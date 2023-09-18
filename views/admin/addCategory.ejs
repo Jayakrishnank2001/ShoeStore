@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoeStore - Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/adminlogin.css">
+</head>
+<body>
+    <%- include('../partials/adminheader.ejs') %>
+
+    <section class="first-footer" style="border-bottom: 2px solid #000;">
+        <footer class="text-center text-white" style="background-color: #ffffff;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center text-nowrap">
+                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1030px; margin-top: 15px;">ADMIN/ADD CATEGORY</span>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+    
+    
+        
+            <div class="row flex-nowrap">
+                
+              <%- include('../partials/adminsidebar.ejs') %>
+
+              <div class="container">
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-8">
+                        <div class="card" style="background-color: #DFDFDF;">
+                            <div class="card-header" style="background-color: #DFDFDF; color:black">
+                                <h3 class="text-center">NEW CATEGORY</h3>
+                            </div>
+                            <div class="card-body">
+                                <form action="/addcategory" method="post">
+                                    <div class="form-row">
+                                        <div class="col d-flex justify-content-center align-items-center">
+                                            <% if(locals.alert){ %>
+                                                <p class="alert alert-danger"><%= locals.alert %></p>
+                                            <% } %>
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="firstName" style="font-weight: 600;">CATEGORY NAME</label>
+                                            <input type="text" name="categoryName" class="form-control" id="" placeholder="" style="border-radius: 1em;">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success mx-auto d-block" style="margin-top: 20px;">CREATE CATEGORY</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+
+
+            </div>
+
+    
+    
+      <%- include('../partials/adminfooter.ejs') %>

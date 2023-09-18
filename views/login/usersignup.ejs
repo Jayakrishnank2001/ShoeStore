@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoes store-Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/usersignup.css">
+    <link rel="stylesheet" href="/css1/userlogin.css">
+</head>
+<body>
+
+    <%- include('../partials/header.ejs') %>
+
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center">SIGN UP</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/signup" method="post">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" name="firstName" class="form-control" id="firstName" placeholder="">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" name="lastName" class="form-control" id="lastName" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="mobileNumber">Mobile Number</label>
+                                    <input type="text" name="mobileNumber" class="form-control" id="mobileNumber" placeholder="">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="password">Password</label>
+                                    <input type="password" name="password" class="form-control" id="password" placeholder="" onkeyup="checkSpecialCharacters()" required>
+                                    <p id="message"></p>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <input type="password" name="confirmPassword" class="form-control" id="confirmPassword" placeholder="">
+                                </div>
+                            </div>
+                            <div class="justify-content-center">
+                                <% if (locals.alert){ %>
+                                    <p class="alert alert-danger"><%= locals.alert %></p>
+                                    <% } %>
+                            </div>
+                            <button type="submit" class="btn btn-black btn-block">Register</button>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <p class="text-center">Already have an account? <a href="/login">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <section class="first-footer">
+        <footer class="text-center text-white" style="background-color: #0667AC;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center align-items-center">
+                <span class="me-3">JOIN SHOES STORE AND GET 15% OFF</span>
+                <a href="/signup"><button type="button" class="btn btn-signup btn-rounded">
+                    SIGN UP FOR FREE
+                </button></a>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+
+    <script>
+
+           function checkSpecialCharacters() {
+            const password = document.getElementById('password').value;
+            const specialCharacters = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+            const messageElement = document.getElementById('message');
+
+            if (specialCharacters.test(password)) {
+                messageElement.innerText = ''; // Clear any previous error message
+            } else {
+                messageElement.innerText = 'Password must include at least one special character.';
+                messageElement.style.color = 'red';
+            }
+        }
+
+    </script>
+
+  <%- include('../partials/footer.ejs') %>

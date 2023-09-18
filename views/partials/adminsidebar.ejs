@@ -1,0 +1,49 @@
+<style>
+    .nav-link{
+        color:white;
+    }
+</style>
+<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0" style="background-color:black;">
+    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" style="margin-top: 30px; margin-left: 20px;">
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu" style="font-size: larger; font-weight:600">
+            <li class="nav-item">
+                <a href="/dashboard" class="nav-link" data-option="dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="/users" class="nav-link" data-option="dashboard">Users</a>
+            </li>
+            <li class="nav-item">
+                <a href="/product" class="nav-link" data-option="dashboard">Product</a>
+            </li>
+            <li class="nav-item">
+                <a href="/category" class="nav-link" data-option="dashboard">Category</a>
+            </li>
+            <li class="nav-item">
+                <a href="/coupons" class="nav-link" data-option="dashboard">Coupons</a>
+            </li>
+            <li class="nav-item">
+                <a href="/orders" class="nav-link" data-option="dashboard">Orders</a>
+            </li>
+            <li class="nav-item">
+                <a href="/banners" class="nav-link" data-option="dashboard">Banners</a>
+            </li>
+            <li class="nav-item">
+                <a href="/payments" class="nav-link" data-option="dashboard">Payments</a>
+            </li>
+        </ul>
+        <hr>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        const sidebarOptions = $('.nav-link');
+        sidebarOptions.on('click', function () {
+            console.log("Link clicked!")
+            sidebarOptions.removeClass('active-option'); // Remove the class from all options
+            $(this).addClass('active-option'); // Add the class to the clicked option
+        });
+    });
+
+</script>

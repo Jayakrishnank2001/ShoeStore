@@ -1,0 +1,73 @@
+const Admin=require('../models/admin')
+const User=require('../models/users')
+const bcrypt=require('bcrypt')
+
+const newAdmin=new Admin({
+    userName:'Jayakrishnan',
+    email:'jkrishnan2001@gmail.com',
+    password:'jayk@16',
+})
+
+exports.dashboard=async(req,res)=>{
+    res.render('./admin/dashboard')
+}
+
+exports.loginpage=async(req,res)=>{
+    res.render('./admin/adminLogin')
+}
+
+exports.users=async(req,res)=>{
+    try{
+        const users=await User.find();
+        res.render('admin/adminUser',{users})
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+exports.login=async(req,res)=>{
+    const {userName,password}=req.body;
+    try{
+        const admin=await Admin.findOne({userName})
+        if(!admin){
+            res.render('./admin/adminLogin',{alert:"Invalid username or password"});
+        }else if(admin.password===password && admin.userName===userName){
+         req.session.admin=admin;
+         res.redirect('/dashboard')
+        }else{
+            return res.status(401).json({error:'Incorrect password'})
+        } 
+    }catch(error){
+        console.error('Error during admin login',error)
+        res.status(500).json({error:'Internal server error'})
+    }
+}
+
+exports.blockUser=async(req,res)=>{  
+    try{
+        const userId=req.params.userId;
+        const user=await User.findByIdAndUpdate(userId,{blocked:true})
+        if(!user){
+            return res.status(404).json({error:'User not found'})
+        }
+        res.redirect('/users')
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Internal Server Error')
+    }
+}
+
+exports.unblockUser=async(req,res)=>{
+    try{ 
+        const userId=req.params.userId;
+        const user=await User.findByIdAndUpdate(userId,{blocked:false})
+        if(!user){
+            return res.status(404).json({error:'User not found'})
+        }
+        res.redirect('/users')
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Internal Server Error')
+    }
+}

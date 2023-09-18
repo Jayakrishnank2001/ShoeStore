@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoeStore - Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/adminlogin.css">
+</head>
+<body>
+    <%- include('../partials/adminheader.ejs') %>
+
+    <section class="first-footer" style="border-bottom: 2px solid #000;">
+        <footer class="text-center text-white" style="background-color: #ffffff;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center">
+                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1110px; margin-top: 15px;">ADMIN/CATEGORY</span>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+    
+    
+        
+            <div class="row flex-nowrap">
+                
+              <%- include('../partials/adminsidebar.ejs') %>
+
+                <div class="container mt-4">
+                  <div class="d-flex justify-content-between mb-4" style="margin-top: -30px;">
+                    <div class="d-flex align-items-center">
+                      <a href="/addcategory"><button type="button" class="btn btn-primary" id="searchButton">ADD CATEGORY</button></a>
+                    </div>
+                    <div id="suggestionsList" class="suggestions-list"></div>    
+                  </div>
+                  <table class="table table-bordered table-thick" style="margin-top: 30px;">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>CATEGORY</th>
+                        <th>LIST/UNLIST</th>
+                      </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                      <% categories.forEach(category => { %>
+                      <tr>
+                        <td class="col-md-8"><%= category.categoryName %></td>
+                        <td class="col-md-4">
+                          <% if (category.isActive == true) { %>
+                            <form action="/admin/category-list/<%= category._id %>" method="POST">
+                              <button type="submit" class="btn btn-success block-btn" data-category-id="<%= category._id %>" style="width:120px; height:40px;">List</button>
+                            </form>
+                          <% } else if(category.isActive==false) { %>
+                            <form action="/admin/category-unlist/<%= category._id %>" method="POST">
+                              <button type="submit" class="btn btn-danger block-btn" data-user-id="<%= category._id %>" style="width:120px; height:40px;">Unlist</button>
+                            </form>
+                          <% } %>
+                         
+                        </td>           
+                      </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+              </div>
+
+            </div>
+
+    
+    
+      <%- include('../partials/adminfooter.ejs') %>

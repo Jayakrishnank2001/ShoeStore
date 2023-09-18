@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoeStore - Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/adminlogin.css">
+    <link href="path/to/toastr.min.css" rel="stylesheet">
+</head>
+<body>
+    <%- include('../partials/adminheader.ejs') %>
+
+    <section class="first-footer" style="border-bottom: 2px solid #000;">
+        <footer class="text-center text-white" style="background-color: #ffffff;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center text-nowrap">
+                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1030px; margin-top: 15px;">ADMIN/ADD PRODUCT</span>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+    
+    
+        
+            <div class="row flex-nowrap">
+                
+              <%- include('../partials/adminsidebar.ejs') %>
+
+              <div class="container">
+                <div class="row justify-content-center mt-5">
+                    <div class="col-md-8">
+                        <div class="card" style="background-color: #DFDFDF; height:960px;">
+                            <div class="card-header" style="background-color: #DFDFDF; color:black">
+                                <h3 class="text-center">ADD PRODUCT</h3>
+                            </div>
+                            <div class="card-body">
+                                <form action="/addproduct" method="post" enctype="multipart/form-data">
+                                    <div class="form-row">
+                                        <% if(locals.alert) { %>
+                                            <p class="alert alert-danger"><%= locals.alert %></p>
+                                        <% } %>
+                                        <div class="form-group col-md-12">
+                                            <label for="firstName" style="font-weight: 600;">PRODUCT NAME</label>
+                                            <input type="text" name="productName" class="form-control" id="firstName" placeholder="" style="border-radius: 1em;">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="mobileNumber" style="font-weight: 600;">CATEGORY</label>
+                                            <input type="text" name="category" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="mobileNumber" style="font-weight: 600;">PRICE</label>
+                                            <input type="text" name="price" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="mobileNumber" style="font-weight: 600;">QUANTITY</label>
+                                            <input type="text" name="quantity" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="mobileNumber" style="font-weight: 600;">BRAND</label>
+                                            <input type="text" name="brand" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                        </div>
+                                    </div> 
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="firstName" style="font-weight: 600;">DESCRIPTION</label>
+                                            <textarea name="description" class="form-control" id="description" rows="4" placeholder="" style="border-radius: 1em;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-5">
+                                            <label for="firstName" style="font-weight: 600;">IMAGE</label>
+                                            <input name="image" type="file" id="imageInput" multiple accept="image/*">
+                                            <img id="imagePreview" src="" alt="Image Preview" style="width:150px; height:150px;">
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="size" style="font-weight: 600;">SIZE</label>
+                                            <fieldset>
+                                                <div class="form-check" style="margin-top: 12px;">
+                                                    <input class="form-check-input" type="checkbox" id="size6" name="size" value="6" style="width: 1.5rem; height: 1.5rem;">
+                                                    <label class="form-check-label" for="size6" style="font-size: 1.2rem; margin-left: 1rem;">6</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="size7" name="size" value="7" style="width: 1.5rem; height: 1.5rem;">
+                                                    <label class="form-check-label" for="size7" style="font-size: 1.2rem; margin-left: 1rem;">7</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="size7" name="size" value="7" style="width: 1.5rem; height: 1.5rem;">
+                                                    <label class="form-check-label" for="size7" style="font-size: 1.2rem; margin-left: 1rem;">8</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="size7" name="size" value="7" style="width: 1.5rem; height: 1.5rem;">
+                                                    <label class="form-check-label" for="size7" style="font-size: 1.2rem; margin-left: 1rem;">9</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="size7" name="size" value="7" style="width: 1.5rem; height: 1.5rem;">
+                                                    <label class="form-check-label" for="size7" style="font-size: 1.2rem; margin-left: 1rem;">10</label>
+                                                </div>
+                                            </fieldset>
+                                        </div>                              
+                                        <div class="form-group col-md-4">
+                                            <label for="color" style="font-weight: 600;">COLOR</label>
+                                            <div class="form-group">
+                                                <label for="color" style="font-weight: bold; color: blue;"></label>
+                                                <select class="form-control" id="color" name="color">
+                                                    <option value="black">BLACK</option>
+                                                    <option value="blue">BLUE</option>
+                                                    <option value="pink">PINK</option>
+                                                    <option value="purple">PURPLE</option>
+                                                </select>
+                                            </div>
+                                            <div class="color-preview" style="margin-top: 8px; padding: 10px; border: 1px solid #ccc; background-color: white; display: inline-block; width:70px; height:70px;">
+                                           
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="form-row" style="margin-top: 10px;">
+                                        <div class="form-group col-md-4">
+                                            <label for="firstName" style="font-weight: 600;">GENDER</label>                                  
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender" id="men" value="men" style="width: 20px; height: 20px;">
+                                                <label class="form-check-label" for="men" style="font-size: 15px; margin-left: 10px;">MEN</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender" id="women" value="women" style="width: 20px; height: 20px;">
+                                                <label class="form-check-label" for="women" style="font-size: 15px; margin-left: 10px;">WOMEN</label>
+                                            </div>                                                                            
+                                        </div>
+                                    </div> 
+                                    <button type="submit" class="btn btn-success mx-auto d-block" style="margin-top: 20px;">CREATE PRODUCT</button>                              
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+
+
+            </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="path/to/toastr.min.js"></script>
+        <script>
+            //image
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            imageInput.addEventListener('change', function () {
+            const file = imageInput.files[0];
+
+            if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+            };
+
+            reader.readAsDataURL(file);
+            } else {
+            imagePreview.src = '';
+            imagePreview.style.display = 'none';
+            }
+          });
+
+          $(document).ready(function() {
+        // Event handler for the color select input
+        $('#color').change(function() {
+            const selectedColor = $(this).val();
+            
+            $('.color-preview').css('background-color', selectedColor);
+        });
+    });
+
+    //toast message for create product
+    function showProductCreatedToast() {
+    toastr.success("Product created successfully!");
+  }
+
+        </script>
+            
+
+      <%- include('../partials/adminfooter.ejs') %>

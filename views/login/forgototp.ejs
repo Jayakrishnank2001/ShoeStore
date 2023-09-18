@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoes store-Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/userlogin.css">
+</head>
+<body>
+    <%- include('../partials/header.ejs') %>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card mt-5">
+                    <div class="card-header">
+                        <h3 class="text-center">ENTER FORGOT OTP</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="/forgototp" method="post">
+                            <div class="form-group">
+                                <% if (locals.alert){ %>
+                                    <p class="alert alert-danger"><%= locals.alert %></p>
+                                    <% } %>
+                                <input type="text" class="form form-control" id="username" name="otp" placeholder="Enter Your OTP">
+                            </div>
+                            <button type="submit" class="btn btn-yellow btn-block">Verify OTP</button>
+                        </form>
+                        <div id="otpTimer">
+                            OTP Expires in <span id="timer">0:00</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                            <p class="text-center">Do you want to resend OTP? <a href="/resendforgotOTP">Resend OTP</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="first-footer">
+        <footer class="text-center text-white" style="background-color: #0667AC;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center align-items-center">
+                <span class="me-3">JOIN SHOES STORE AND GET 15% OFF</span>
+                <a href="/signup"><button type="button" class="btn btn-signup btn-rounded">
+                    SIGN UP FOR FREE
+                </button></a>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+    
+    <script>
+        
+        const otpTimer = (durationInSeconds) => {
+        let seconds = durationInSeconds;
+        let timerExpired = false;
+
+        const timerElement = document.getElementById('timer');
+        const otpInput = document.getElementById('otpInput');
+        const otpSubmit = document.getElementById('otpSubmit');
+
+        const timerInterval = setInterval(() => {
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = 'OTP Expired';
+                // Perform any action you want when OTP expires
+                timerExpired = true;
+                otpInput.disabled = true;
+                otpSubmit.disabled = true;
+            } else {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                timerElement.textContent = `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+                seconds--;
+            }
+        }, 1000); // Update the timer every 1 second (1000 milliseconds)
+
+        return timerExpired;
+    };
+    // Set the OTP timer for 5 minutes (300 seconds)
+    const timerExpired = otpTimer(60);
+
+    // Verify OTP when the form is submitted
+    document.querySelector('form').addEventListener('submit', (event) => {
+        if (timerExpired) {
+            event.preventDefault(); // Prevent form submission if timer has expired
+            alert('OTP has expired. Please request a new OTP.');
+        }
+    });
+
+
+    </script>
+
+<%- include('../partials/footer.ejs') %>

@@ -1,0 +1,40 @@
+.container-fluid{
+    background-color: #828181;
+}
+.search{
+    margin-left: 900px;
+    border-radius: 1em;
+}
+.body{
+    background-color: black;
+}
+.black-background{
+    background-color: black;
+    height: 550px;
+}
+.card{
+    background-color: #1A1A1A;
+    margin-top: 20px;
+    border-radius: 1.5em;
+    height: 410px;
+}
+.card-header{
+    color: white;
+}
+.btn-primary{
+    border-radius: 1.5em;
+    margin-top: 50px;
+}
+.search-1{
+    border-radius: 1em;
+    margin-top: 20px;
+}
+.card-header{
+    margin-top: 40px;
+}
+.btn-success{
+    border-radius: .7em;
+}
+.navbar{
+    background-color: #828181;
+}

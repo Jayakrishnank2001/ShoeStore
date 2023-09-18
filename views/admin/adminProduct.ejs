@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShoeStore - Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/adminlogin.css">
+</head>
+<body>
+    <%- include('../partials/adminheader.ejs') %>
+
+    <section class="first-footer" style="border-bottom: 2px solid #000;">
+        <footer class="text-center text-white" style="background-color: #ffffff;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center">
+                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1120px; margin-top: 15px;">ADMIN/PRODUCT</span>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+    
+    
+        
+            <div class="row flex-nowrap">
+                
+              <%- include('../partials/adminsidebar.ejs') %>
+
+                <div class="container mt-4">
+                  <div class="d-flex justify-content-between mb-4" style="margin-top: 20px;">
+                    <div class="d-flex align-items-center">
+                      <input type="text" id="searchInput" class="form-control form-control mr-2" style="width: 250px;" placeholder="Search Products..." />
+                      <button type="button" class="btn btn-dark" id="searchButton">Search</button>
+                      <div class="d-flex align-items-center">
+                        <a href="/addproduct"><button type="button" class="btn btn-primary text-nowrap" id="searchButton" style="margin-left:650px; margin-top: 5px;">ADD PRODUCT</button></a>
+                      </div>
+                    </div>
+                    <div id="suggestionsList" class="suggestions-list"></div>    
+                  </div>
+                  <table class="table table-bordered table-thick" style="margin-top: 80px;">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>PRODUCT</th>
+                        <th>CATEGORY</th>
+                        <th>BRAND</th>
+                        <th>PRICE</th>
+                        <th>GENDER</th>
+                        <th>IMAGE</th>
+                        <th>EDIT</th>
+                        <th>LIST/UNLIST</th>
+                      </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                      <% products.forEach(product => { %>
+                      <tr>
+                        <td class="editable" data-field="productname"><%= product.productName %></td>
+                        <td><%= product.category %></td>  
+                        <td><%= product.brand %></td>                                              
+                        <td><%= product.price %></td> 
+                        <td><%= product.gender %></td>                                             
+                        <td><img src='/uploads/<%= product.image[0] %>' style="width:80px; height:80px;"></td>
+                        <td>
+                          <a href="/editproduct/<%= product._id %>"><button type="button" class="btn btn-warning block-btn" data-product-id="<%= product._id %>">Edit</button></a>                          
+                        </td>
+                        <td>
+                          <% if (product.isActive == true) { %>
+                            <form action="/admin/product-list/<%= product._id %>" method="POST">
+                              <button type="submit" class="btn btn-success block-btn" data-product-id="<%= product._id %>">List</button>
+                            </form>
+                          <% } else if(product.isActive==false) { %>
+                            <form action="/admin/product-unlist/<%= product._id %>" method="POST">
+                              <button type="submit" class="btn btn-danger block-btn" data-product-id="<%= product._id %>">Unlist</button>
+                            </form>
+                          <% } %>
+                        </td>
+                      </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+            
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+            <script>
+            $(document).ready(function () {
+              $('#searchButton').on('click', function () {
+                searchUser();
+              });
+              $('#searchInput').on('input', function () {
+                searchUser();
+              });
+             });
+             function searchUser() {
+              const searchInputValue = $('#searchInput').val().toLowerCase().trim();
+              const tableRows = $('#userTableBody tr');
+              tableRows.each(function () {
+                const username = $(this).find('.editable[data-field="productname"]').text().toLowerCase();
+                const isVisible = username.includes(searchInputValue) || searchInputValue === '';
+                $(this).css('display', isVisible ? '' : 'none');
+              });
+            }
+          
+          </script>
+    
+    
+      <%- include('../partials/adminfooter.ejs') %>

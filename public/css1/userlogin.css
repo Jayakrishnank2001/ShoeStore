@@ -1,0 +1,59 @@
+.container1{
+    background-color: #828181;
+}
+.nav1{
+    margin-left:80px;
+    font-weight: bolder;
+}
+.form{
+    margin-top: 35px;
+}
+.me-3{
+    font-weight:500;
+    font-size: 200%;
+    color: black;
+}
+.btn-signup{
+    background-color: black;
+    color:white;
+    margin-left: 30px;
+}
+.btn-signup:hover{
+    background-color: white;
+    color:black;
+}
+.first-footer{
+    margin-top: 80px;
+}
+.last-div{
+    background-color: black;
+}
+.card{
+    border-radius: 1.5em;
+    border-color:black;
+    background-color: #f3f3f3;
+}
+.form1{
+    border-radius: 1em;
+}
+.form2{
+    margin-right: 150px;
+}
+.btn-yellow{
+    border-radius: 1.5em;
+    background-color: black;
+    color:yellow;
+}
+.btn-yellow:hover{
+    color:yellow;
+}
+.btn1{
+    border-radius: 1em;
+}
+.icon{
+    margin-right: 40px;
+    size:20%;
+}
+.navbar1{
+    background-color: #828181;
+}

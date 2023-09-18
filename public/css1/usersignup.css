@@ -1,0 +1,8 @@
+.btn-black{
+    background-color: black;
+    color:yellow;
+    border-radius: 1.5em;
+}
+.btn-black:hover{
+    color: yellow;
+}
