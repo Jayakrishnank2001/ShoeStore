@@ -6,55 +6,119 @@ const crypto=require('crypto')
 const randomstring=require('randomstring')
 const { log } = require('console')
 const { product } = require('./adminProductController')
+const Category = require('../models/category')
+const category = require('../models/category')
 
 exports.loginPage=async(req,res)=>{
     res.render('./login/userLogin')
 }
 
-//route for products page
-exports.productspage=async(req,res)=>{
-    try{
-         const page=parseInt(req.query.page)||1;
-         const limit=6;
-         const skip=(page-1)*limit;
+exports.cartPage=async(req,res)=>{
+  res.render('./user/cart')
+}
 
-         const products=await Product.find()
+exports.checkoutPage=async(req,res)=>{
+  res.render('./user/checkout')
+}
+exports.otppage=async(req,res)=>{
+res.render('./login/userloginotp')
+}
+
+exports.forgotPage=async(req,res)=>{
+  res.render('./login/forgotpassword')
+}
+
+exports.signupPage=async(req,res)=>{
+  res.render('./login/usersignup')
+}
+
+exports.forgototppage=async(req,res)=>{
+res.render('./login/forgototp')
+}
+
+exports.resetpassword=async(req,res)=>{
+res.render('./login/resetpassword')
+} 
+
+//to show the product details
+exports.productpage=async(req,res)=>{
+  try {
+    const productId=req.params.productId;
+    const product=await Product.findById(productId)
+    res.render('./user/product',{product})
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+  
+}
+
+//to show products page for men
+exports.productspage = async (req, res) => {
+  try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = 6;
+      const skip = (page - 1) * limit;
+      const categoryId = req.query.categoryId; // Retrieve categoryId from query parameters
+      const { priceFrom, priceTo } = req.query; // Retrieve priceFrom and priceTo from query parameters
+
+      const categories = await Category.find({ isActive: true });
+      const categoryIds = categories.map((category) => category._id);
+
+      let productsQuery = {isActive: true,gender: "men",category: categoryId ? categoryId : { $in: categoryIds }};
+      // Add price range filter if priceFrom and priceTo are provided
+      if (priceFrom && priceTo) {
+          productsQuery.price = { $gte: priceFrom, $lte: priceTo };
+      }
+      
+      const products = await Product.find(productsQuery)
+          .populate('category')
           .skip(skip)
           .limit(limit)
           .exec();
 
-          const totalCount=await Product.countDocuments();
-          const totalPages=Math.ceil(totalCount/limit);
-           
-         res.render('./user/shop',{products,currentPage:page,totalPages});
-    }catch(error){
+      const totalCount = await Product.countDocuments(productsQuery);
+      const totalPages = Math.ceil(totalCount / limit);
+
+      res.render("./user/shop", {products,categories,currentPage: page,totalPages,priceFrom,priceTo});
+   } catch (error) {
       console.error(error);
-      res.status(500).send('Internal server error.');
+      res.status(500).send("Internal server error.");
+  }
+};
+
+
+//to show products page for women
+exports.womenproductspage=async(req,res)=>{
+  try{
+    const page=parseInt(req.query.page)||1;
+    const limit=6;
+    const skip=(page-1)*limit;
+    const categoryId=req.query.categoryId;
+    const { priceFrom,priceTo }=req.query;
+ 
+    const categories=await Category.find({isActive:true})
+    const categoryIds=categories.map((category)=>category._id)
+ 
+    let productsQuery={isActive:true,gender:"women",category:categoryId ? categoryId : {$in:categoryIds}}
+
+    if(priceFrom && priceTo){
+      productsQuery.price={$gte:priceFrom,$lte:priceTo}
     }
-}
 
-exports.productpage=async(req,res)=>{
-  res.render('./user/product')
-}
+    const products=await Product.find(productsQuery)
+      .populate('category')
+      .skip(skip)
+      .limit(limit)
+      .exec();
 
-exports.otppage=async(req,res)=>{
-  res.render('./login/userloginotp')
-}
-
-exports.forgotPage=async(req,res)=>{
-    res.render('./login/forgotpassword')
-}
-
-exports.signupPage=async(req,res)=>{
-    res.render('./login/usersignup')
-}
-
-exports.forgototppage=async(req,res)=>{
-  res.render('./login/forgototp')
-}
-
-exports.resetpassword=async(req,res)=>{
-  res.render('./login/resetpassword')
+     const totalCount=await Product.countDocuments(productsQuery);
+     const totalPages=Math.ceil(totalCount/limit);
+    res.render('./user/womenshop',{products,categories,currentPage:page,totalPages,priceFrom,priceTo});
+  }catch(error){
+   console.error(error);
+   res.status(500).send('Internal server error.');
+  }
 }
 
 //set email to send OTP
@@ -252,4 +316,32 @@ exports.forgototpverify=async(req,res)=>{
     console.error(error);
     res.status(500).send('Internal Server Error')
 }
+}
+
+//product add to the cart
+exports.addToCart=async(req,res)=>{
+  try{
+    const productId=req.params.productId
+    const product=await Product.findById(productId)
+    if(!product){
+      return res.status(404).json({error:'Product not found'});
+    }
+    if(!req.session || !req.session.user){
+      return res.status(401).json({error:'Unauthorized'})
+    }
+    const userId=req.session.user._id
+    const user=await User.findById(userId)
+    if(!user){
+      return res.status(404).json({error:'User not found'})
+    }
+    user.cart.push({
+      productId:product._id,
+      quantity:1
+    });
+    await user.save()
+    res.status(200).json({message:'Product added to cart successfully'})
+  }catch(error){
+    console.error(error);
+    res.status(500).send('Internal Server Error')
+  }
 }

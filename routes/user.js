@@ -1,9 +1,9 @@
 const express=require('express')
 const router=express.Router()
 const userController=require('../controllers/userController')
+const userAuth=require('../middlewares/userAuth')
 
-
-router.get('/login',userController.loginPage)
+router.get('/login',userAuth.yesSession,userController.loginPage)
 router.post('/login',userController.userlogin)
 
 router.get('/otp',userController.otppage)
@@ -25,7 +25,16 @@ router.post('/resetpassword',userController.reset)
 
 router.get('/products',userController.productspage)
 
-router.get('/userproduct',userController.productpage)
+router.get('/womenproducts',userController.womenproductspage)
+
+router.get('/userproduct/:productId',userController.productpage)
+
+router.get('/cart',userController.cartPage)
+router.post('/addCart/:productId',userAuth.noSession,userController.addToCart)
+
+router.get('/checkout',userController.checkoutPage)
+
+
 
 
 module.exports=router

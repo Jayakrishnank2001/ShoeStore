@@ -6,6 +6,7 @@
     <title>ShoeStore - Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css1/adminlogin.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <%- include('../partials/adminheader.ejs') %>
@@ -27,6 +28,29 @@
             <div class="row flex-nowrap">
                 
               <%- include('../partials/adminsidebar.ejs') %>
+
+
+              <!--Modal for confirmation-->
+              <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to List/Unlist this Product?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-warning" id="confirmActionBtn">Confirm</button>
+                    </div>
+                  </div>
+                </div>
+              </div>       
+
 
                 <div class="container mt-4">
                   <div class="d-flex justify-content-between mb-4" style="margin-top: 20px;">
@@ -56,7 +80,7 @@
                       <% products.forEach(product => { %>
                       <tr>
                         <td class="editable" data-field="productname"><%= product.productName %></td>
-                        <td><%= product.category %></td>  
+                        <td><%= product.category.categoryName %></td>  
                         <td><%= product.brand %></td>                                              
                         <td><%= product.price %></td> 
                         <td><%= product.gender %></td>                                             
@@ -66,19 +90,24 @@
                         </td>
                         <td>
                           <% if (product.isActive == true) { %>
-                            <form action="/admin/product-list/<%= product._id %>" method="POST">
-                              <button type="submit" class="btn btn-success block-btn" data-product-id="<%= product._id %>">List</button>
-                            </form>
+                            <button type="button" class="btn btn-success block-btn" data-toggle="modal" data-target="#confirmationModal" data-product-id="<%= product._id %>" data-action-url="/admin/product-list/<%= product._id %>">List</button>
                           <% } else if(product.isActive==false) { %>
-                            <form action="/admin/product-unlist/<%= product._id %>" method="POST">
-                              <button type="submit" class="btn btn-danger block-btn" data-product-id="<%= product._id %>">Unlist</button>
-                            </form>
+                            <button type="button" class="btn btn-danger block-btn" data-toggle="modal" data-target="#confirmationModal" data-product-id="<%= product._id %>" data-action-url="/admin/product-unlist/<%= product._id %>">Unlist</button>
                           <% } %>
                         </td>
                       </tr>
                       <% }); %>
                     </tbody>
                   </table>
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                      <% for (let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                          <a class="page-link" href="/product?page=<%= i %>"><%= i %></a>
+                        </li>
+                      <% } %>
+                    </ul>
+                  </nav>
               </div>
             </div>
             
@@ -105,6 +134,62 @@
                 $(this).css('display', isVisible ? '' : 'none');
               });
             }
+
+            //Modal script
+
+           $(document).ready(function () {
+            // Handle button click
+             $('.block-btn').click(function () {
+             const productId = $(this).data('product-id');
+             const actionUrl = $(this).data('action-url');
+             $('#confirmActionBtn').data('product-id', productId);
+             $('#confirmActionBtn').data('action-url', actionUrl);
+           });
+
+           // Handle "Confirm" button click in modal
+            $('#confirmActionBtn').click(function () {
+            const productId = $(this).data('product-id');
+            const actionUrl = $(this).data('action-url');
+            // Perform the action by submitting the form or making an AJAX request
+            // Redirect to the appropriate URL after action completion
+            window.location.href = actionUrl;
+           });
+          });
+
+          //sweatalert script create product
+          function showSuccessMessage() {
+             Swal.fire({
+             icon: 'success',
+             title: 'Product Created Successfully',
+             showConfirmButton: false,
+             timer: 2000,
+            });
+          }
+
+          // Check if the "success" query parameter is present in the URL
+           const urlParams = new URLSearchParams(window.location.search);
+           if (urlParams.has('success') && urlParams.get('success') === 'true') {
+           // Call the custom function to display the success message
+           showSuccessMessage();
+        }
+
+        //sweatalert script update product
+        function showUpdateMessage() {
+             Swal.fire({
+             icon: 'success',
+             title: 'Product Updated Successfully',
+             showConfirmButton: false,
+             timer: 2000,
+            });
+          }
+
+          // Check if the "success" query parameter is present in the URL
+           const urlParams1 = new URLSearchParams(window.location.search);
+           if (urlParams1.has('success') && urlParams1.get('success') === 'false') {
+           // Call the custom function to display the success message
+           showUpdateMessage();
+          }
+
           
           </script>
     

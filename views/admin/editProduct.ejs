@@ -36,17 +36,21 @@
                                 <h3 class="text-center">EDIT PRODUCT</h3>
                             </div>
                             <div class="card-body">
-                                <form action="/editproduct" method="post">
+                                <form action="/editproduct/<%= product._id %>" method="post" enctype="multipart/form-data">
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="firstName" style="font-weight: 600;">PRODUCT NAME</label>
-                                            <input type="text" value="<%= product.productName %>" name="categoryname" class="form-control" id="firstName" placeholder="" style="border-radius: 1em;">
+                                            <input type="text" value="<%= product.productName %>" name="productName" class="form-control" id="firstName" placeholder="" style="border-radius: 1em;">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="mobileNumber" style="font-weight: 600;">CATEGORY</label>
-                                            <input type="text" value="<%= product.category %>" name="price" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                            <select name="category" class="form-control" id="category" style="border-radius: 1em;">
+                                                <% categories.forEach(category => { %>
+                                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                                <% }); %>
+                                            </select>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="mobileNumber" style="font-weight: 600;">PRICE</label>
@@ -56,23 +60,23 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="mobileNumber" style="font-weight: 600;">QUANTITY</label>
-                                            <input type="text" value="<%= product.quantity %>" name="price" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                            <input type="text" value="<%= product.quantity %>" name="quantity" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="mobileNumber" style="font-weight: 600;">BRAND</label>
-                                            <input type="text" value="<%= product.brand %>" name="price" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                            <input type="text" value="<%= product.brand %>" name="brand" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
                                         </div>
                                     </div> 
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="firstName" style="font-weight: 600;">DESCRIPTION</label>
-                                            <textarea class="form-control" value="" id="description" rows="4" placeholder="" style="border-radius: 1em;"><%= product.description %></textarea>
+                                            <textarea name="description" class="form-control" value="" id="description" rows="4" placeholder="" style="border-radius: 1em;"><%= product.description %></textarea>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-5">
                                             <label for="firstName" style="font-weight: 600;">IMAGE</label>
-                                            <input type="file" value="" id="imageInput" accept="image/*">
+                                            <input name="image" type="file" value="" id="imageInput" accept="image/*">
                                             <img id="imagePreview" src="/uploads/<%= product.image %>" alt="Image Preview" style="width:150px; height:150px;">
                                         </div>
                                         <div class="form-group col-md-3">
@@ -97,9 +101,13 @@
                                                     <option value="blue" <%= product.color === 'blue' ? 'selected' : '' %>>BLUE</option>
                                                     <option value="pink" <%= product.color === 'pink' ? 'selected' : '' %>>PINK</option>
                                                     <option value="purple" <%= product.color === 'purple' ? 'selected' : '' %>>PURPLE</option>
+                                                    <option value="skyblue" <%= product.color === 'skyblue' ? 'selected' : '' %>>SKY BLUE</option>
+                                                    <option value="white" <%= product.color === 'white' ? 'selected' : '' %>>WHITE</option>
+                                                    <option value="red" <%= product.color === 'red' ? 'selected' : '' %>>RED</option>
+                                                    <option value="brown" <%= product.color === 'brown' ? 'selected' : '' %>>BROWN</option>
                                                 </select>
                                             </div>
-                                            <div class="color-preview" style="margin-top: 8px; padding: 10px; border: 1px solid #ccc; background-color: <%= product.color%>; display: inline-block; width:70px; height:70px;">
+                                            <div class="color-preview" style="margin-top: 8px; padding: 10px; border: 1px solid #ccc; background-color: <%= product.color %> ; display: inline-block; width:70px; height:70px; ">
                                             </div>
                                         </div>                                        
                                     </div> 

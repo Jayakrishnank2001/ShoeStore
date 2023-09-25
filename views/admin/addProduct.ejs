@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css1/adminlogin.css">
     <link href="path/to/toastr.min.css" rel="stylesheet">
+
 </head>
 <body>
     <%- include('../partials/adminheader.ejs') %>
@@ -32,16 +33,18 @@
               <div class="container">
                 <div class="row justify-content-center mt-5">
                     <div class="col-md-8">
-                        <div class="card" style="background-color: #DFDFDF; height:960px;">
+                        <div class="card" style="background-color: #DFDFDF; height:1000px;">
                             <div class="card-header" style="background-color: #DFDFDF; color:black">
                                 <h3 class="text-center">ADD PRODUCT</h3>
                             </div>
                             <div class="card-body">
                                 <form action="/addproduct" method="post" enctype="multipart/form-data">
                                     <div class="form-row">
-                                        <% if(locals.alert) { %>
-                                            <p class="alert alert-danger"><%= locals.alert %></p>
-                                        <% } %>
+                                        <div class="col d-flex justify-content-center align-items-center">
+                                            <% if(locals.alert){ %>
+                                                <p class="alert alert-danger"><%= locals.alert %></p>
+                                            <% } %>
+                                        </div>
                                         <div class="form-group col-md-12">
                                             <label for="firstName" style="font-weight: 600;">PRODUCT NAME</label>
                                             <input type="text" name="productName" class="form-control" id="firstName" placeholder="" style="border-radius: 1em;">
@@ -49,9 +52,13 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label for="mobileNumber" style="font-weight: 600;">CATEGORY</label>
-                                            <input type="text" name="category" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
-                                        </div>
+                                            <label for="category" style="font-weight: 600;">CATEGORY</label>
+                                            <select name="category" class="form-control" id="category" style="border-radius: 1em;">
+                                                <% categories.forEach(category => { %>
+                                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                                <% }); %>
+                                            </select>
+                                          </div>
                                         <div class="form-group col-md-6">
                                             <label for="mobileNumber" style="font-weight: 600;">PRICE</label>
                                             <input type="text" name="price" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
@@ -113,6 +120,10 @@
                                                     <option value="blue">BLUE</option>
                                                     <option value="pink">PINK</option>
                                                     <option value="purple">PURPLE</option>
+                                                    <option value="skyblue">SKY BLUE</option>
+                                                    <option value="white">WHITE</option>
+                                                    <option value="red">RED</option>
+                                                    <option value="brown">BROWN</option>
                                                 </select>
                                             </div>
                                             <div class="color-preview" style="margin-top: 8px; padding: 10px; border: 1px solid #ccc; background-color: white; display: inline-block; width:70px; height:70px;">
@@ -176,10 +187,10 @@
         });
     });
 
-    //toast message for create product
-    function showProductCreatedToast() {
-    toastr.success("Product created successfully!");
-  }
+       //toast message for create product
+       function showProductCreatedToast() {
+       toastr.success("Product created successfully!");
+      }
 
         </script>
             

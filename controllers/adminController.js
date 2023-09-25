@@ -18,8 +18,19 @@ exports.loginpage=async(req,res)=>{
 
 exports.users=async(req,res)=>{
     try{
-        const users=await User.find();
-        res.render('admin/adminUser',{users})
+        const page=parseInt(req.query.page)||1;
+        const limit=10;
+        const skip=(page-1)*limit; 
+
+        const users=await User.find()
+        .skip(skip)
+        .limit(limit)
+        .exec();
+
+        const totalCount=await User.countDocuments();
+        const totalPages=Math.ceil(totalCount/limit);
+
+        res.render('admin/adminUser',{users,totalPages,currentPage:page});
     }catch(error){
         console.error(error);
         res.status(500).send('Internal Server Error');
@@ -66,6 +77,17 @@ exports.unblockUser=async(req,res)=>{
             return res.status(404).json({error:'User not found'})
         }
         res.redirect('/users')
+    }catch(error){
+        console.error(error);
+        res.status(500).send('Internal Server Error')
+    }
+}
+
+//to logout the admin
+exports.adminlogout=async(req,res)=>{
+    try{
+        req.session.destroy()
+        res.redirect('/adminlogin')
     }catch(error){
         console.error(error);
         res.status(500).send('Internal Server Error')

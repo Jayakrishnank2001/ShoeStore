@@ -3,6 +3,7 @@ const router=express.Router()
 const adminController=require('../controllers/adminController')
 const adminProductController=require('../controllers/adminProductController')
 const adminCategoryController=require('../controllers/adminCategoryController')
+const adminAuth=require('../middlewares/adminAuth')
 
 const multer = require('multer')
 const path = require('path');
@@ -28,33 +29,35 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-router.get('/adminlogin',adminController.loginpage)
+router.get('/adminlogin',adminAuth.yesSession,adminController.loginpage)
 router.post('/adminlogin',adminController.login)
 
-router.get('/dashboard',adminController.dashboard)
+router.get('/dashboard',adminAuth.noSession,adminController.dashboard)
 
-router.get('/users',adminController.users)
+router.get('/users',adminAuth.noSession,adminController.users)
 
-router.post('/admin/block-user/:userId',adminController.blockUser)
-router.post('/admin/unblock-user/:userId',adminController.unblockUser)
+router.get('/admin/block-user/:userId',adminAuth.noSession,adminController.blockUser)
+router.get('/admin/unblock-user/:userId',adminAuth.noSession,adminController.unblockUser)
 
-router.post('/admin/category-list/:categoryId',adminCategoryController.listCategory)
-router.post('/admin/category-unlist/:categoryId',adminCategoryController.unlistCategory)
+router.get('/admin/category-list/:categoryId',adminAuth.noSession,adminCategoryController.listCategory)
+router.get('/admin/category-unlist/:categoryId',adminAuth.noSession,adminCategoryController.unlistCategory)
 
-router.post('/admin/product-list/:productId',adminProductController.listProduct)
-router.post('/admin/product-unlist/:productId',adminProductController.unlistProduct)
+router.get('/admin/product-list/:productId',adminAuth.noSession,adminProductController.listProduct)
+router.get('/admin/product-unlist/:productId',adminAuth.noSession,adminProductController.unlistProduct)
 
-router.get('/product',adminProductController.product)
+router.get('/product',adminAuth.noSession,adminProductController.product)
 
-router.get('/addproduct',adminProductController.addproduct)
+router.get('/addproduct',adminAuth.noSession,adminProductController.addproduct)
 router.post('/addproduct',upload.array('image',3),adminProductController.createProduct)
 
-router.get('/editproduct/:productId',adminProductController.editproduct)
+router.get('/editproduct/:productId',adminAuth.noSession,adminProductController.editproduct)
+router.post('/editproduct/:productId',upload.array('image',3),adminProductController.updateProduct)
 
-router.get('/category',adminCategoryController.category)
+router.get('/category',adminAuth.noSession,adminCategoryController.category)
 
-router.get('/addcategory',adminCategoryController.addcategory)
+router.get('/addcategory',adminAuth.noSession,adminCategoryController.addcategory)
 router.post('/addcategory',adminCategoryController.createcategory)
 
+router.post('/adminlogout',adminController.adminlogout)
 
 module.exports=router

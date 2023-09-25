@@ -30,7 +30,18 @@ const userSchema=new mongoose.Schema({
     },
     otp:{
         type:String,
-    }
+    },
+    cart:[{
+        productId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Product',
+            required:true
+        },
+        quantity:{
+            type:Number,
+            default:1
+        }
+    }]
 });
 
 module.exports=mongoose.model('User',userSchema)

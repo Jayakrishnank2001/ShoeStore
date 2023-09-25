@@ -7,6 +7,7 @@ const session=require('express-session')
 const {v4:uuidv4}=require('uuid')
 const bcrypt=require('bcrypt')
 const connectDB=require('./config/db')
+const nocache=require('nocache')
 //const expressLayouts=require('express-ejs-layouts')
 
 const app=express()
@@ -29,6 +30,13 @@ app.use(session({
     resave: false,
     saveUninitialized: true
   }));
+
+app.use(nocache());
+
+app.use((req,res,next)=>{
+    res.set("Cache-control","no-store,no-cache")
+    next()
+})
 //templating engine
 //app.use(expressLayouts)
 //app.set('layout','./layouts/main')
