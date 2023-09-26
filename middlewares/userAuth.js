@@ -6,7 +6,7 @@ const bcrypt=require('bcrypt')
 
 exports.noSession=async(req,res,next)=>{
     try{
-        if(!req.session.user){
+        if(!req.session.userId){
            return res.redirect('/login')
         }
         return next()
@@ -19,7 +19,7 @@ exports.noSession=async(req,res,next)=>{
 
 exports.yesSession=async(req,res,next)=>{
     try{
-        if(req.session.user){
+        if(req.session.userId){
             return res.redirect('/home')
         }
         return next()

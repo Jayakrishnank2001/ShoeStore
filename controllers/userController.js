@@ -14,7 +14,20 @@ exports.loginPage=async(req,res)=>{
 }
 
 exports.cartPage=async(req,res)=>{
-  res.render('./user/cart')
+    try {
+      const userId=req.session.userId;
+      const user=await User.findById(userId).populate('cart.productId');
+      const cartItems=user.cart.map(item=>{
+        return{
+          product:item.productId,
+          quantity:item.quantity
+        };
+      });
+      res.render('./user/cart',{cartItems})
+    } catch (error) {
+      console.error(error)
+      res.status(500).send('Internal Server Error')
+    }
 }
 
 exports.checkoutPage=async(req,res)=>{
@@ -291,7 +304,7 @@ exports.userlogin=async(req,res)=>{
         return res.render('./login/userlogin',{alert:"Can't access your account."})
       }
       else if(user.email===email && passwordMatch){
-        req.session.user=user;
+        req.session.userId=user._id;
         res.redirect('/')
       }else{
         return res.render('./login/userLogin',{alert:'Invalid Password or Email.'})
@@ -320,28 +333,39 @@ exports.forgototpverify=async(req,res)=>{
 
 //product add to the cart
 exports.addToCart=async(req,res)=>{
-  try{
+  try {
+    const productId=req.params.productId;
+    console.log(productId)
+    let userId=req.session.userId;
+    console.log(userId)
+    const user=await User.findOne({_id:userId,'cart.productId':productId});
+    if(user){
+      res.json({'data':'Already added this product to cart.'});
+    }else{
+      let user=await User.findByIdAndUpdate(
+          userId,
+          {$push:{cart:{productId:productId,quantity:1}}},
+          {new:true}
+      );
+      res.json({'data':'Product added to cart successfully'})
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
+//remove product from the cart
+exports.removeFromCart=async(req,res)=>{
+  try {
+    const userId=req.session.userId
     const productId=req.params.productId
-    const product=await Product.findById(productId)
-    if(!product){
-      return res.status(404).json({error:'Product not found'});
-    }
-    if(!req.session || !req.session.user){
-      return res.status(401).json({error:'Unauthorized'})
-    }
-    const userId=req.session.user._id
-    const user=await User.findById(userId)
-    if(!user){
-      return res.status(404).json({error:'User not found'})
-    }
-    user.cart.push({
-      productId:product._id,
-      quantity:1
-    });
-    await user.save()
-    res.status(200).json({message:'Product added to cart successfully'})
-  }catch(error){
-    console.error(error);
+    const user=await User.findByIdAndUpdate(userId,
+      {$pull:{cart:{productId}}},
+      {new:true}
+      );
+  } catch (error) {
+    console.error(error)
     res.status(500).send('Internal Server Error')
   }
 }

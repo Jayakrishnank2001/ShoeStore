@@ -29,8 +29,10 @@ router.get('/womenproducts',userController.womenproductspage)
 
 router.get('/userproduct/:productId',userController.productpage)
 
-router.get('/cart',userController.cartPage)
-router.post('/addCart/:productId',userAuth.noSession,userController.addToCart)
+router.get('/cart',userAuth.noSession,userController.cartPage)
+router.get('/addcart/:productId',userAuth.noSession,userController.addToCart)
+
+router.get('/removecart/:productId',userAuth.noSession,userController.removeFromCart)
 
 router.get('/checkout',userController.checkoutPage)
 

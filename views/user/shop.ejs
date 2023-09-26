@@ -65,7 +65,7 @@
 			    						<p class="price"><span>₹<%= product.price %></span></p>
 			    					</div>
 			    					<p class="bottom-area d-flex px-3">
-		    							<a href="#" class="add-to-cart text-center py-2 mr-1" onclick="addToCart('<%= product._id %>')">
+		    							<a href="/products" class="add-to-cart text-center py-2 mr-1" onclick="addToCart('<%= product._id %>')">
 											<span>Add to cart <i class="ion-ios-add ml-1"></i></span>
 										</a>
 		    							<a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a>
@@ -253,24 +253,23 @@
     }
 
 
-	function addToCart(productId) {
-    try {
-        const response = fetch(`/addCart/${productId}`, {
-            method: 'POST',
-        });
-
-        if (response.ok) {
-            // Product added to cart successfully
-            console.log('Product added to cart');
-        } else {
-            // Handle error response (e.g., product not found or unauthorized)
-            const data = response.json();
-            console.error('Error:', data.error);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-   }
+	async function addToCart(productId){
+		await fetch(`/addcart/${productId}`).then(res=>res.json()).then(data=>{
+			if(data.data=='Product added to the cart successfully'){
+				Swal.fire({
+				icon:'success',
+				title:'Product added to cart successfully',
+				timer:2000,
+				})
+			}else if(data.data=='Already added this product to cart.'){
+                Swal.fire({
+				icon:'warning',
+				title:'Already added this product to cart.',
+				timer:2000,
+				})
+			}
+		})
+	}
 
 
 	</script>

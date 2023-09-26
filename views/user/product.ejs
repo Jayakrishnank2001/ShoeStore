@@ -60,8 +60,8 @@
 	          	</div>
           	</div>
           	<p>
-                <a href="" class="btn btn-black py-3 px-5 mr-2" id="addToCartButton">Add to Cart</a>
-                <a href="" class="btn btn-primary py-3 px-5">Buy now</a>
+                <a href="/userproduct/<%= product._id %>" class="btn btn-black py-3 px-5 mr-2" id="addToCartButton" onclick="addToCart('<%= product._id %>')">Add to Cart</a>
+                <a href="#" class="btn btn-primary py-3 px-5">Buy now</a>
              
               
           </p>
@@ -107,7 +107,29 @@
     	</div>
     </section>
 
-  
+    <script>
+
+
+   async function addToCart(productId){
+		await fetch(`/addcart/${productId}`).then(res=>res.json()).then(data=>{
+			if(data.data=='Product added to the cart successfully'){
+				Swal.fire({
+				icon:'success',
+				title:'Product added to cart successfully',
+				timer:2000,
+				})
+			}else if(data.data=='Already added this product to cart.'){
+        Swal.fire({
+				icon:'warning',
+				title:'Already added this product to cart.',
+				timer:2000,
+				})
+			}
+		})
+	 }
+
+
+	</script>
 		
 
    <%- include('../partials/homefooter.ejs') %>

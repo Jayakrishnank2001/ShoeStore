@@ -58,26 +58,31 @@
 						      </tr>
 						    </thead>
 						    <tbody>
+							  <% cartItems.forEach(item=>{ %>
 						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><img src='' style="width:80px; height:80px;"></td>
+						        <td class="product-remove"><a href="/cart" onclick="cartRemove('<%= item.product._id %>')"><span class="ion-ios-close"></span></a></td>
+
+						        <td class="image-prod"><img src='/uploads/<%= item.product.image %>' style="width:80px; height:80px;"></td>
 						        
 						        <td class="product-name">
-						        	<h3></h3>
+						        	<h3><%= item.product.productName %></h3>
 						        	
 						        </td>
 						        
-						        <td class="price">₹</td>
+						        <td class="price">₹<%= item.product.price %></td>
 						        
 						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
+									<div class="input-group mb-3">
+										<button class="quantity-decrement btn btn-primary" type="button">-</button>
+										<span class="quantity-value">1</span>
+										<button class="quantity-increment btn btn-primary" type="button">+</button>
+									</div>
+								</td>
+								
 						        
-						        <td class="total">₹</td>
+						        <td class="total">₹<%= item.product.price %></td>
 						      </tr>
+							<% }); %>
 						    </tbody>
 						  </table>
 					  </div>
@@ -112,6 +117,7 @@
 		</section>
 
   <script>
+
 		$(document).ready(function(){
 
 		var quantitiy=0;
@@ -146,6 +152,48 @@
 		    });
 		    
 		});
+         
+		//product remove from the cart
+		async function cartRemove(productId){
+			await fetch(`/removecart/${productId}`).then(res=>res.json()).then(data=>{
+				if(data.data=='Product removed from the cart successfully'){
+					Swal.fire({
+					icon:'success',
+					title:'Product removed from the cart successfully',
+					timer:2000
+					})
+				}
+			})
+		}
+
+
+
+	//product quantity increase and decrease
+	document.addEventListener('DOMContentLoaded', () => {
+    const quantityContainers = document.querySelectorAll('.quantity');
+
+    quantityContainers.forEach(container => {
+        const decrementButton = container.querySelector('.quantity-decrement');
+        const incrementButton = container.querySelector('.quantity-increment');
+        const quantityValue = container.querySelector('.quantity-value');
+
+        let quantity = parseInt(quantityValue.textContent, 10) || 1;
+
+        decrementButton.addEventListener('click', () => {
+            if (quantity > 1) {
+                quantity--;
+                quantityValue.textContent = quantity;
+            }
+        });
+
+        incrementButton.addEventListener('click', () => {
+            quantity++;
+            quantityValue.textContent = quantity;
+        });
+      });
+    });
+
+
 	</script>
     
 	<%- include('../partials/homefooter.ejs') %>
