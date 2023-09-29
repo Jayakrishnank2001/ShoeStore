@@ -19,7 +19,7 @@ const userSchema=new mongoose.Schema({
     },
     password:{
         type:String,
-        required:true,
+    //    required:true,
     },
     blocked:{
         type:Boolean,
@@ -41,7 +41,17 @@ const userSchema=new mongoose.Schema({
             type:Number,
             default:1
         }
-    }]
+    }],
+    gender:{
+        type:String,
+    },
+    dateOfBirth:{
+        type:Date,
+    },
+    profilePic : {
+        type : [String],
+        // require : true
+    }
 });
 
 module.exports=mongoose.model('User',userSchema)

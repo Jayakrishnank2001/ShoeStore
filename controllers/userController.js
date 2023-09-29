@@ -13,10 +13,21 @@ exports.loginPage=async(req,res)=>{
     res.render('./login/userLogin')
 }
 
+//user profile page
 exports.userprofile=async(req,res)=>{
-  res.render('./user/userprofile')
+  try {
+    const userId=req.session.userId
+    const user=await User.findById(userId)
+    res.render('./user/userprofile',{user})
+  }catch(error){
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
 }
 
+exports.userAddress=async(req,res)=>{
+  res.render('./user/address')
+}
 exports.checkoutPage=async(req,res)=>{
   res.render('./user/checkout')
 }
@@ -359,6 +370,56 @@ exports.userLogout=async(req,res)=>{
   try {
     req.session.destroy()
     res.redirect('/login')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
+//change User password on the user profile
+exports.changePassword=async(req,res)=>{
+  try {
+    const { currentPassword,newPassword,confirmPassword } =req.body;
+    const userId=req.session.userId
+    const user=await User.findById(userId)
+    const passwordMatch=await bcrypt.compare(currentPassword,user.password)
+    if(!passwordMatch){
+      res.render('./user/address',{alert:"Password is not correct"})
+    }
+    if (newPassword !== confirmPassword) {
+      return res.render('./user/address', { alert: "Passwords do not match" });
+    }
+    if (newPassword.length < 6) {
+      return res.render('./user/address', { alert: "Password must be at least 6 characters long" });
+    }
+    const hashedPassword=await bcrypt.hash(newPassword,10)
+    user.password=hashedPassword
+    await user.save();
+    req.session.destroy()
+    res.redirect('/login')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
+//user personal information update
+exports.userInfoUpdate=async(req,res)=>{
+  try {
+    const {firstName,lastName,mobileNumber,email,dateOfBirth,gender}=req.body;
+    const userId=req.session.userId
+    const user=await User.findById(userId)
+    const updatedFields={
+      firstName,
+      lastName,
+      mobileNumber,
+      email,
+      dateOfBirth,
+      gender
+   };
+   Object.assign(user, updatedFields);
+   await user.save();
+   res.render('./user/userprofile',{user})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')

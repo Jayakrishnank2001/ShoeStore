@@ -38,5 +38,15 @@ router.get('/profile',userAuth.noSession,userController.userprofile)
 
 router.get('/orders',userAuth.noSession,userController.orderHistory)
 
+router.get('/address',userAuth.noSession,userController.userAddress)
+
 router.post('/logout',userAuth.noSession,userController.userLogout)
+
+router.post('/changepassword',userAuth.noSession,userController.changePassword)
+
+router.post('/update-user-info',userAuth.noSession,userController.userInfoUpdate)
+
+
+
+
 module.exports=router
