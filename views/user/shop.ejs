@@ -9,7 +9,6 @@
 
     <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="css/animate.css">
-    
     <link rel="stylesheet" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/owl.theme.default.min.css">
     <link rel="stylesheet" href="css/magnific-popup.css">
@@ -25,6 +24,8 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
   </head>
   <body class="goto-here">
     
@@ -36,7 +37,7 @@
     			<div class="col-md-8 col-lg-10 order-md-last">
     				<div class="row">
 						<% products.forEach(product => { %>
-						<% if (product.isActive && product.gender==="men") { %>
+						<% if (product.isActive) { %>
 		    			<div class="col-sm-12 col-md-12 col-lg-4 ftco-animate d-flex">
 		    				<div class="product d-flex flex-column">
 		    					<a href="/userproduct/<%= product._id %>" class="img-prod"><img class="img-fluid" src="uploads/<%= product.image %>" alt="Colorlib Template">
@@ -81,15 +82,15 @@
 						  <div class="block-27">
 							<ul>
 							  <% if (currentPage > 1) { %>
-								<li><a href="/products?page=<%= currentPage - 1 %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>">&lt;</a></li>
+								<li><a href="/products?page=<%= currentPage - 1 %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>">&lt;</a></li>
 							  <% } %>
 							  <% for (let i = 1; i <= totalPages; i++) { %>
 								<li class="<%= i === currentPage ? 'active' : '' %>">
-								  <a href="/products?page=<%= i %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>"><span><%= i %></span></a>
+								  <a href="/products?page=<%= i %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>"><span><%= i %></span></a>
 								</li>
 							  <% } %>
 							  <% if (currentPage < totalPages) { %>
-								<li><a href="/products?page=<%= currentPage + 1 %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>">&gt;</a></li>
+								<li><a href="/products?page=<%= currentPage + 1 %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>">&gt;</a></li>
 							  <% } %>
 							</ul>
 						  </div>
@@ -107,7 +108,7 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingTwo">
 												<h4 class="panel-title">
-													<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Men's Shoes
+													<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Shoes Categories
 													</a>
 												</h4>
 											</div>
@@ -116,7 +117,7 @@
 													<% categories.forEach(category => { %>
 														<% if (category.isActive) { %>
 															<ul>
-																<li><a href="/products?categoryId=<%= category._id %>"><%= category.categoryName %></a></li>
+																<li><a href="/products?categoryId=<%= category._id %>&gender=<%= gender %>"><%= category.categoryName %></a></li>
 															</ul>
 														<% } %>
 													<% }); %>
@@ -249,7 +250,7 @@
         const priceTo = priceToSelect.value;
 
         // Redirect to the filtered products page with the selected price range
-        window.location.href = `/products?priceFrom=${priceFrom}&priceTo=${priceTo}`;
+        window.location.href = `/products?priceFrom=${priceFrom}&priceTo=${priceTo}&gender=<%= gender %>`;
     }
 
 

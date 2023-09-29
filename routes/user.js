@@ -25,8 +25,6 @@ router.post('/resetpassword',userController.reset)
 
 router.get('/products',userController.productspage)
 
-router.get('/womenproducts',userController.womenproductspage)
-
 router.get('/userproduct/:productId',userController.productpage)
 
 router.get('/cart',userAuth.noSession,userController.cartPage)
@@ -34,9 +32,11 @@ router.get('/addcart/:productId',userAuth.noSession,userController.addToCart)
 
 router.get('/removecart/:productId',userAuth.noSession,userController.removeFromCart)
 
-router.get('/checkout',userController.checkoutPage)
+router.get('/checkout',userAuth.noSession,userController.checkoutPage)
 
+router.get('/profile',userAuth.noSession,userController.userprofile)
 
+router.get('/orders',userAuth.noSession,userController.orderHistory)
 
-
+router.post('/logout',userAuth.noSession,userController.userLogout)
 module.exports=router

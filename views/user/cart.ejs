@@ -6,18 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-
     <link rel="stylesheet" href="/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="/css/animate.css">
-    
     <link rel="stylesheet" href="/css/owl.carousel.min.css">
     <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+	
     <link rel="stylesheet" href="/css/magnific-popup.css">
-
     <link rel="stylesheet" href="/css/aos.css">
 
     <link rel="stylesheet" href="/css/ionicons.min.css">
-
     <link rel="stylesheet" href="/css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="/css/jquery.timepicker.css">
 
@@ -25,6 +22,8 @@
     <link rel="stylesheet" href="/css/flaticon.css">
     <link rel="stylesheet" href="/css/icomoon.css">
     <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
   </head>
   <body class="goto-here">
 		
@@ -71,17 +70,25 @@
 						        
 						        <td class="price">₹<%= item.product.price %></td>
 						        
-						        <td class="quantity">
-									<div class="input-group mb-3">
-										<button class="quantity-decrement btn btn-primary" type="button">-</button>
-										<span class="quantity-value">1</span>
-										<button class="quantity-increment btn btn-primary" type="button">+</button>
-									</div>
-								</td>
+						        <td class="quantity" id="product<%= item.product._id %>">
+									<form class="input-group">
+									  <div class="input-group-prepend">
+										<button class="btn btn-outline-secondary btn-lg" id="decrease<%= item.product._id %>" onclick="decreaseValue('<%= item.product._id %>')" type="button">-</button>
+									  </div>
+									  <input class="form-control input-sm" type="number" id="number<%= item.product._id %>" value="1" min="1" max="<%= item.product.quantity %>" readonly>
+									  <div class="input-group-append">
+										<button class="btn btn-outline-secondary btn-lg" id="increase<%= item.product._id %>" onclick="increaseValue('<%= item.product._id %>')" type="button">+</button>
+									  </div>
+									</form>
+								  </td>
+								  
+										
 								
 						        
-						        <td class="total">₹<%= item.product.price %></td>
-						      </tr>
+								  <td class="total">₹<span id="totalAmount<%= item.product._id %>"></span></td>
+
+
+							</tr>
 							<% }); %>
 						    </tbody>
 						  </table>
@@ -94,20 +101,20 @@
     					<h3>Cart Totals</h3>
     					<p class="d-flex">
     						<span>Subtotal</span>
-    						<span>$20.60</span>
+    						<span>₹20.60</span>
     					</p>
     					<p class="d-flex">
     						<span>Delivery</span>
-    						<span>$0.00</span>
+    						<span>₹0.00</span>
     					</p>
     					<p class="d-flex">
     						<span>Discount</span>
-    						<span>$3.00</span>
+    						<span>₹3.00</span>
     					</p>
     					<hr>
     					<p class="d-flex total-price">
     						<span>Total</span>
-    						<span>$17.60</span>
+    						<span>₹17.60</span>
     					</p>
     				</div>
     				<p class="text-center"><a href="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
@@ -116,7 +123,9 @@
 			</div>
 		</section>
 
-  <script>
+
+    <script>
+
 
 		$(document).ready(function(){
 
@@ -166,34 +175,52 @@
 			})
 		}
 
+		function updateTotalAmount(productId) {
+  var quantityInput = document.getElementById('number' + productId);
+  var priceElement = document.getElementById('totalAmount' + productId);
+  var productPrice = parseFloat(priceElement.dataset.price);
+
+  if (!isNaN(productPrice)) {
+    var quantity = parseInt(quantityInput.value);
+    var totalPrice = quantity * productPrice;
+    
+    if (!isNaN(totalPrice)) {
+      priceElement.innerText = '₹' + totalPrice.toFixed(2);
+    } else {
+      console.error('Failed to calculate total price. Invalid quantity or product price.');
+    }
+  } else {
+    console.error('Invalid product price.');
+  }
+}
 
 
-	//product quantity increase and decrease
-	document.addEventListener('DOMContentLoaded', () => {
-    const quantityContainers = document.querySelectorAll('.quantity');
+	  //increase product quantity
+      function increaseValue(productId) {
+      var quantityInput = document.getElementById('number' + productId);
+      var currentValue = parseInt(quantityInput.value);
+      var maxQuantity = parseInt(quantityInput.getAttribute('max'));
 
-    quantityContainers.forEach(container => {
-        const decrementButton = container.querySelector('.quantity-decrement');
-        const incrementButton = container.querySelector('.quantity-increment');
-        const quantityValue = container.querySelector('.quantity-value');
+      if (currentValue < maxQuantity) {
+        quantityInput.value = currentValue + 1;
+        updateTotalAmount(productId);
+      }
+    }
 
-        let quantity = parseInt(quantityValue.textContent, 10) || 1;
+	//decrease product quantity
+    function decreaseValue(productId) {
+       var quantityInput = document.getElementById('number' + productId);
+       var currentValue = parseInt(quantityInput.value);
+       var minQuantity = parseInt(quantityInput.getAttribute('min'));
 
-        decrementButton.addEventListener('click', () => {
-            if (quantity > 1) {
-                quantity--;
-                quantityValue.textContent = quantity;
-            }
-        });
-
-        incrementButton.addEventListener('click', () => {
-            quantity++;
-            quantityValue.textContent = quantity;
-        });
-      });
-    });
+      if (currentValue > minQuantity) {
+        quantityInput.value = currentValue - 1;
+        updateTotalAmount(productId);
+     }
+    }
 
 
 	</script>
     
+
 	<%- include('../partials/homefooter.ejs') %>
