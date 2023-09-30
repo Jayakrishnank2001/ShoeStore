@@ -48,10 +48,26 @@ const userSchema=new mongoose.Schema({
     dateOfBirth:{
         type:Date,
     },
-    profilePic : {
-        type : [String],
-        // require : true
-    }
+    userAddress:[{
+        address:{
+            type:String
+        },
+        town:{
+            type:String
+        },
+        pincode:{
+            type:String
+        },
+        district:{
+            type:String
+        },
+        state:{
+            type:String
+        },
+        country:{
+            type:String
+        }
+    }],
 });
 
 module.exports=mongoose.model('User',userSchema)

@@ -38,15 +38,17 @@ router.get('/profile',userAuth.noSession,userController.userprofile)
 
 router.get('/orders',userAuth.noSession,userController.orderHistory)
 
-router.get('/address',userAuth.noSession,userController.userAddress)
-
 router.post('/logout',userAuth.noSession,userController.userLogout)
 
+router.get('/changepassword',userAuth.noSession,userController.passwordChange)
 router.post('/changepassword',userAuth.noSession,userController.changePassword)
 
 router.post('/update-user-info',userAuth.noSession,userController.userInfoUpdate)
 
-
+router.get('/address',userAuth.noSession,userController.userAddress)
+router.post('/address',userAuth.noSession,userController.addAddress)
+router.get('/deleteaddress/:addressId',userAuth.noSession,userController.deleteAddress)
+router.post('/editaddress/:addressId',userAuth.noSession,userController.editAddress)
 
 
 module.exports=router

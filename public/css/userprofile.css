@@ -57,3 +57,7 @@ body{margin-top:20px;
         margin-left: 1rem;
         margin-right: 1rem;
     }
+    .larger-image {
+        width: 195px; 
+        height: 195px;
+    }

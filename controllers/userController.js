@@ -25,14 +25,21 @@ exports.userprofile=async(req,res)=>{
   }
 }
 
-exports.userAddress=async(req,res)=>{
-  res.render('./user/address')
+exports.passwordChange=async(req,res)=>{
+  res.render('./user/changepassword')
 }
 exports.checkoutPage=async(req,res)=>{
   res.render('./user/checkout')
 }
 exports.otppage=async(req,res)=>{
-res.render('./login/userloginotp')
+  res.render('./login/userloginotp')
+}
+
+exports.userAddress=async(req,res)=>{
+  const userId=req.session.userId
+  const user= await User.findById(userId);
+  const addressDetails =user.userAddress;
+  res.render('./user/address',{addressDetails})
 }
 
 exports.forgotPage=async(req,res)=>{
@@ -384,13 +391,13 @@ exports.changePassword=async(req,res)=>{
     const user=await User.findById(userId)
     const passwordMatch=await bcrypt.compare(currentPassword,user.password)
     if(!passwordMatch){
-      res.render('./user/address',{alert:"Password is not correct"})
+      return res.render('./user/changepassword',{alert:"Password is not correct"})
     }
     if (newPassword !== confirmPassword) {
-      return res.render('./user/address', { alert: "Passwords do not match" });
+      return res.render('./user/changepassword', { alert: "Passwords do not match" });
     }
     if (newPassword.length < 6) {
-      return res.render('./user/address', { alert: "Password must be at least 6 characters long" });
+      return res.render('./user/changepassword', { alert: "Password must be at least 6 characters long" });
     }
     const hashedPassword=await bcrypt.hash(newPassword,10)
     user.password=hashedPassword
@@ -420,6 +427,65 @@ exports.userInfoUpdate=async(req,res)=>{
    Object.assign(user, updatedFields);
    await user.save();
    res.render('./user/userprofile',{user})
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
+//add new address to the user saved addresses
+exports.addAddress=async(req,res)=>{
+  try {
+    const { address,town,pincode,district,state,country }=req.body
+    const userId=req.session.userId
+    const user=await User.findByIdAndUpdate(
+      userId,
+      {$push:{userAddress:{address:address,town:town,pincode:pincode,district:district,state:state,country:country}}},
+      {new:true}
+    )
+   res.redirect('/address')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
+//delete user saved address
+exports.deleteAddress=async(req,res)=>{
+  try {
+    const addressId=req.params.addressId
+    const userId=req.session.userId
+    const user=await User.findByIdAndUpdate(userId,{
+      $pull:{userAddress:{_id:addressId}}
+    },{new:true});
+    res.redirect('/address')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
+//edit user address
+exports.editAddress=async(req,res)=>{
+  try {
+    const addressId=req.params.addressId
+    const userId=req.session.userId
+    const { address,town,pincode,district,state,country}=req.body;
+    const user=await User.findOneAndUpdate(
+      {_id:userId,'userAddress._id':addressId},
+      {
+        $set:{
+          'userAddress.$.address':address,
+          'userAddress.$.town':town,
+          'userAddress.$.pincode':pincode,
+          'userAddress.$.district':district,
+          'userAddress.$.state':state,
+          'userAddress.$.country':country,
+        },
+      },
+      {new:true}
+    );
+    res.redirect('/address')
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
