@@ -65,14 +65,20 @@ exports.orderHistory=async(req,res)=>{
 exports.cartPage=async(req,res)=>{
   try {
     const userId=req.session.userId;
-    const user=await User.findById(userId).populate('cart.productId');
+    const user = await User.findById(userId).populate('cart.productId').exec();
+    // const user=await User.findById(userId).populate('cart.productId');
     const cartItems=user.cart.map(item=>{
       return{
         product:item.productId,
-        quantity:item.quantity
+        totalPrice:item.totalPrice,
+        quantity:item.quantity,
       };
     });
-    res.render('./user/cart',{cartItems})
+
+    const totalSum = user.cart.reduce((sum,cartItems)=>{
+      return sum + cartItems.totalPrice
+  },0)
+    res.render('./user/cart',{cartItems,totalSum})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -337,16 +343,15 @@ exports.forgototpverify=async(req,res)=>{
 exports.addToCart=async(req,res)=>{
   try {
     const productId=req.params.productId;
-    console.log(productId)
+    const product = await Product.findById(productId);
     let userId=req.session.userId;
-    console.log(userId)
     const user=await User.findOne({_id:userId,'cart.productId':productId});
     if(user){
       res.json({'data':'Already added this product to cart.'});
     }else{
       let user=await User.findByIdAndUpdate(
           userId,
-          {$push:{cart:{productId:productId,quantity:1}}},
+          {$push:{cart:{productId:productId,quantity:1,totalPrice:product.price}}},
           {new:true}
       );
       res.json({'data':'Product added to cart successfully'})
@@ -486,6 +491,49 @@ exports.editAddress=async(req,res)=>{
       {new:true}
     );
     res.redirect('/address')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
+
+//update cart item quantity and price
+exports.updateQuantity=async(req,res)=>{
+  try {
+    const { productId, newQuantity } = req.params 
+    const userId = req.session.userId
+    const user = await User.findById(userId)
+    if (!user) {
+        return res.status(404).json({error: 'User not found'})
+    }
+    // Find the cart item with the matching product ID
+    const cartItem = user.cart.find((item) => item.productId._id.toString() === productId)
+    if (!cartItem) {
+        return res.status(404).json({error: 'Product not found in the cart'})
+    } 
+    const product=await Product.findOne({_id:productId})
+    const proSinglePrice=product.price
+    cartItem.quantity = parseInt(newQuantity)
+    cartItem.totalPrice = proSinglePrice * cartItem.quantity
+
+     // Calculating total sum of the  product in cart
+     const totalSum = user.cart.reduce((sum,cartItem)=>{
+        return sum + cartItem.totalPrice
+    },0)
+    await user.save()
+    // Respond with the updated total price
+    res.json({updatedTotalPrice: cartItem.totalPrice,totalSum})
+} catch (error) {
+    console.error('Error:',error)
+}
+}
+
+//to get the product quantity to increase the product quantity in cart
+exports.getProductDetails=async(req,res)=>{
+  try {
+    const productId=req.params.productId
+    const product=await Product.findById(productId)
+    res.json({availableQuantity:product.quantity})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')

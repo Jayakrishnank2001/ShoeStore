@@ -50,5 +50,7 @@ router.post('/address',userAuth.noSession,userController.addAddress)
 router.get('/deleteaddress/:addressId',userAuth.noSession,userController.deleteAddress)
 router.post('/editaddress/:addressId',userAuth.noSession,userController.editAddress)
 
+router.put('/updateQuantity/:productId/:newQuantity',userAuth.noSession,userController.updateQuantity)
+router.get('/getproduct/:productId',userAuth.noSession,userController.getProductDetails)
 
 module.exports=router

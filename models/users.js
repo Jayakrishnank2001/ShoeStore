@@ -40,6 +40,9 @@ const userSchema=new mongoose.Schema({
         quantity:{
             type:Number,
             default:1
+        },
+        totalPrice:{
+            type:Number,
         }
     }],
     gender:{

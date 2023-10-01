@@ -66,7 +66,7 @@
 			    						<p class="price"><span>₹<%= product.price %></span></p>
 			    					</div>
 			    					<p class="bottom-area d-flex px-3">
-		    							<a href="/products" class="add-to-cart text-center py-2 mr-1" onclick="addToCart('<%= product._id %>')">
+		    							<a href="/products?gender=<%= product.gender %>" class="add-to-cart text-center py-2 mr-1" onclick="addToCart('<%= product._id %>')">
 											<span>Add to cart <i class="ion-ios-add ml-1"></i></span>
 										</a>
 		    						</p>
@@ -81,15 +81,15 @@
 						  <div class="block-27">
 							<ul>
 							  <% if (currentPage > 1) { %>
-								<li><a href="/products?page=<%= currentPage - 1 %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>">&lt;</a></li>
+								<li><a href="/products?page=<%= currentPage - 1 %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>&searchQuery=<%= searchQuery %>">&lt;</a></li>
 							  <% } %>
 							  <% for (let i = 1; i <= totalPages; i++) { %>
 								<li class="<%= i === currentPage ? 'active' : '' %>">
-								  <a href="/products?page=<%= i %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>"><span><%= i %></span></a>
+								  <a href="/products?page=<%= i %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>&searchQuery=<%= searchQuery %>"><span><%= i %></span></a>
 								</li>
 							  <% } %>
 							  <% if (currentPage < totalPages) { %>
-								<li><a href="/products?page=<%= currentPage + 1 %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>">&gt;</a></li>
+								<li><a href="/products?page=<%= currentPage + 1 %>&gender=<%= gender %>&priceFrom=<%= priceFrom %>&priceTo=<%= priceTo %>&searchQuery=<%= searchQuery %>">&gt;</a></li>
 							  <% } %>
 							</ul>
 						  </div>

@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="/css/icomoon.css">
     <link rel="stylesheet" href="/css/style.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
   </head>
   <body class="goto-here">
 		
@@ -73,22 +73,22 @@
 						        <td class="quantity" id="product<%= item.product._id %>">
 									<form class="input-group">
 									  <div class="input-group-prepend">
-										<button class="btn btn-outline-secondary btn-lg" id="decrease<%= item.product._id %>" onclick="decreaseValue('<%= item.product._id %>')" type="button">-</button>
+										<button class="btn btn-outline-secondary btn-lg minus-button" data-productid="<%= item.product._id %>" data-quantity="<%= item.quantity-1 %>"><i class="fas fa-minus"></i></button>
 									  </div>
-									  <input class="form-control input-sm" type="number" id="number<%= item.product._id %>" value="1" min="1" max="<%= item.product.quantity %>" readonly>
+									  <input class="form-control" name="quantity" type="number" id="quantityInput<%= item.product._id %>" min="1" value="<%= item.quantity %>" readonly/>
 									  <div class="input-group-append">
-										<button class="btn btn-outline-secondary btn-lg" id="increase<%= item.product._id %>" onclick="increaseValue('<%= item.product._id %>')" type="button">+</button>
+										<button class="btn btn-outline-secondary btn-lg plus-button" data-productid="<%= item.product._id %>" data-quantity="<%= item.quantity+1 %>"><i class="fas fa-plus"></i></button>
 									  </div>
 									</form>
 								  </td>
-								  
-										
-								
-						        
-								  <td class="total">₹<span id="totalAmount<%= item.product._id %>"></span></td>
+						      
+								  <td class="total">
+                    
+                      <span id="totalPrice<%= item.product._id %>">₹<%= item.totalPrice %></span>
 
-
+                  </td>
 							</tr>
+
 							<% }); %>
 						    </tbody>
 						  </table>
@@ -101,7 +101,7 @@
     					<h3>Cart Totals</h3>
     					<p class="d-flex">
     						<span>Subtotal</span>
-    						<span>₹20.60</span>
+    						<span id="newTotalSumejs">₹<%= totalSum %></span>
     					</p>
     					<p class="d-flex">
     						<span>Delivery</span>
@@ -109,12 +109,12 @@
     					</p>
     					<p class="d-flex">
     						<span>Discount</span>
-    						<span>₹3.00</span>
+    						<span>₹0.00</span>
     					</p>
     					<hr>
     					<p class="d-flex total-price">
     						<span>Total</span>
-    						<span>₹17.60</span>
+    						<span id="newTotalSumClient">₹<%= totalSum %></span>
     					</p>
     				</div>
     				<p class="text-center"><a href="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
@@ -123,44 +123,7 @@
 			</div>
 		</section>
 
-
     <script>
-
-
-		$(document).ready(function(){
-
-		var quantitiy=0;
-		   $('.quantity-right-plus').click(function(e){
-		        
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		            
-		            $('#quantity').val(quantity + 1);
-
-		          
-		            // Increment
-		        
-		    });
-
-		     $('.quantity-left-minus').click(function(e){
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		      
-		            // Increment
-		            if(quantity>0){
-		            $('#quantity').val(quantity - 1);
-		            }
-		    });
-		    
-		});
          
 		//product remove from the cart
 		async function cartRemove(productId){
@@ -175,49 +138,117 @@
 			})
 		}
 
-		function updateTotalAmount(productId) {
-  var quantityInput = document.getElementById('number' + productId);
-  var priceElement = document.getElementById('totalAmount' + productId);
-  var productPrice = parseFloat(priceElement.dataset.price);
+    //funtion to update the total sum in the UI
+		const updateTotalSum=(newTotalSum)=>{
+			const totalSumElement=document.getElementById('newTotalSumejs')
+            if (totalSumElement) {
+                totalSumElement.textContent = `₹${newTotalSum}`
+            }
+        }
 
-  if (!isNaN(productPrice)) {
-    var quantity = parseInt(quantityInput.value);
-    var totalPrice = quantity * productPrice;
-    
-    if (!isNaN(totalPrice)) {
-      priceElement.innerText = '₹' + totalPrice.toFixed(2);
-    } else {
-      console.error('Failed to calculate total price. Invalid quantity or product price.');
-    }
-  } else {
-    console.error('Invalid product price.');
-  }
-}
+		// Handling Plus or Minus button
+        const plusButtons = document.querySelectorAll('.plus-button')
+        const minusButtons = document.querySelectorAll('.minus-button')
+        
+        // Function to update the quantity and total price in the UI
+        const updateUI = (productId, newQuantity, newTotalPrice, newTotalSum) => {
+            const quantityInput = document.querySelector(`#quantityInput${productId}`);
+            const totalPriceElement = document.querySelector(`#totalPrice${productId}`);
+            const totalSumElement = document.getElementById('newTotalSumejs');
+            const newTotalSumElement = document.getElementById('newTotalSumClient');
+            if (newTotalSumElement) {
+              newTotalSumElement.textContent = `₹${newTotalSum}`;
+            }
+            quantityInput.value = newQuantity;
+            totalPriceElement.innerHTML = `₹${newTotalPrice}`;
+            if (newTotalSum !== undefined) {
+                totalSumElement.textContent = `₹${newTotalSum}`; // Update total sum
+            }
+        }
 
+		   // Click event listeners to the plus buttons
+        plusButtons.forEach((plusButton) => {
+            plusButton.addEventListener('click', async (e) => {
+              e.preventDefault()
+                const productId = plusButton.getAttribute('data-productid')
+                const quantityInput = document.querySelector(`#quantityInput${productId}`)
+                let newQuantity = parseInt(quantityInput.value) || 0
+                
+                // Fetch the product details, including its available quantity
+                const productDetails = await fetch(`/getproduct/${productId}`, {
+                   method: 'GET',
+                   headers: {
+                     'Accept': 'application/json',
+                  },
+                }).then(res => res.json());
 
-	  //increase product quantity
-      function increaseValue(productId) {
-      var quantityInput = document.getElementById('number' + productId);
-      var currentValue = parseInt(quantityInput.value);
-      var maxQuantity = parseInt(quantityInput.getAttribute('max'));
+               if (productDetails && productDetails.availableQuantity !== undefined) {
+                 const availableQuantity = productDetails.availableQuantity;
+                
+                if (newQuantity < 5 && newQuantity < availableQuantity) {
+                    newQuantity += 1
+                    // fetch for update the quantity on the server
+                    const response = await fetch(`/updateQuantity/${productId}/${newQuantity}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json', // Specify JSON response
+                        },
+                    }).then(res => res.json())
+                        .then((response) => {
+                            if (response) {                        
+                                // parse the response JSON to get the updated total price
+                                // const { updatedTotalPrice, updatedTotalSum  } = await response.json()
+                                // Update the UI with the new quantity and total price
+                                updateUI(productId, newQuantity, response.updatedTotalPrice, response.totalSum)
+                                Swal.fire({
+                                    position: 'bottom',
+                                    title: '<i class="fas fa-check-circle"></i> Quantity Increased',
+                                    customClass: {
+                                        title: 'text-success',
+                                    },
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                })
+                            }
+                        })
+                }
+            }})
+        })
 
-      if (currentValue < maxQuantity) {
-        quantityInput.value = currentValue + 1;
-        updateTotalAmount(productId);
-      }
-    }
-
-	//decrease product quantity
-    function decreaseValue(productId) {
-       var quantityInput = document.getElementById('number' + productId);
-       var currentValue = parseInt(quantityInput.value);
-       var minQuantity = parseInt(quantityInput.getAttribute('min'));
-
-      if (currentValue > minQuantity) {
-        quantityInput.value = currentValue - 1;
-        updateTotalAmount(productId);
-     }
-    }
+        // Click event listeners to the minus button
+        minusButtons.forEach((minusButton) => {
+            minusButton.addEventListener('click', async (e) => {
+              e.preventDefault()
+                const productId = minusButton.getAttribute('data-productid')
+                const quantityInput = document.querySelector(`#quantityInput${productId}`)
+                let currentQuantity = parseInt(quantityInput.value) || 0
+                if (currentQuantity > 1) {
+                    currentQuantity -= 1 // Decrementing quantity
+                    // using fetch for updating the quantity on the server
+                    const response = await fetch(`/updateQuantity/${productId}/${currentQuantity}`, {
+                        method: 'PUT',
+                        'Accept': 'application/json',
+                    }).then(res => res.json())
+                        .then((response) => {
+                            if (response) {
+                                // Parse the response JSON to get the updated total price
+                                // const { updatedTotalPrice } = await response.json()
+                                // Update the UI with the new quantity and total price
+                                updateUI(productId, currentQuantity, response.updatedTotalPrice, response.totalSum)
+                                Swal.fire({
+                                    position: 'bottom',
+                                    title: '<i class="fas fa-check-circle"></i> Quantity Decreased',
+                                    customClass: {
+                                        title: 'text-success', // Apply the 'text-success' class to the title
+                                    },
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                })
+                            }
+                        })
+                }
+            })
+        })
 
 
 	</script>
