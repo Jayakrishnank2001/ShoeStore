@@ -69,7 +69,11 @@ const userSchema=new mongoose.Schema({
         },
         country:{
             type:String
-        }
+        },
+        isDefault: {
+            type: Boolean,
+            default: false,
+        },
     }],
 });
 

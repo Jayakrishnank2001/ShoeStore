@@ -44,6 +44,10 @@
                                             <p class="card-text">District : <%= address.district %></p>
                                             <p class="card-text">State : <%= address.state %></p>
                                             <p class="card-text">Country : <%= address.country %></p>
+                                            <div class="form-check" style="position: absolute; top: 10px; right: 10px;">
+                                                <input type="radio" class="form-check-input set-default-address" name="defaultAddress" data-address-id="<%= address._id %>">
+                                                <label class="form-check-label">Select Address</label>
+                                            </div>                                                                                                                         
                                             <div class="btn-group" role="group">
                                                     <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#editAddressModal<%= index %>">Edit</button>
                                             </div>
@@ -200,6 +204,38 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<script>
+
+const radioButtons = document.querySelectorAll('.set-default-address');
+
+radioButtons.forEach((radioButton) => {
+    radioButton.addEventListener('click', function () {
+        const addressId = this.getAttribute('data-address-id');
+
+        // Send an AJAX request to set the address as default
+        fetch(`/set-default-address/${addressId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                // Optionally, update the UI to indicate the selected default address
+                alert('Address selected successfully');
+            } else {
+                alert('Failed');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+});
+
+
+</script>
     
     
 </body>

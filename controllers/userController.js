@@ -29,7 +29,14 @@ exports.passwordChange=async(req,res)=>{
   res.render('./user/changepassword')
 }
 exports.checkoutPage=async(req,res)=>{
-  res.render('./user/checkout')
+  try {
+    const userId=req.session.userId
+    const user=await User.findById(userId)
+    const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
+    res.render('./user/checkout',{user,defaultAddress})
+  } catch (error) {
+    
+  }
 }
 exports.otppage=async(req,res)=>{
   res.render('./login/userloginotp')
@@ -537,5 +544,26 @@ exports.getProductDetails=async(req,res)=>{
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
+  }
+}
+
+//to set an address as default
+exports.setDefaultAddress=async(req,res)=>{
+  try {
+    const addressId=req.params.addressId;
+    const userId=req.session.userId;
+    const user=await User.findById(userId)
+    user.userAddress.forEach((address) => {
+      if (address._id.toString() === addressId) {
+          address.isDefault = true;
+      } else {
+          address.isDefault = false;
+      }
+    });
+    await user.save()
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ success: false });
   }
 }
