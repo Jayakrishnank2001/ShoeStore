@@ -57,15 +57,17 @@
 						      </tr>
 						    </thead>
 						    <tbody>
+                  <% if(cartItems.length===0) {%>
+                    <h3 class="text-center font-weight-bold">Your cart is Empty</h3>
+                    <% } %>
 							  <% cartItems.forEach(item=>{ %>
 						      <tr class="text-center">
-						        <td class="product-remove"><a href="/cart" onclick="cartRemove('<%= item.product._id %>')"><span class="ion-ios-close"></span></a></td>
+						        <td class="product-remove"><a href="#" onclick="cartRemove('<%= item.product._id %>')"><span class="ion-ios-close"></span></a></td>
 
 						        <td class="image-prod"><img src='/uploads/<%= item.product.image %>' style="width:80px; height:80px;"></td>
 						        
 						        <td class="product-name">
 						        	<h3><%= item.product.productName %></h3>
-						        	
 						        </td>
 						        
 						        <td class="price">₹<%= item.product.price %></td>
@@ -90,6 +92,7 @@
 							</tr>
 
 							<% }); %>
+              
 						    </tbody>
 						  </table>
 					  </div>
@@ -117,11 +120,17 @@
     						<span id="newTotalSumClient">₹<%= totalSum %></span>
     					</p>
     				</div>
-    				<p class="text-center"><a href="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+            <% if(cartItems.length===0) { %>
+    				<p class="text-center"><a href="/cart" class="btn btn-primary py-3 px-4" onclick="checkCartNotEmpty()">Proceed to Checkout</a></p>
+            <% }else{ %>
+              <p class="text-center"><a href="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+            <% } %>
     			</div>
     		</div>
 			</div>
 		</section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
          
@@ -132,11 +141,16 @@
 					Swal.fire({
 					icon:'success',
 					title:'Product removed from the cart successfully',
-					timer:2000
+          timer:2000,
+          showConfirmButton:false
 					})
+          setTimeout(()=>{
+            location.reload()
+          },2000)
 				}
 			})
 		}
+
 
     //funtion to update the total sum in the UI
 		const updateTotalSum=(newTotalSum)=>{
@@ -202,7 +216,7 @@
                                 updateUI(productId, newQuantity, response.updatedTotalPrice, response.totalSum)
                                 Swal.fire({
                                     position: 'bottom',
-                                    title: '<i class="fas fa-check-circle"></i> Quantity Increased',
+                                    title: '<i class="fas fa-plus-circle"></i> Quantity Increased',
                                     customClass: {
                                         title: 'text-success',
                                     },
@@ -237,9 +251,9 @@
                                 updateUI(productId, currentQuantity, response.updatedTotalPrice, response.totalSum)
                                 Swal.fire({
                                     position: 'bottom',
-                                    title: '<i class="fas fa-check-circle"></i> Quantity Decreased',
+                                    title: '<i class="fas fa-minus-circle"></i> Quantity Decreased',
                                     customClass: {
-                                        title: 'text-success', // Apply the 'text-success' class to the title
+                                        title: 'text-danger', // Apply the 'text-success' class to the title
                                     },
                                     showConfirmButton: false,
                                     timer: 1000

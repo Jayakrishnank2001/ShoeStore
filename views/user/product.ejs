@@ -60,7 +60,7 @@
 	          	</div>
           	</div>
           	<p>
-                <a href="/userproduct/<%= product._id %>" class="btn btn-black py-3 px-5 mr-2" id="addToCartButton" onclick="addToCart('<%= product._id %>')">Add to Cart</a>
+                <a href="#" class="btn btn-black py-3 px-5 mr-2" id="addToCartButton" onclick="addToCart('<%= product._id %>')">Add to Cart</a>
              
               
           </p>
@@ -106,6 +106,7 @@
     	</div>
     </section>
 
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
 
@@ -116,12 +117,16 @@
 				icon:'success',
 				title:'Product added to cart successfully',
 				timer:2000,
+				showConfirmButton: false,
+				position: 'top'
 				})
 			}else if(data.data=='Already added this product to cart.'){
         Swal.fire({
 				icon:'warning',
 				title:'Already added this product to cart.',
+				showConfirmButton: false,
 				timer:2000,
+				position: 'top'
 				})
 			}
 		})

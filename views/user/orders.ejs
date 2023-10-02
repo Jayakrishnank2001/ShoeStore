@@ -33,37 +33,28 @@
                 <table class="table mb-0">
                     <thead>
                         <tr>
-                            <th class="border-gray-200" scope="col">Transaction ID</th>
+                            <th class="border-gray-200" scope="col">Order ID</th>
+                            <th class="border-gray-200" scope="col">product</th>
                             <th class="border-gray-200" scope="col">Date</th>
                             <th class="border-gray-200" scope="col">Amount</th>
                             <th class="border-gray-200" scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <% orders.forEach(order=> {  %>
                         <tr>
-                            <td>#39201</td>
-                            <td>06/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-light text-dark">Pending</span></td>
+                            <td class="table-data">#<%= order._id.toString().slice(0, 9) %></td>
+                            <td>
+                                <% order.products.forEach(product => { %>
+                                    <img src="/uploads/<%= product.productId.image %>" style="width:80px; height:80px;">
+                                    <h6><%= product.productId.productName %></h6>
+                                  <% }) %>                      
+                            </td>
+                            <td class="table-data"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>
+                            <td class="table-data">₹<%= order.totalPrice %></span></td>
+                            <td class="table-data"><%= order.orderStatus %></td>
                         </tr>
-                        <tr>
-                            <td>#38594</td>
-                            <td>05/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-success">Paid</span></td>
-                        </tr>
-                        <tr>
-                            <td>#38223</td>
-                            <td>04/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-success">Paid</span></td>
-                        </tr>
-                        <tr>
-                            <td>#38125</td>
-                            <td>03/15/2021</td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-success">Paid</span></td>
-                        </tr>
+                        <% }) %>
                     </tbody>
                 </table>
             </div>

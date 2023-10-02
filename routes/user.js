@@ -33,6 +33,7 @@ router.get('/addcart/:productId',userAuth.noSession,userController.addToCart)
 router.get('/removecart/:productId',userAuth.noSession,userController.removeFromCart)
 
 router.get('/checkout',userAuth.noSession,userController.checkoutPage)
+router.post('/checkout',userAuth.noSession,userController.orderPlace)
 
 router.get('/profile',userAuth.noSession,userController.userprofile)
 
@@ -52,6 +53,11 @@ router.post('/editaddress/:addressId',userAuth.noSession,userController.editAddr
 router.post('/set-default-address/:addressId',userAuth.noSession,userController.setDefaultAddress)
 
 router.put('/updateQuantity/:productId/:newQuantity',userAuth.noSession,userController.updateQuantity)
+
 router.get('/getproduct/:productId',userAuth.noSession,userController.getProductDetails)
+
+
+
+
 
 module.exports=router

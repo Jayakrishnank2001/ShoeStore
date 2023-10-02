@@ -7,7 +7,9 @@ const randomstring=require('randomstring')
 const { log } = require('console')
 const { product } = require('./adminProductController')
 const Category = require('../models/category')
-const category = require('../models/category')
+const Order=require('../models/order')
+
+
 
 exports.loginPage=async(req,res)=>{
     res.render('./login/userLogin')
@@ -28,16 +30,19 @@ exports.userprofile=async(req,res)=>{
 exports.passwordChange=async(req,res)=>{
   res.render('./user/changepassword')
 }
+
 exports.checkoutPage=async(req,res)=>{
   try {
     const userId=req.session.userId
+    const cartTotal=req.session.totalSum
     const user=await User.findById(userId)
     const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
-    res.render('./user/checkout',{user,defaultAddress})
+    res.render('./user/checkout',{user,defaultAddress,cartTotal})
   } catch (error) {
     
   }
 }
+
 exports.otppage=async(req,res)=>{
   res.render('./login/userloginotp')
 }
@@ -66,7 +71,15 @@ res.render('./login/resetpassword')
 } 
 
 exports.orderHistory=async(req,res)=>{
-  res.render('./user/orders')
+  try {
+    const userId=req.session.userId
+    const orders = await Order.find({ userId: userId }).populate('products.productId')
+
+    res.render('./user/orders',{orders})
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error')
+  }
 }
 //to show products on the cart page
 exports.cartPage=async(req,res)=>{
@@ -354,14 +367,14 @@ exports.addToCart=async(req,res)=>{
     let userId=req.session.userId;
     const user=await User.findOne({_id:userId,'cart.productId':productId});
     if(user){
-      res.json({'data':'Already added this product to cart.'});
+      res.json({data:'Already added this product to cart.'});
     }else{
       let user=await User.findByIdAndUpdate(
           userId,
           {$push:{cart:{productId:productId,quantity:1,totalPrice:product.price}}},
           {new:true}
       );
-      res.json({'data':'Product added to cart successfully'})
+      res.json({data:'Product added to the cart successfully'})
     }
   } catch (error) {
     console.error(error)
@@ -378,6 +391,7 @@ exports.removeFromCart=async(req,res)=>{
       {$pull:{cart:{productId}}},
       {new:true}
       );
+    res.json({data:'Product removed from the cart successfully'})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -455,7 +469,9 @@ exports.addAddress=async(req,res)=>{
       {$push:{userAddress:{address:address,town:town,pincode:pincode,district:district,state:state,country:country}}},
       {new:true}
     )
-   res.redirect('/address')
+    setTimeout(()=>{
+      res.redirect('/address')
+    },2000)
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -497,7 +513,9 @@ exports.editAddress=async(req,res)=>{
       },
       {new:true}
     );
-    res.redirect('/address')
+    setTimeout(()=>{
+      res.redirect('/address')
+    },2000)
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -527,6 +545,7 @@ exports.updateQuantity=async(req,res)=>{
      const totalSum = user.cart.reduce((sum,cartItem)=>{
         return sum + cartItem.totalPrice
     },0)
+    req.session.totalSum=totalSum
     await user.save()
     // Respond with the updated total price
     res.json({updatedTotalPrice: cartItem.totalPrice,totalSum})
@@ -565,5 +584,52 @@ exports.setDefaultAddress=async(req,res)=>{
   } catch (error) {
     console.error(error)
     res.status(500).json({ success: false });
+  }
+}
+
+//to place an order
+exports.orderPlace=async(req,res)=>{
+  try {
+   const { firstName,lastName,address,town,pincode,district,state,country,mobileNumber,paymentMethod }=req.body
+   //totalPrice to store in database
+   const totalPrice=req.session.totalSum
+   const userId=req.session.userId
+   //cartTotal to render the cart page
+   const cartTotal=req.session.totalSum
+   const user=await User.findById(userId)
+   const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
+   if(!firstName||!lastName||!address||!town||!pincode||!district||!state||!country||!mobileNumber||!paymentMethod){
+    res.render('./user/checkout',{user,defaultAddress,cartTotal,alert:'Please fill all the required fields or select an payment method'})
+   }
+   if(paymentMethod==='Cash on delivery' && firstName && lastName && address && town && pincode && district && state && country && mobileNumber){
+    const newAddress = {
+      firstName,
+      lastName,
+      address,
+      town,
+      pincode,
+      district,
+      state,
+      country,
+      mobileNumber,
+    }; 
+    const products = user.cart.map((cartItem) => ({
+      productId: cartItem.productId,
+      orderQuantity: cartItem.quantity,
+    }));
+    const orderData = new Order({
+      userId,
+      products, 
+      totalPrice, 
+      orderStatus: 'Pending', 
+    });
+    orderData.address.push(newAddress);
+    await orderData.save()
+    user.cart=[];
+    await user.save();
+    res.redirect('/')
+   }
+  } catch (error) {
+    console.error(error)
   }
 }
