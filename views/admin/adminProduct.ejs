@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShoeStore - Login</title>
+    <title>Shoes Store Admin</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css1/adminlogin.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <%- include('../partials/adminheader.ejs') %>
+
+    <style>
+      .table-data{
+        font-weight: 600;
+      }
+    </style> 
 
     <section class="first-footer" style="border-bottom: 2px solid #000;">
         <footer class="text-center text-white" style="background-color: #ffffff;">
@@ -53,7 +59,7 @@
 
 
                 <div class="container mt-4">
-                  <div class="d-flex justify-content-between mb-4" style="margin-top: 20px;">
+                  <div class="d-flex justify-content-between mb-4">
                     <div class="d-flex align-items-center">
                       <input type="text" id="searchInput" class="form-control form-control mr-2" style="width: 250px;" placeholder="Search Products..." />
                       <button type="button" class="btn btn-dark" id="searchButton">Search</button>
@@ -63,7 +69,7 @@
                     </div>
                     <div id="suggestionsList" class="suggestions-list"></div>    
                   </div>
-                  <table class="table table-bordered table-thick" style="margin-top: 80px;">
+                  <table class="table table-bordered table-thick">
                     <thead class="thead-dark">
                       <tr>
                         <th>PRODUCT</th>
@@ -79,11 +85,11 @@
                     <tbody id="userTableBody">
                       <% products.forEach(product => { %>
                       <tr>
-                        <td class="editable" data-field="productname"><%= product.productName %></td>
-                        <td><%= product.category.categoryName %></td>  
-                        <td><%= product.brand %></td>                                              
-                        <td><%= product.price %></td> 
-                        <td><%= product.gender %></td>                                             
+                        <td class="editable table-data" data-field="productname"><%= product.productName %></td>
+                        <td class="table-data"><%= product.category.categoryName %></td>  
+                        <td class="table-data"><%= product.brand %></td>                                              
+                        <td class="table-data">₹<%= product.price %></td> 
+                        <td class="table-data"><%= product.gender %></td>                                             
                         <td><img src='/uploads/<%= product.image[0] %>' style="width:80px; height:80px;"></td>
                         <td>
                           <a href="/editproduct/<%= product._id %>"><button type="button" class="btn btn-warning block-btn" data-product-id="<%= product._id %>">Edit</button></a>                          

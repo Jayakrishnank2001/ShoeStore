@@ -74,7 +74,6 @@ exports.orderHistory=async(req,res)=>{
   try {
     const userId=req.session.userId
     const orders = await Order.find({ userId: userId }).populate('products.productId')
-
     res.render('./user/orders',{orders})
   } catch (error) {
     console.error(error);
@@ -146,7 +145,7 @@ exports.productspage = async (req, res) => {
           { brand: { $regex: searchQuery, $options: 'i' } },
         ];
       }
-      
+  
       const products = await Product.find(productsQuery)
           .populate('category')
           .skip(skip)
@@ -452,7 +451,9 @@ exports.userInfoUpdate=async(req,res)=>{
    };
    Object.assign(user, updatedFields);
    await user.save();
-   res.render('./user/userprofile',{user})
+   setTimeout(() => {
+    res.render('./user/userprofile',{user})
+   }, 2000);
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -599,7 +600,7 @@ exports.orderPlace=async(req,res)=>{
    const user=await User.findById(userId)
    const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
    if(!firstName||!lastName||!address||!town||!pincode||!district||!state||!country||!mobileNumber||!paymentMethod){
-    res.render('./user/checkout',{user,defaultAddress,cartTotal,alert:'Please fill all the required fields or select an payment method'})
+    res.render('./user/checkout',{user,defaultAddress,cartTotal,alert:'Please fill all the required fields or select a payment method'})
    }
    if(paymentMethod==='Cash on delivery' && firstName && lastName && address && town && pincode && district && state && country && mobileNumber){
     const newAddress = {

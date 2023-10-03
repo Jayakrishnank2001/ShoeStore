@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShoeStore - Login</title>
+    <title>Shoes Store Admin</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css1/adminlogin.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <%- include('../partials/adminheader.ejs') %>
+
+    <style>
+          .table-data{
+            font-weight: 600;
+          }
+    </style>
 
     <section class="first-footer" style="border-bottom: 2px solid #000;">
         <footer class="text-center text-white" style="background-color: #ffffff;">
@@ -69,8 +75,8 @@
                     <tbody id="userTableBody">
                       <% categories.forEach(category => { %>
                       <tr>
-                        <td class="col-md-8"><%= category.categoryName %></td>
-                        <td class="col-md-4">
+                        <td class="col-md-8 table-data"><%= category.categoryName %></td>
+                        <td class="col-md-4 table-data">
                           <% if (category.isActive == true) { %>
                             <button type="button" class="btn btn-success block-btn" data-toggle="modal" data-target="#confirmationModal" data-category-id="<%= category._id %>" data-action-url="/admin/category-list/<%= category._id %>">List</button>
                           <% } else if(category.isActive==false) { %>

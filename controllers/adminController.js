@@ -1,5 +1,6 @@
 const Admin=require('../models/admin')
 const User=require('../models/users')
+const Order=require('../models/order')
 const bcrypt=require('bcrypt')
 
 const newAdmin=new Admin({
@@ -13,7 +14,32 @@ exports.dashboard=async(req,res)=>{
 }
 
 exports.loginpage=async(req,res)=>{
-    res.render('./admin/adminLogin')
+    try {
+        res.render('./admin/adminLogin')
+    } catch (error) {
+       console.error(error)
+       res.status(500).send('Internal Server Error') 
+    }
+}
+
+exports.orderHistory=async(req,res)=>{
+    try {
+        const page=parseInt(req.query.page)||1;
+        const limit=6;
+        const skip=(page-1)*limit;
+
+        const orders=await Order.find().populate('products.productId')
+        .skip(skip)
+        .limit(limit)
+        .exec();
+
+        const totalCount=await Order.countDocuments();
+        const totalPages=Math.ceil(totalCount/limit);
+         
+        res.render('./admin/adminOrder',{orders,totalPages,currentPage:page});
+    } catch (error) {
+        
+    }
 }
 
 exports.users=async(req,res)=>{
@@ -93,3 +119,4 @@ exports.adminlogout=async(req,res)=>{
         res.status(500).send('Internal Server Error')
     }
 }
+

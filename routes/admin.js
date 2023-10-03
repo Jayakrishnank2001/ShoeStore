@@ -58,6 +58,12 @@ router.get('/category',adminAuth.noSession,adminCategoryController.category)
 router.get('/addcategory',adminAuth.noSession,adminCategoryController.addcategory)
 router.post('/addcategory',adminCategoryController.createcategory)
 
+router.get('/adminorder',adminAuth.noSession,adminController.orderHistory)
+
 router.post('/adminlogout',adminController.adminlogout)
+
+
+
+
 
 module.exports=router

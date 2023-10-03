@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoes Store Admin</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/adminlogin.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <%- include('../partials/adminheader.ejs') %>
+
+    <style>
+        .table-data{
+          font-weight: 600;
+        }
+  </style>
+  
+    <section class="first-footer" style="border-bottom: 2px solid #000;">
+        <footer class="text-center text-white" style="background-color: #ffffff;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center">
+                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1120px; margin-top: 15px;">ADMIN/ORDERS</span>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+    
+    
+        
+            <div class="row flex-nowrap">
+                
+              <%- include('../partials/adminsidebar.ejs') %>
+
+
+                <div class="container mt-4">
+                  <table class="table table-bordered table-thick" style="margin-top: 40px;">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>ORDER ID</th>
+                        <th>ORDER ITEM</th>
+                        <th>ADDRESS</th>
+                        <th>ORDER DATE</th>
+                        <th>STATUS</th>
+                        <th>OPERATION</th>
+                      </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                      <tr>
+                        <% orders.forEach(order=> { %>
+                        <td class="table-data">#<%= order._id.toString().slice(0, 9) %></td>
+                        <td class="table-data">
+                            <% order.products.forEach(product => { %>
+                                <img src="/uploads/<%= product.productId.image %>" style="width:80px; height:80px;">
+                                <h6><%= product.productId.productName %></h6>
+                              <% }) %>                      
+                        </td>                                                               
+                        <td class="table-data"></td> 
+                        <td class="table-data"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>                                             
+                        <td class="table-data"><%= order.orderStatus %></td>
+                        <td class="table-data"></td>
+                      </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <% for (let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                              <a class="page-link" href="/adminorder?page=<%= i %>"><%= i %></a>
+                            </li>
+                        <% } %>
+                    </ul>
+                  </nav>
+              </div>
+            </div>
+            
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    
+    
+      <%- include('../partials/adminfooter.ejs') %>

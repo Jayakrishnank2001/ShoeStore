@@ -165,7 +165,7 @@
                             </div>                            
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary" >Update Details</button>
+                            <button type="submit" class="btn btn-primary" onclick="updateDetails()">Update Details</button>
                         </div>
                     </form>
                 </div>
@@ -185,8 +185,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+//show sweetalert for update details
+    function updateDetails(){
+    Swal.fire({
+    icon:'success',
+	title:'Details updated successfully',
+    timer:2000,
+    showConfirmButton:false
+	})
+    }
+
 
    //calender
     $(document).ready(function () {

@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShoeStore - Login</title>
+    <title>Shoes Store Admin</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css1/adminlogin.css">
 </head>
 <body>
     <%- include('../partials/adminheader.ejs') %>
 
+    <style>
+      .table-data{
+        font-weight: 600;
+      }
+    </style>  
+    
     <section class="first-footer" style="border-bottom: 2px solid #000;">
         <footer class="text-center text-white" style="background-color: #ffffff;">
           <div class="container p-4 pb-0">
@@ -50,14 +56,14 @@
               </div>                       
 
                 <div class="container mt-4">
-                  <div class="d-flex justify-content-between mb-4" style="margin-top: 20px;">
+                  <div class="d-flex justify-content-between mb-4">
                     <div class="d-flex align-items-center">
                       <input type="text" id="searchInput" class="form-control mr-2" placeholder="Search user..." />
                       <button type="button" class="btn btn-dark" id="searchButton">Search</button>
                     </div>
                     <div id="suggestionsList" class="suggestions-list"></div>    
                   </div>
-                  <table class="table table-bordered table-thick" style="margin-top: 80px;">
+                  <table class="table table-bordered table-thick">
                     <thead class="thead-dark">
                       <tr>
                         <th>USERNAME</th>
@@ -69,9 +75,9 @@
                     <tbody id="userTableBody">
                       <% users.forEach(user => { %>
                         <tr>
-                          <td class="editable" data-field="username"><%= user.firstName %></td>
-                          <td><%= user.mobileNumber %></td>
-                          <td><%= user.email %></td>
+                          <td class="editable table-data" data-field="username"><%= user.firstName %></td>
+                          <td class="table-data"><%= user.mobileNumber %></td>
+                          <td class="table-data"><%= user.email %></td>
                           <td>
                             <% if (user.blocked == false) { %>
                               <button type="button" class="btn btn-success block-btn" data-toggle="modal" data-target="#confirmationModal" data-user-id="<%= user._id %>" data-action-url="/admin/block-user/<%= user._id %>">Block</button>
