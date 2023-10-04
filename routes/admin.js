@@ -51,7 +51,7 @@ router.get('/addproduct',adminAuth.noSession,adminProductController.addproduct)
 router.post('/addproduct',upload.array('image',5),adminProductController.createProduct)
 
 router.get('/editproduct/:productId',adminAuth.noSession,adminProductController.editproduct)
-router.post('/editproduct/:productId',upload.array('image',3),adminProductController.updateProduct)
+router.post('/editproduct/:productId',upload.array('image',5),adminProductController.updateProduct)
 
 router.get('/category',adminAuth.noSession,adminCategoryController.category)
 

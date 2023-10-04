@@ -76,8 +76,8 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-5">
                                             <label for="firstName" style="font-weight: 600;">IMAGE</label>
-                                            <input name="image" type="file" value="" id="imageInput" accept="image/*">
-                                            <img id="imagePreview" src="/uploads/<%= product.image %>" alt="Image Preview" style="width:150px; height:150px;">
+                                            <input name="image" type="file" id="imageInput" multiple accept="image/*">
+                                            <img id="imagePreview" src="/uploads/<%= product.image[0] %>" alt="Image Preview" style="width:150px; height:150px;">
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label for="firstName" style="font-weight: 600;">SIZE</label>

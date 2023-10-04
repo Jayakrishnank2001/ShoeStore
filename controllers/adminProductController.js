@@ -120,10 +120,9 @@ exports.editproduct=async(req,res)=>{
 exports.updateProduct=async(req,res)=>{
     try{ 
         const productId=req.params.productId;
-        let img=[]
+        const img=[]
         const {productName,category,price,quantity,brand,description,image,size,color,gender}=req.body;
-        console.log(req.body)
-        for(let file of req.files){
+        for(const file of req.files){
             img.push(file.filename)
         }
         // Update the product data in the database using Mongoose

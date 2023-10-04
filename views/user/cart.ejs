@@ -64,7 +64,7 @@
 						      <tr class="text-center">
 						        <td class="product-remove"><a href="#" onclick="cartRemove('<%= item.product._id %>')"><span class="ion-ios-close"></span></a></td>
 
-						        <td class="image-prod"><img src='/uploads/<%= item.product.image %>' style="width:80px; height:80px;"></td>
+						        <td class="image-prod"><img src='/uploads/<%= item.product.image[0] %>' style="width:80px; height:80px;"></td>
 						        
 						        <td class="product-name">
 						        	<h3><%= item.product.productName %></h3>

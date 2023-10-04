@@ -8,6 +8,7 @@ const {v4:uuidv4}=require('uuid')
 const bcrypt=require('bcrypt')
 const connectDB=require('./config/db')
 const nocache=require('nocache')
+
 //const expressLayouts=require('express-ejs-layouts')
 
 const app=express()
@@ -19,7 +20,6 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({extended:true}))
 
 app.use(express.json())
-
 connectDB();
 
 //static files

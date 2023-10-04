@@ -43,10 +43,9 @@
 					  <% } %>
 					</div>
 					<div class="big-image prod-img-bg w-75">
-						<a href="/uploads/<%= product.image[0] %>" class="image-popup prod-img-bg"><img src="/uploads/<%= product.image[0] %>" width="100%" style="object-fit: cover;" class="img-fluid main-image" alt="Colorlib Template"></a>
-					</div>
+						<img src="/uploads/<%= product.image[0] %>" width="100%" style="object-fit: cover;" class="img-fluid main-image" alt="Colorlib Template">	
+					 </div>
 				  </div>
-
 
     			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
     				<h1><%= product.productName %></h1>
@@ -139,27 +138,23 @@
 		})
 	 }
 
-    // JavaScript to change the main image when a smaller image is clicked
-   const galleryImages = document.querySelectorAll('.gallery-image');
-   const mainImage = document.querySelector('.main-image');
- 
-   galleryImages.forEach((image) => {
-    image.addEventListener('click', () => {
-      const index = image.getAttribute('data-index');
-      const selectedImageSrc = image.getAttribute('src');
-      mainImage.src = selectedImageSrc;
+ // JavaScript to change the main image when a smaller image is clicked
+const galleryImages = document.querySelectorAll('.gallery-image');
+const mainImage = document.querySelector('.main-image');
 
-      // Remove the 'active' class from all images and add it to the selected image
-      galleryImages.forEach((img) => {
-        img.classList.remove('active');
-      });
-      image.classList.add('active');
-    });
+galleryImages.forEach((image) => {
+  image.addEventListener('click', () => {
+    const selectedImageSrc = image.getAttribute('src');
+    mainImage.src = selectedImageSrc;
   });
+});
 
-  // Initially, set the first image as the default big image
-  mainImage.src = galleryImages[0].getAttribute('src');
-  galleryImages[0].classList.add('active');
+// JavaScript to open the zoomed version of the main image
+mainImage.addEventListener('click', () => {
+  const mainImageSrc = mainImage.getAttribute('src');
+  window.open(mainImageSrc, '_blank'); // Open the image in a new tab or window
+});
+
 
 
 	</script>

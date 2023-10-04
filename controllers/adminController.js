@@ -22,6 +22,7 @@ exports.loginpage=async(req,res)=>{
     }
 }
 
+//to show order details on the admin side
 exports.orderHistory=async(req,res)=>{
     try {
         const page=parseInt(req.query.page)||1;

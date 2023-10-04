@@ -8,7 +8,12 @@ const { log } = require('console')
 const { product } = require('./adminProductController')
 const Category = require('../models/category')
 const Order=require('../models/order')
+const Razorpay=require('razorpay')
 
+var instance=new Razorpay({
+  key_id:"RAZORPAY_ID_KEY",
+  key_secret:"RAZORPAY_SECRET_KEY"
+});
 
 
 exports.loginPage=async(req,res)=>{
@@ -70,6 +75,7 @@ exports.resetpassword=async(req,res)=>{
   res.render('./login/resetpassword')
 } 
 
+//to show order history on the user side
 exports.orderDetails=async(req,res)=>{
   try {
     const productId=req.params.productId
@@ -86,9 +92,19 @@ exports.orderDetails=async(req,res)=>{
 
 exports.orderHistory=async(req,res)=>{
   try {
+    const page=parseInt(req.query.page)||1;
+    const limit=6;
+    const skip=(page-1)*limit;
+
     const userId=req.session.userId
     const orders = await Order.find({ userId: userId }).populate('products.productId')
-    res.render('./user/orders',{orders})
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
+    const totalCount=await Order.countDocuments({userId:userId})
+    const totalPages=Math.ceil(totalCount/limit);
+    res.render('./user/orders',{orders,totalPages,currentPage:page})
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error')

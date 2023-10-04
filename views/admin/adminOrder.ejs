@@ -57,7 +57,7 @@
                         <td class="table-data">#<%= order._id.toString().slice(0, 9) %></td>
                         <td class="table-data">
                             <% order.products.forEach(product => { %>
-                                <img src="/uploads/<%= product.productId.image %>" style="width:80px; height:80px;">
+                                <img src="/uploads/<%= product.productId.image[0] %>" style="width:80px; height:80px;">
                                 <h6><%= product.productId.productName %></h6>
                               <% }) %>                      
                         </td>      
