@@ -40,10 +40,10 @@ exports.addproduct=async(req,res)=>{
 //creating a new product and store product data to the database
 exports.createProduct=async(req,res)=>{
     try{
-        let img=[]
+        const img=[]
         const {productName,category,price,quantity,brand,description,image,size,color,gender}=req.body;
         //push the image files to the array
-        for(let file of req.files){
+        for(const file of req.files){
             img.push(file.filename)
         }
         const newProduct=new Product({

@@ -40,7 +40,7 @@
 						<% if (product.isActive) { %>
 		    			<div class="col-sm-12 col-md-12 col-lg-4 ftco-animate d-flex">
 		    				<div class="product d-flex flex-column">
-		    					<a href="/userproduct/<%= product._id %>" class="img-prod"><img class="img-fluid" src="uploads/<%= product.image %>" alt="Colorlib Template">
+		    					<a href="/userproduct/<%= product._id %>" class="img-prod"><img class="img-fluid" src="uploads/<%= product.image[0] %>" alt="Colorlib Template">
 		    						<div class="overlay"></div>
 		    					</a>
 		    					<div class="text py-3 pb-4 px-3" style="margin-top: 56px;">

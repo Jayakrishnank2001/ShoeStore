@@ -12,9 +12,20 @@
     <%- include('../partials/adminheader.ejs') %>
 
     <style>
-      .table-data{
-        font-weight: 600;
-      }
+
+    .table-data{
+      font-weight: 600;
+    }
+    .image-container {
+    position: relative;
+    }
+    .image-container img {
+    transition: transform 0.3s ease-in-out;
+    }
+    .image-container:hover img {
+    transform: scale(2.5); /* Adjust the scale value as needed */
+    }
+
     </style> 
 
     <section class="first-footer" style="border-bottom: 2px solid #000;">
@@ -90,7 +101,11 @@
                         <td class="table-data"><%= product.brand %></td>                                              
                         <td class="table-data">₹<%= product.price %></td> 
                         <td class="table-data"><%= product.gender %></td>                                             
-                        <td><img src='/uploads/<%= product.image[0] %>' style="width:80px; height:80px;"></td>
+                        <td>
+                          <div class="image-container">
+                          <img src='/uploads/<%= product.image[0] %>' style="width:80px; height:80px;">
+                          </div>
+                        </td>
                         <td>
                           <a href="/editproduct/<%= product._id %>"><button type="button" class="btn btn-warning block-btn" data-product-id="<%= product._id %>">Edit</button></a>                          
                         </td>

@@ -63,12 +63,26 @@ exports.signupPage=async(req,res)=>{
 }
 
 exports.forgototppage=async(req,res)=>{
-res.render('./login/forgototp')
+  res.render('./login/forgototp')
 }
 
 exports.resetpassword=async(req,res)=>{
-res.render('./login/resetpassword')
+  res.render('./login/resetpassword')
 } 
+
+exports.orderDetails=async(req,res)=>{
+  try {
+    const productId=req.params.productId
+    const userId=req.session.userId
+    const product=await Product.findById(productId)
+    const user=await User.findById(userId)
+    const order=await Order.find({userId:userId}).populate('products.productId')
+    res.render('./user/orderDetails',{user,product,order})
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
 
 exports.orderHistory=async(req,res)=>{
   try {
@@ -628,7 +642,6 @@ exports.orderPlace=async(req,res)=>{
     await orderData.save()
     user.cart=[];
     await user.save();
-    res.redirect('/')
    }
   } catch (error) {
     console.error(error)

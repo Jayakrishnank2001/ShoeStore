@@ -208,7 +208,7 @@
 											  </div>
 										  </div>
 									  </div>
-									  <p><button type="submit" class="btn btn-primary py-3 px-4">Place an order</button></p>								  </div>
+									  <p><button type="submit" class="btn btn-primary py-3 px-4" onclick="orderPlaced()">Place an order</button></p>								  </div>
 					</div>
 				</div>
 
@@ -225,7 +225,7 @@
       </div>
     </section> <!-- .section -->
 		
-
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    
   <script>
 
@@ -263,6 +263,31 @@
 		    });
 		    
 		});
+
+		//order place sweet alert
+		function orderPlaced() {
+			setTimeout(()=>{
+				Swal.fire({
+    title: 'Order Placed!',
+    text: 'Thank you for your order. Your order has been confirmed.',
+    icon: 'success',
+    confirmButtonText: 'Continue Shopping',
+    showCancelButton: true,
+    cancelButtonText: 'Order Details',
+    allowOutsideClick: false,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = '/';
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      window.location.href = '/orders';
+    }
+	history.pushState(null, null, '/');
+  });
+ },1000)
+  
+}
+
+
 
 	</script>
     

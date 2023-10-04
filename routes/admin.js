@@ -48,7 +48,7 @@ router.get('/admin/product-unlist/:productId',adminAuth.noSession,adminProductCo
 router.get('/product',adminAuth.noSession,adminProductController.product)
 
 router.get('/addproduct',adminAuth.noSession,adminProductController.addproduct)
-router.post('/addproduct',upload.array('image',3),adminProductController.createProduct)
+router.post('/addproduct',upload.array('image',5),adminProductController.createProduct)
 
 router.get('/editproduct/:productId',adminAuth.noSession,adminProductController.editproduct)
 router.post('/editproduct/:productId',upload.array('image',3),adminProductController.updateProduct)

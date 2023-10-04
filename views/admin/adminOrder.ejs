@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css1/adminlogin.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 </head>
 <body>
     <%- include('../partials/adminheader.ejs') %>
@@ -15,8 +17,9 @@
         .table-data{
           font-weight: 600;
         }
+       
   </style>
-  
+
     <section class="first-footer" style="border-bottom: 2px solid #000;">
         <footer class="text-center text-white" style="background-color: #ffffff;">
           <div class="container p-4 pb-0">
@@ -37,45 +40,59 @@
 
 
                 <div class="container mt-4">
-                  <table class="table table-bordered table-thick" style="margin-top: 40px;">
+                  <table class="table table-bordered table-thick">
                     <thead class="thead-dark">
                       <tr>
                         <th>ORDER ID</th>
                         <th>ORDER ITEM</th>
+                        <th>AMOUNT</th>
                         <th>ADDRESS</th>
                         <th>ORDER DATE</th>
                         <th>STATUS</th>
-                        <th>OPERATION</th>
                       </tr>
                     </thead>
                     <tbody id="userTableBody">
-                      <tr>
-                        <% orders.forEach(order=> { %>
+                      <% orders.forEach(order=> { %>
+                      <tr> 
                         <td class="table-data">#<%= order._id.toString().slice(0, 9) %></td>
                         <td class="table-data">
                             <% order.products.forEach(product => { %>
                                 <img src="/uploads/<%= product.productId.image %>" style="width:80px; height:80px;">
                                 <h6><%= product.productId.productName %></h6>
                               <% }) %>                      
-                        </td>                                                               
-                        <td class="table-data"></td> 
+                        </td>      
+                        <td class="table-data">₹<%= order.totalPrice %></td>                                                         
+                        <td class="table-data">
+                            <h6><%= order.address[0].firstName %> <%= order.address[0].lastName %></h6>
+                            <h6><%= order.address[0].address %></h6>  
+                            <h6><%= order.address[0].town %>,<%= order.address[0].district %>-<%= order.address[0].pincode %></h6>
+                            <h6><%= order.address[0].state %></h6>              
+                        </td> 
                         <td class="table-data"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>                                             
-                        <td class="table-data"><%= order.orderStatus %></td>
-                        <td class="table-data"></td>
+                        <td class="table-data">
+                          <div class="input-group">
+                              <select class="form-select">
+                                  <option selected>Status</option>
+                                  <option value="Australia">Australia</option>
+                                  <option value="India">India</option>
+                                  <option value="United States">United States</option>
+                              </select>
+                          </div>
+                      </td>                                
                       </tr>
-                      <% }); %>
+                      <% }); %> 
                     </tbody>
                   </table>
                   <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center">
                         <% for (let i = 1; i <= totalPages; i++) { %>
                             <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                              <a class="page-link" href="/adminorder?page=<%= i %>"><%= i %></a>
+                                <a class="page-link" href="/adminorder?page=<%= i %>" style="text-align:center;"><%= i %></a>
                             </li>
                         <% } %>
                     </ul>
-                  </nav>
-              </div>
+                </nav>
+            </div>
             </div>
             
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -83,6 +100,6 @@
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-    
+
     
       <%- include('../partials/adminfooter.ejs') %>

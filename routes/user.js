@@ -38,6 +38,7 @@ router.post('/checkout',userAuth.noSession,userController.orderPlace)
 router.get('/profile',userAuth.noSession,userController.userprofile)
 
 router.get('/orders',userAuth.noSession,userController.orderHistory)
+router.get('/orderdetails/:productId',userAuth.noSession,userController.orderDetails)
 
 router.post('/logout',userAuth.noSession,userController.userLogout)
 
