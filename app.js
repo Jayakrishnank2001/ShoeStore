@@ -46,10 +46,6 @@ app.set('view engine','ejs')
 app.use('/',require('./routes/user'))
 app.use('/',require('./routes/admin'))
 
-app.get('/',(req,res)=>{
-    res.render('./user/home')
-})
-
 app.listen(port,()=>{
     console.log(`Server started on port http://localhost:${port}`)
 })

@@ -12,6 +12,9 @@ const orderSchema=new mongoose.Schema({
         },
         orderQuantity:{
             type:Number
+        },
+        productTotalPrice:{
+            type:Number,
         }
     }],
     address:[{

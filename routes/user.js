@@ -3,6 +3,7 @@ const router=express.Router()
 const userController=require('../controllers/userController')
 const userAuth=require('../middlewares/userAuth')
 
+router.get('/',userController.homePage)
 router.get('/login',userAuth.yesSession,userController.loginPage)
 router.post('/login',userController.userlogin)
 
@@ -34,11 +35,14 @@ router.get('/removecart/:productId',userAuth.noSession,userController.removeFrom
 
 router.get('/checkout',userAuth.noSession,userController.checkoutPage)
 router.post('/checkout',userAuth.noSession,userController.orderPlace)
+// ================= online payment==========================
+router.post('/online-payment',userAuth.noSession,userController.onlinePayment)
+
 
 router.get('/profile',userAuth.noSession,userController.userprofile)
 
 router.get('/orders',userAuth.noSession,userController.orderHistory)
-router.get('/orderdetails/:productId',userAuth.noSession,userController.orderDetails)
+router.get('/orderdetails/:orderId',userAuth.noSession,userController.orderDetails)
 
 router.post('/logout',userAuth.noSession,userController.userLogout)
 

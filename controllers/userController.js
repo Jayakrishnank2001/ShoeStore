@@ -10,11 +10,20 @@ const Category = require('../models/category')
 const Order=require('../models/order')
 const Razorpay=require('razorpay')
 
-var instance=new Razorpay({
-  key_id:"RAZORPAY_ID_KEY",
-  key_secret:"RAZORPAY_SECRET_KEY"
+const razorpay=new Razorpay({
+  key_id:process.env.RAZORPAY_ID_KEY,
+  key_secret:process.env.RAZORPAY_SECRET_KEY,
 });
 
+exports.homePage=async(req,res)=>{
+  try {
+    const products=await Product.find({brand:'Nike',isActive:true}).limit(8)
+    res.render('./user/home',{products})
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+  }
+}
 
 exports.loginPage=async(req,res)=>{
     res.render('./login/userLogin')
@@ -78,12 +87,11 @@ exports.resetpassword=async(req,res)=>{
 //to show order history on the user side
 exports.orderDetails=async(req,res)=>{
   try {
-    const productId=req.params.productId
+    const orderId=req.params.orderId
+    const order=await Order.findById(orderId).populate('products.productId')
     const userId=req.session.userId
-    const product=await Product.findById(productId)
     const user=await User.findById(userId)
-    const order=await Order.find({userId:userId}).populate('products.productId')
-    res.render('./user/orderDetails',{user,product,order})
+    res.render('./user/orderDetails',{user,order})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -102,6 +110,7 @@ exports.orderHistory=async(req,res)=>{
     .limit(limit)
     .exec();
 
+    orders.sort((a, b) => b.orderDate - a.orderDate);
     const totalCount=await Order.countDocuments({userId:userId})
     const totalPages=Math.ceil(totalCount/limit);
     res.render('./user/orders',{orders,totalPages,currentPage:page})
@@ -571,7 +580,6 @@ exports.updateQuantity=async(req,res)=>{
     const proSinglePrice=product.price
     cartItem.quantity = parseInt(newQuantity)
     cartItem.totalPrice = proSinglePrice * cartItem.quantity
-
      // Calculating total sum of the  product in cart
      const totalSum = user.cart.reduce((sum,cartItem)=>{
         return sum + cartItem.totalPrice
@@ -632,7 +640,7 @@ exports.orderPlace=async(req,res)=>{
    if(!firstName||!lastName||!address||!town||!pincode||!district||!state||!country||!mobileNumber||!paymentMethod){
     res.render('./user/checkout',{user,defaultAddress,cartTotal,alert:'Please fill all the required fields or select a payment method'})
    }
-   if(paymentMethod==='Cash on delivery' && firstName && lastName && address && town && pincode && district && state && country && mobileNumber){
+   if(firstName && lastName && address && town && pincode && district && state && country && mobileNumber){
     const newAddress = {
       firstName,
       lastName,
@@ -644,10 +652,17 @@ exports.orderPlace=async(req,res)=>{
       country,
       mobileNumber,
     }; 
-    const products = user.cart.map((cartItem) => ({
-      productId: cartItem.productId,
-      orderQuantity: cartItem.quantity,
-    }));
+    const products = await Promise.all(
+      user.cart.map(async (cartItem) => {
+        const product = await Product.findById(cartItem.productId);
+        const productTotalPrice = cartItem.quantity * product.price;
+        return {
+          productId: cartItem.productId,
+          orderQuantity: cartItem.quantity,
+          productTotalPrice: productTotalPrice,
+        };
+      })
+    );
     const orderData = new Order({
       userId,
       products, 
@@ -661,5 +676,21 @@ exports.orderPlace=async(req,res)=>{
    }
   } catch (error) {
     console.error(error)
+  }
+}
+
+//for online payment
+exports.onlinePayment=async(req,res)=>{
+  try {
+    const totalPrice=req.body.totalPrice
+    const options={
+      amount:totalPrice*100,
+      currency:'INR',
+    }
+    const order=await razorpay.orders.create(options)
+    res.json({orderId:order.id})
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({error:'Internal Server Error'})
   }
 }

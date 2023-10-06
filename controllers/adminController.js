@@ -34,6 +34,7 @@ exports.orderHistory=async(req,res)=>{
         .limit(limit)
         .exec();
 
+        orders.sort((a, b) => b.orderDate - a.orderDate);
         const totalCount=await Order.countDocuments();
         const totalPages=Math.ceil(totalCount/limit);
          
@@ -41,6 +42,20 @@ exports.orderHistory=async(req,res)=>{
     } catch (error) {
         
     }
+}
+
+//to show the order details of products
+exports.orderDetails=async(req,res)=>{
+    try {
+        const orderId=req.params.orderId
+        const order=await Order.findById(orderId).populate('products.productId')
+        const userId=req.session.userId
+        const user=await User.findById(userId)
+        res.render('./admin/adminOrderDetails',{user,order})
+    }catch (error) {
+    console.error(error)
+    res.status(500).send('Internal Server Error')
+ }
 }
 
 exports.users=async(req,res)=>{
@@ -117,6 +132,22 @@ exports.adminlogout=async(req,res)=>{
         res.redirect('/adminlogin')
     }catch(error){
         console.error(error);
+        res.status(500).send('Internal Server Error')
+    }
+}
+
+//to change the order status of a product
+exports.orderStatus=async(req,res)=>{
+    try {
+        const { orderId,status }=req.body;
+        console.log(orderId,status,"dfjkdjkfdkjfdkfkd")
+        const updatedOrder=await Order.findByIdAndUpdate(orderId,
+            {$set:{orderStatus:status}},
+            {new:true}
+        );
+        res.status(200).json(updatedOrder)
+    } catch (error) {
+        console.error(error)
         res.status(500).send('Internal Server Error')
     }
 }

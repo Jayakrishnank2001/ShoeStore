@@ -48,7 +48,7 @@
 			<% if(locals.alert) { %>
 				<p class="alert alert-danger text-center"><%= locals.alert %></p>
 			<% } %>
-						<form action="/checkout" class="billing-form" method="POST">
+						<form action="/checkout" id="onlineCheckout" class="billing-form" method="POST" onsubmit="proceedToPay(event)">
 							<h3 class="mb-4 billing-heading">Billing Details</h3>
 							
 	          	<div class="row align-items-end">
@@ -167,15 +167,15 @@
 							<h3 class="billing-heading mb-4">Cart Total</h3>
 							<p class="d-flex">
 									  <span>Subtotal</span>
-									  <span name="totalPrice" value="<%= cartTotal %>">₹<%= cartTotal %></span>
+									  <span name="totalPrice" id ="cartTotal" value="<%= cartTotal %>"><%= cartTotal %></span>
 								  </p>
 								  <p class="d-flex">
 									  <span>Delivery</span>
-									  <span>₹</span>
+									  <span>₹0.00</span>
 								  </p>
 								  <p class="d-flex">
 									  <span>Discount</span>
-									  <span>₹</span>
+									  <span>₹0.00</span>
 								  </p>
 								  <hr>
 								  <p class="d-flex total-price">
@@ -190,7 +190,7 @@
 									  <div class="form-group">
 										  <div class="col-md-12">
 											  <div class="radio">
-												 <label><input type="radio" name="paymentMethod" class="mr-2" value="Online Payment"> Online Payment</label>
+												 <label><input type="radio" id="razorPay" value="razorPay" name="paymentMethod" class="mr-2" value="Online Payment"> Online Payment</label>
 											  </div>
 										  </div>
 									  </div>
@@ -208,7 +208,8 @@
 											  </div>
 										  </div>
 									  </div>
-									  <p><button type="submit" class="btn btn-primary py-3 px-4" onclick="orderPlaced()">Place an order</button></p>								  </div>
+									  <p><button type="submit" class="btn btn-primary py-3 px-4" id="placeOrder">Place an order</button></p>								  
+									</div>
 					</div>
 				</div>
 
@@ -226,7 +227,55 @@
     </section> <!-- .section -->
 		
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   
+
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+	<!-- <script>
+      
+	  const placeAnOrder=document.getElementById('placeOrder')
+	  placeAnOrder.addEventListener('click',async()=>{
+		const selectedPayment=document.querySelector('input[name=paymentMethod]:checked')
+		if(!selectedPayment){
+			showErrorPopup('No Payment method selected','Please select a payment method to proceed')
+			return 
+		}
+
+		let totalPrice=document.getElementById('cartTotal').innerHTML
+        console.log(totalPrice);
+		if(selectedPayment.value==='razorPay'){
+			const razorPayKey='rzp_test_8AyTSoNP7K7ygJ'
+			try {
+				fetch('/online-payment',{
+					method:'POST',
+					headers:{
+						'Content-Type':'application/json'
+					},
+					body:JSON.stringify({totalPrice:totalPrice})
+				}).then(res=>res.json())
+				.then((res)=>{
+					const razorPayOptions={
+						key:razorPayKey,
+						amount:totalPrice,
+						currency:'INR',
+						name:'Shoes Store',
+						descriptions:'Order Payment',
+						order:'hello',
+						handler:handleRazorpaySuccess
+					}
+					const razorPayInstance=new Razorpay(razorPayOptions)
+					razorPayInstance.open()
+				})
+			} catch (error) {
+				showErrorPopup('Payment Error','Payment could not processed.Please try again.')
+				console.error(error)
+			}
+		}
+	  })
+      
+
+
+	</script> -->
+
   <script>
 
 		$(document).ready(function(){
@@ -283,10 +332,42 @@
     }
 	history.pushState(null, null, '/');
   });
- },1000)
+ },200)
   
-}
+ }
 
+ //razorpay
+    async function proceedToPay(event){
+		event.preventDefault()
+      const form=document.getElementById('onlineCheckout')
+	  const selectedPayment=document.querySelector('input[name=paymentMethod]:checked')
+	  if(selectedPayment=='Cash on delivery'){
+		orderPlaced()
+		form.submit()
+	  }else if(selectedPayment=='Online Payment'){
+            await fetch('/online-payment',{
+					method:'POST',
+					headers:{
+						'Content-Type':'application/json'
+					},
+					body:JSON.stringify({totalPrice:totalPrice})
+				}).then(res=>res.json())
+				.then((res)=>{
+					const razorPayOptions={
+						key:razorPayKey,
+						amount:totalPrice,
+						currency:'INR',
+						name:'Shoes Store',
+						descriptions:'Order Payment',
+						order:res.orderId,
+						handler:handleRazorpaySuccess
+					}
+					const razorPayInstance=new Razorpay(razorPayOptions)
+					razorPayInstance.open()
+				})
+			}
+		}
+	  
 
 
 	</script>

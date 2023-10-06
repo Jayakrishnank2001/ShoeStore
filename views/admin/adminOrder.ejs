@@ -11,6 +11,7 @@
 
 </head>
 <body>
+
     <%- include('../partials/adminheader.ejs') %>
 
     <style>
@@ -57,7 +58,9 @@
                         <td class="table-data">#<%= order._id.toString().slice(0, 9) %></td>
                         <td class="table-data">
                             <% order.products.forEach(product => { %>
+                              <a href="/adminOrderdetails/<%= order._id %>">
                                 <img src="/uploads/<%= product.productId.image[0] %>" style="width:80px; height:80px;">
+                                </a>
                                 <h6><%= product.productId.productName %></h6>
                               <% }) %>                      
                         </td>      
@@ -71,14 +74,18 @@
                         <td class="table-data"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>                                             
                         <td class="table-data">
                           <div class="input-group">
-                              <select class="form-select">
-                                  <option selected>Status</option>
-                                  <option value="Australia">Australia</option>
-                                  <option value="India">India</option>
-                                  <option value="United States">United States</option>
+                              <select id="statusSelect" class="form-select" data-order-id="<%= order._id %>">
+                                  <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
+                                  <option value="Pending">Pending</option>
+                                  <option value="Shipped">Shipped</option>
+                                  <option value="Delivered">Delivered</option>
+                                  <option value="Canceled">Canceled</option>
+                                  <option value="Refunded">Refunded</option>
+                                  <option value="Returned">Returned</option>
+                                  <option value="Payment Failed">Payment Failed</option>
                               </select>
                           </div>
-                      </td>                                
+                        </td>                                
                       </tr>
                       <% }); %> 
                     </tbody>
@@ -101,5 +108,32 @@
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
 
+        <script>
+
+        const statusSelect = document.getElementById('statusSelect');
+        statusSelect.addEventListener('change', () => {
+        const newStatus = statusSelect.value;
+        const orderId = statusSelect.getAttribute('data-order-id');
+        const data = { status: newStatus, orderId: orderId };
+        fetch('/update-order-status', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+      })
+      .then((response) => {
+      if (response.ok) {
+        console.log('Status updated successfully');
+        } else {
+        console.error('Error updating status');
+        }
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+      });
+    });
+
+      </script>
     
       <%- include('../partials/adminfooter.ejs') %>

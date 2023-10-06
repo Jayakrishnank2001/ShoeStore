@@ -7,6 +7,7 @@ const adminAuth=require('../middlewares/adminAuth')
 
 const multer = require('multer')
 const path = require('path');
+const admin = require('../models/admin')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -59,6 +60,8 @@ router.get('/addcategory',adminAuth.noSession,adminCategoryController.addcategor
 router.post('/addcategory',adminCategoryController.createcategory)
 
 router.get('/adminorder',adminAuth.noSession,adminController.orderHistory)
+router.get('/adminOrderdetails/:orderId',adminAuth.noSession,adminController.orderDetails)
+router.post('/update-order-status',adminAuth.noSession,adminController.orderStatus)
 
 router.post('/adminlogout',adminController.adminlogout)
 

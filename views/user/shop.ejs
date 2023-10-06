@@ -255,7 +255,7 @@
         window.location.href = `/products?priceFrom=${priceFrom}&priceTo=${priceTo}&gender=<%= gender %>`;
     }
 
-
+    //to add the product to the cart
 	async function addToCart(productId){
 		await fetch(`/addcart/${productId}`).then(res=>res.json()).then(data=>{
 			if(data.data=='Product added to the cart successfully'){
