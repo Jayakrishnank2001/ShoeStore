@@ -53,7 +53,6 @@ exports.checkoutPage=async(req,res)=>{
     const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
     res.render('./user/checkout',{user,defaultAddress,cartTotal})
   } catch (error) {
-    
   }
 }
 

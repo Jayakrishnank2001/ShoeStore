@@ -42,6 +42,10 @@ exports.createProduct=async(req,res)=>{
     try{
         const img=[]
         const {productName,category,price,quantity,brand,description,image,size,color,gender}=req.body;
+        const categories=await Category.find()
+        if(!productName||!category||!price||!quantity||!brand||!description||!size||!color||!gender){
+            res.render('./admin/addProduct',{categories,alert:'Please fill all required fields.'})
+        }
         //push the image files to the array
         for(const file of req.files){
             img.push(file.filename)
@@ -58,15 +62,10 @@ exports.createProduct=async(req,res)=>{
             color,
             gender
         })
-        if(!productName||!category||!price||!quantity||!brand||!description||!size||!color||!gender){
-            return res.render('./admin/addProduct',{alert:'Please fill in all required fields.'})
-        }
         await newProduct.save()
         res.redirect('/product?success=true')
     }catch(error){
         console.error(error.message)
-        res.send(error)
-        res.status(500).send('Internal server Error')
     }
 }
 

@@ -33,14 +33,15 @@ exports.orderHistory=async(req,res)=>{
         .skip(skip)
         .limit(limit)
         .exec();
-
+    
         orders.sort((a, b) => b.orderDate - a.orderDate);
         const totalCount=await Order.countDocuments();
         const totalPages=Math.ceil(totalCount/limit);
          
         res.render('./admin/adminOrder',{orders,totalPages,currentPage:page});
     } catch (error) {
-        
+        console.error(error)
+        res.status(500).send('Internal Server Error')
     }
 }
 
@@ -140,7 +141,6 @@ exports.adminlogout=async(req,res)=>{
 exports.orderStatus=async(req,res)=>{
     try {
         const { orderId,status }=req.body;
-        console.log(orderId,status,"dfjkdjkfdkjfdkfkd")
         const updatedOrder=await Order.findByIdAndUpdate(orderId,
             {$set:{orderStatus:status}},
             {new:true}

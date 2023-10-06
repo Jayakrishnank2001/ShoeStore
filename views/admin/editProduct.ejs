@@ -36,7 +36,7 @@
                                 <h3 class="text-center">EDIT PRODUCT</h3>
                             </div>
                             <div class="card-body">
-                                <form action="/editproduct/<%= product._id %>" method="post" enctype="multipart/form-data">
+                                <form action="/editproduct/<%= product._id %>" method="post" enctype="multipart/form-data" id="editProductForm">
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="firstName" style="font-weight: 600;">PRODUCT NAME</label>
@@ -53,14 +53,14 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label for="mobileNumber" style="font-weight: 600;">PRICE</label>
-                                            <input type="text" value="<%= product.price %>" name="price" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                            <label for="price" style="font-weight: 600;">PRICE</label>
+                                            <input type="number" value="<%= product.price %>" name="price" class="form-control" id="price" placeholder="" style="border-radius: 1em;">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label for="mobileNumber" style="font-weight: 600;">QUANTITY</label>
-                                            <input type="text" value="<%= product.quantity %>" name="quantity" class="form-control" id="mobileNumber" placeholder="" style="border-radius: 1em;">
+                                            <label for="quantity" style="font-weight: 600;">QUANTITY</label>
+                                            <input type="number" value="<%= product.quantity %>" name="quantity" class="form-control" id="quantity" placeholder="" style="border-radius: 1em;" min="1">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="mobileNumber" style="font-weight: 600;">BRAND</label>
@@ -163,6 +163,22 @@
             const selectedColor = $(this).val();
             
             $('.color-preview').css('background-color', selectedColor);
+        });
+    });
+
+
+    //to set price is non-negative integer
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('editProductForm'); // Replace 'yourFormId' with the actual ID of your form
+
+        form.addEventListener('submit', function(event) {
+            const priceInput = document.getElementById('price');
+            const priceValue = parseFloat(priceInput.value);
+
+            if (isNaN(priceValue) || priceValue < 0) {
+                event.preventDefault(); // Prevent form submission
+                alert('Price must be a non-negative number.');
+            }
         });
     });
 

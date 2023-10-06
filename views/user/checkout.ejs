@@ -230,7 +230,7 @@
 
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-	<!-- <script>
+	 <script>
       
 	  const placeAnOrder=document.getElementById('placeOrder')
 	  placeAnOrder.addEventListener('click',async()=>{
@@ -274,77 +274,67 @@
       
 
 
-	</script> -->
+	</script> 
 
   <script>
 
 		$(document).ready(function(){
-
 		var quantitiy=0;
 		   $('.quantity-right-plus').click(function(e){
-		        
 		        // Stop acting like a button
 		        e.preventDefault();
 		        // Get the field name
 		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		            
+		        // If is not undefined 
 		            $('#quantity').val(quantity + 1);
-
-		          
-		            // Increment
-		        
+		            // Increment  
 		    });
-
 		     $('.quantity-left-minus').click(function(e){
 		        // Stop acting like a button
 		        e.preventDefault();
 		        // Get the field name
 		        var quantity = parseInt($('#quantity').val());
-		        
 		        // If is not undefined
-		      
 		            // Increment
 		            if(quantity>0){
 		            $('#quantity').val(quantity - 1);
 		            }
 		    });
-		    
 		});
 
-		//order place sweet alert
-		function orderPlaced() {
-			setTimeout(()=>{
-				Swal.fire({
-    title: 'Order Placed!',
-    text: 'Thank you for your order. Your order has been confirmed.',
-    icon: 'success',
-    confirmButtonText: 'Continue Shopping',
-    showCancelButton: true,
-    cancelButtonText: 'Order Details',
-    allowOutsideClick: false,
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = '/';
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      window.location.href = '/orders';
-    }
-	history.pushState(null, null, '/');
-  });
- },200)
-  
- }
 
- //razorpay
+	//order place sweet alert
+	function orderPlaced() {
+		setTimeout(()=>{
+		    Swal.fire({
+            title: 'Order Placed!',
+            text: 'Thank you for your order. Your order has been confirmed.',
+            icon: 'success',
+            confirmButtonText: 'Continue Shopping',
+            showCancelButton: true,
+            cancelButtonText: 'Order Details',
+            allowOutsideClick: false,
+        }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/';
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            window.location.href = '/orders';
+        }
+	    history.pushState(null, null, '/');
+      });
+    },200)
+   }
+
+    //razorpay
     async function proceedToPay(event){
 		event.preventDefault()
       const form=document.getElementById('onlineCheckout')
 	  const selectedPayment=document.querySelector('input[name=paymentMethod]:checked')
-	  if(selectedPayment=='Cash on delivery'){
+	  if(selectedPayment.value=='Cash on delivery'){
 		orderPlaced()
 		form.submit()
-	  }else if(selectedPayment=='Online Payment'){
+	  }else if(selectedPayment.value=='Online Payment'){
+		
             await fetch('/online-payment',{
 					method:'POST',
 					headers:{
@@ -353,21 +343,37 @@
 					body:JSON.stringify({totalPrice:totalPrice})
 				}).then(res=>res.json())
 				.then((res)=>{
+					const orderId=res.orderId;
 					const razorPayOptions={
-						key:razorPayKey,
-						amount:totalPrice,
-						currency:'INR',
-						name:'Shoes Store',
-						descriptions:'Order Payment',
-						order:res.orderId,
-						handler:handleRazorpaySuccess
+						"key":razorPayKey,
+						"amount":totalPrice,
+						"currency":'INR',
+						"name":'Shoes Store',
+						"descriptions":'Order Payment',
+						"order_id":orderId,
+						handler:function(response){
+							console.log(response.razorpay_payment_id);
+							form.submit();
+						},
+						"prefill":{
+							"name":"<%= user.firstName %>",
+							"email":"<%= user.email %>",
+							"contact":"7034240636"
+						},
+						"theme":{
+							"color":"#F37254"
+						}
 					}
 					const razorPayInstance=new Razorpay(razorPayOptions)
 					razorPayInstance.open()
 				})
+				.catch(error=>{
+					console.error('Fetch error:',error);
+				})
+			}else{
+				form.submit();
 			}
 		}
-	  
 
 
 	</script>
