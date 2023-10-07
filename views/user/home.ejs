@@ -103,7 +103,7 @@
     					<div class="text py-3 pb-4 px-3" style="margin-top: 56px;">
     						<div class="d-flex">
     							<div class="cat">
-		    						<span>Casuals</span>
+		    						<span><%= product.category.categoryName %></span>
 		    					</div>
 		    					<div class="rating">
 	    							<p class="text-right mb-0">
@@ -115,9 +115,12 @@
 	    							</p>
 	    						</div>
 	    					</div>
-    						<h3><a href="#">Nike Men shoes</a></h3>
+    						<h3><a href="#"><%= product.productName %></a></h3>
+							<div class="cat">
+								<span style="color: black;"><%= product.gender %></span>
+							</div>
   							<div class="pricing">
-	    						<p class="price"><span>₹3899</span></p>
+	    						<p class="price"><span>₹<%= product.price %></span></p>
 	    					</div>
 	    					<p class="bottom-area d-flex px-3">
     							<a href="#" class="add-to-cart text-center py-2 mr-1" onclick="addToCart('<%= product._id %>')"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>

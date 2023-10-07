@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoes Store Admin</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/adminlogin.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <%- include('../partials/adminheader.ejs') %>
+
+    <style>
+          .table-data{
+            font-weight: 600;
+          }
+    </style>
+
+    <section class="first-footer" style="border-bottom: 2px solid #000;">
+        <footer class="text-center text-white" style="background-color: #ffffff;">
+          <div class="container p-4 pb-0">
+            <section class="">
+              <p class="d-flex justify-content-center">
+                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1110px; margin-top: 15px;">ADMIN/COUPON</span>
+              </p>
+            </section>
+          </div>
+        </footer>
+    </section>
+    
+    
+        
+            <div class="row flex-nowrap">
+                
+              <%- include('../partials/adminsidebar.ejs') %>     
+
+
+                <div class="container mt-4">
+                  <div class="d-flex justify-content-between mb-4" style="margin-top: -30px;">
+                    <div class="d-flex align-items-center">
+                      <a href="/addcoupon"><button type="button" class="btn btn-primary" id="searchButton">ADD COUPON</button></a>
+                    </div>
+                    <div id="suggestionsList" class="suggestions-list"></div>    
+                  </div>
+                  <table class="table table-bordered table-thick" style="margin-top: 30px;">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>COUPON CODE</th>
+                        <th>EXPIRY DATE</th>
+                        <th>PRICE</th>                   
+                        <th>COUPON DESCRIPTION</th>
+                      </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                      <tr>
+                        <td class="col-md-8 table-data"></td>
+                        <td class="col-md-4 table-data">                  
+                        </td>           
+                      </tr>                    
+                    </tbody>
+                  </table>
+              </div>
+
+            </div>
+            
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+
+          
+
+          //sweatalert script
+          function showSuccessMessage() {
+             Swal.fire({
+             icon: 'success',
+             title: 'Category Created Successfully',
+             showConfirmButton: false,
+             timer: 3000,
+            });
+          }
+
+          // Check if the "success" query parameter is present in the URL
+          const urlParams = new URLSearchParams(window.location.search);
+           if (urlParams.has('success') && urlParams.get('success') === 'true') {
+           // Call the custom function to display the success message
+           showSuccessMessage();
+          }
+
+            
+          </script>
+    
+    
+      <%- include('../partials/adminfooter.ejs') %>

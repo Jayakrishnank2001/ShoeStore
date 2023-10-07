@@ -3,6 +3,8 @@ const router=express.Router()
 const adminController=require('../controllers/adminController')
 const adminProductController=require('../controllers/adminProductController')
 const adminCategoryController=require('../controllers/adminCategoryController')
+const adminOrderController=require('../controllers/adminOrderController')
+const adminCouponController=require('../controllers/adminCouponController')
 const adminAuth=require('../middlewares/adminAuth')
 
 const multer = require('multer')
@@ -59,9 +61,12 @@ router.get('/category',adminAuth.noSession,adminCategoryController.category)
 router.get('/addcategory',adminAuth.noSession,adminCategoryController.addcategory)
 router.post('/addcategory',adminCategoryController.createcategory)
 
-router.get('/adminorder',adminAuth.noSession,adminController.orderHistory)
-router.get('/adminOrderdetails/:orderId',adminAuth.noSession,adminController.orderDetails)
-router.post('/update-order-status',adminAuth.noSession,adminController.orderStatus)
+router.get('/adminorder',adminAuth.noSession,adminOrderController.orderHistory)
+router.get('/adminOrderdetails/:orderId',adminAuth.noSession,adminOrderController.orderDetails)
+router.post('/update-order-status',adminAuth.noSession,adminOrderController.orderStatus)
+
+router.get('/addcoupon',adminAuth.noSession,adminCouponController.createCoupon)
+router.get('/coupon',adminAuth.noSession,adminCouponController.couponPage)
 
 router.post('/adminlogout',adminController.adminlogout)
 

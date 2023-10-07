@@ -17,7 +17,7 @@ const razorpay=new Razorpay({
 
 exports.homePage=async(req,res)=>{
   try {
-    const products=await Product.find({brand:'Nike',isActive:true}).limit(8)
+    const products=await Product.find({brand:'Nike',isActive:true}).limit(8).populate('category')
     res.render('./user/home',{products})
   } catch (error) {
     console.error(error)
