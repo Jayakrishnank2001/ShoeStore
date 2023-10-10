@@ -44,19 +44,19 @@
                   <table class="table table-bordered table-thick">
                     <thead class="thead-dark">
                       <tr>
-                        <th>ORDER ID</th>
-                        <th>ORDER ITEM</th>
-                        <th>AMOUNT</th>
-                        <th>ADDRESS</th>
-                        <th>ORDER DATE</th>
-                        <th>STATUS</th>
+                        <th class="text-center">ORDER ID</th>
+                        <th class="text-center">ORDER ITEM</th>
+                        <th class="text-center">AMOUNT</th>
+                        <th class="text-center">ADDRESS</th>
+                        <th class="text-center">ORDER DATE</th>
+                        <th class="text-center">STATUS</th>
                       </tr>
                     </thead>
                     <tbody id="userTableBody">
                       <% orders.forEach(order=> { %>
                       <tr> 
-                        <td class="table-data">#<%= order._id.toString().slice(0, 9) %></td>
-                        <td class="table-data">
+                        <td class="table-data text-center">#<%= order._id.toString().slice(0, 9) %></td>
+                        <td class="table-data text-center">
                             <% order.products.forEach(product => { %>
                               <a href="/adminOrderdetails/<%= order._id %>">
                                 <img src="/uploads/<%= product.productId.image[0] %>" style="width:80px; height:80px;">
@@ -64,15 +64,15 @@
                                 <h6><%= product.productId.productName %></h6>
                               <% }) %>                      
                         </td>      
-                        <td class="table-data">₹<%= order.totalPrice %></td>                                                         
-                        <td class="table-data">
+                        <td class="table-data text-center">₹<%= order.totalPrice %></td>                                                         
+                        <td class="table-data text-center">
                             <h6><%= order.address[0].firstName %> <%= order.address[0].lastName %></h6>
                             <h6><%= order.address[0].address %></h6>  
                             <h6><%= order.address[0].town %>,<%= order.address[0].district %>-<%= order.address[0].pincode %></h6>
                             <h6><%= order.address[0].state %></h6>              
                         </td> 
-                        <td class="table-data"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>                                             
-                        <td class="table-data">
+                        <td class="table-data text-center"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>                                             
+                        <td class="table-data text-center">
                           <div class="input-group">
                               <select id="statusSelect" class="form-select" data-order-id="<%= order._id %>">
                                   <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>

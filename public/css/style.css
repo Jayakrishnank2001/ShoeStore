@@ -10681,3 +10681,12 @@ textarea.form-control {
 .equal-size{
   height: 58px;
 }
+
+.banner-slide {
+  display: none;
+  transition: opacity 1s ease-in-out;
+}
+
+.banner-slide:first-child {
+  display: block;
+}

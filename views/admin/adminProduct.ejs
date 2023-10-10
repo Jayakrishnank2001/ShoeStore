@@ -83,33 +83,33 @@
                   <table class="table table-bordered table-thick">
                     <thead class="thead-dark">
                       <tr>
-                        <th>PRODUCT</th>
-                        <th>CATEGORY</th>
-                        <th>BRAND</th>
-                        <th>PRICE</th>
-                        <th>GENDER</th>
-                        <th>IMAGE</th>
-                        <th>EDIT</th>
-                        <th>LIST/UNLIST</th>
+                        <th class="text-center">PRODUCT</th>
+                        <th class="text-center">CATEGORY</th>
+                        <th class="text-center">BRAND</th>
+                        <th class="text-center">PRICE</th>
+                        <th class="text-center">GENDER</th>
+                        <th class="text-center">IMAGE</th>
+                        <th class="text-center">EDIT</th>
+                        <th class="text-center">LIST/UNLIST</th>
                       </tr>
                     </thead>
                     <tbody id="userTableBody">
                       <% products.forEach(product => { %>
                       <tr>
-                        <td class="editable table-data" data-field="productname"><%= product.productName %></td>
-                        <td class="table-data"><%= product.category.categoryName %></td>  
-                        <td class="table-data"><%= product.brand %></td>                                              
-                        <td class="table-data">₹<%= product.price %></td> 
-                        <td class="table-data"><%= product.gender %></td>                                             
+                        <td class="editable table-data text-center" data-field="productname"><%= product.productName %></td>
+                        <td class="table-data text-center"><%= product.category.categoryName %></td>  
+                        <td class="table-data text-center"><%= product.brand %></td>                                              
+                        <td class="table-data text-center">₹<%= product.price %></td> 
+                        <td class="table-data text-center"><%= product.gender %></td>                                             
                         <td>
-                          <div class="image-container">
+                          <div class="image-container text-center">
                           <img src='/uploads/<%= product.image[0] %>' style="width:80px; height:80px;">
                           </div>
                         </td>
-                        <td>
+                        <td class="text-center">
                           <a href="/editproduct/<%= product._id %>"><button type="button" class="btn btn-warning block-btn" data-product-id="<%= product._id %>">Edit</button></a>                          
                         </td>
-                        <td>
+                        <td class="text-center">
                           <% if (product.isActive == true) { %>
                             <button type="button" class="btn btn-success block-btn" data-toggle="modal" data-target="#confirmationModal" data-product-id="<%= product._id %>" data-action-url="/admin/product-list/<%= product._id %>">List</button>
                           <% } else if(product.isActive==false) { %>

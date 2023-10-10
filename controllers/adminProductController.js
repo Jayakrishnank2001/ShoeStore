@@ -66,6 +66,7 @@ exports.createProduct=async(req,res)=>{
         res.redirect('/product?success=true')
     }catch(error){
         console.error(error.message)
+        res.status(500).send('Internal server error')
     }
 }
 

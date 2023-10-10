@@ -1,5 +1,6 @@
 const User=require('../models/users')
 const Product=require('../models/product')
+const Banner=require('../models/banner')
 const bcrypt=require('bcrypt')
 const nodemailer=require('nodemailer')
 const crypto=require('crypto')
@@ -19,7 +20,8 @@ const razorpay=new Razorpay({
 exports.homePage=async(req,res)=>{
   try {
     const products=await Product.find({brand:'Nike',isActive:true}).limit(8).populate('category')
-    res.render('./user/home',{products})
+    const banners=await Banner.find()
+    res.render('./user/home',{products,banners})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -123,6 +125,7 @@ exports.orderHistory=async(req,res)=>{
     const userId=req.session.userId
     const orders = await Order.find({ userId: userId }).populate('products.productId')
     .skip(skip)
+    .sort({ orderDate: -1, _id: 1 })
     .limit(limit)
     .exec();
 

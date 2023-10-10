@@ -12,10 +12,10 @@ exports.orderHistory=async(req,res)=>{
 
         const orders=await Order.find().populate('products.productId')
         .skip(skip)
+        .sort({ orderDate: -1, _id: 1 })
         .limit(limit)
         .exec();
     
-        orders.sort((a, b) => b.orderDate - a.orderDate);
         const totalCount=await Order.countDocuments();
         const totalPages=Math.ceil(totalCount/limit);
          

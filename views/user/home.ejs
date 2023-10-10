@@ -37,7 +37,7 @@
 	      	<div class="overlay"></div>
 	        <div class="container-fluid p-0">
 	          <div class="row d-md-flex no-gutters slider-text align-items-center justify-content-end" data-scrollax-parent="true">
-	          	<img class="one-third order-md-last img-fluid" style="height: 800px; width:1800px;" src="/images/DC-233-Womens-MantecaHi-MLT-mobile (1).jpg" alt="">
+	          	<img class="one-third order-md-last img-fluid" style="height:100%; width:100%;" src="/images/4-collins-x-air-max.gif" alt="">
 		          <div class="one-forth d-flex align-items-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
 		          </div>
 	        	</div>
@@ -83,6 +83,18 @@
         </div>
 	  </div>
 	</section>
+
+	<div class="container">
+		<div class="row">
+			<% banners.forEach(banner => { %>
+				<div class="col-md-12 banner-slide">
+					<a href="/products">
+						<img src="/uploads/<%= banner.bannerImage %>" class="img-fluid" alt="" style="height: 100%; width:100%;">
+					</a>
+				</div>
+			<% }) %>
+		</div>
+	</div>
 
     <section class="ftco-section bg-light">
     	<div class="container">
@@ -150,89 +162,6 @@
 	  </div>
   </section>
 
-    
-    <section class="ftco-section ftco-deal" style="background-color: #f0f1f2;">
-    	<div class="container">
-    		<div class="row">
-    			<div class="col-md-6">
-    				<img src="images/prod-1.png" class="img-fluid" alt="">
-    			</div>
-    			<div class="col-md-6">
-    				<div class="heading-section heading-section-white">
-    					<span class="subheading" style="color:black">lowest price ever</span>
-	            <h2 class="deal mb-3" style="color:black">DEAL OF THE MONTH</h2>
-	          </div>
-						<div class="text-deal">
-							<h2><a href="#">Nike Free RN 2019 iD</a></h2>
-							<p class="price"><span class="mr-2 price-dc">₹3499</span><span class="price-sale" style="color:black">₹2999</span></p>
-							<ul class="thumb-deal d-flex mt-4">
-								<li class="img" style="background-image: url(images/product-6.png);"></li>
-								<li class="img" style="background-image: url(images/product-2.png);"></li>
-								<li class="img" style="background-image: url(images/product-4.png);"></li>
-							</ul>
-						</div>
-    			</div>
-    		</div>
-    	</div>
-    </section>
-
-    <section class="ftco-gallery">
-    	<div class="container">
-    		<div class="row justify-content-center">
-    			<div class="col-md-8 heading-section text-center mb-4 ftco-animate">
-            <h2 class="follow mb-4">Follow Us On Instagram</h2>
-			<p>Follow us on Instagram,Facebook and all other major social media platforms.</p>
-          </div>
-    		</div>
-    	</div>
-    	<div class="container-fluid px-0">
-    		<div class="row no-gutters">
-					<div class="col-md-4 col-lg-2 ftco-animate">
-						<a href="images/gallery-1.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(images/gallery-1.jpg);">
-							<div class="icon mb-4 d-flex align-items-center justify-content-center">
-    						<span class="icon-instagram"></span>
-    					</div>
-						</a>
-					</div>
-					<div class="col-md-4 col-lg-2 ftco-animate">
-						<a href="images/gallery-2.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(images/gallery-2.jpg);">
-							<div class="icon mb-4 d-flex align-items-center justify-content-center">
-    						<span class="icon-instagram"></span>
-    					</div>
-						</a>
-					</div>
-					<div class="col-md-4 col-lg-2 ftco-animate">
-						<a href="images/gallery-3.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(images/gallery-3.jpg);">
-							<div class="icon mb-4 d-flex align-items-center justify-content-center">
-    						<span class="icon-instagram"></span>
-    					</div>
-						</a>
-					</div>
-					<div class="col-md-4 col-lg-2 ftco-animate">
-						<a href="images/gallery-4.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(images/gallery-4.jpg);">
-							<div class="icon mb-4 d-flex align-items-center justify-content-center">
-    						<span class="icon-instagram"></span>
-    					</div>
-						</a>
-					</div>
-					<div class="col-md-4 col-lg-2 ftco-animate">
-						<a href="images/gallery-5.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(images/gallery-5.jpg);">
-							<div class="icon mb-4 d-flex align-items-center justify-content-center">
-    						<span class="icon-instagram"></span>
-    					</div>
-						</a>
-					</div>
-					<div class="col-md-4 col-lg-2 ftco-animate">
-						<a href="images/gallery-6.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(images/gallery-6.jpg);">
-							<div class="icon mb-4 d-flex align-items-center justify-content-center">
-    						<span class="icon-instagram"></span>
-    					</div>
-						</a>
-					</div>
-        </div>
-    	</div>
-    </section>
-
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 
@@ -281,6 +210,18 @@
 			}
 		})
 	}
+
+	//banner image carousel
+	const bannerSlides = document.querySelectorAll('.banner-slide');
+    let currentSlide = 0;
+    function showNextSlide() {
+        bannerSlides[currentSlide].style.display = 'none';
+        currentSlide = (currentSlide + 1) % bannerSlides.length;
+        bannerSlides[currentSlide].style.display = 'block';
+    }
+    // Automatically change slide every 5 seconds (5000 milliseconds)
+    setInterval(showNextSlide, 5000);
+
 	
 	</script>
 

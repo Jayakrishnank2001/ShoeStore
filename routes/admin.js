@@ -58,6 +58,10 @@ router.post('/editproduct/:productId',upload.array('image',5),adminProductContro
 
 router.get('/category',adminAuth.noSession,adminCategoryController.category)
 
+router.get('/banners',adminAuth.noSession,adminController.bannerPage)
+router.get('/addbanner',adminAuth.noSession,adminController.addBanner)
+router.post('/addbanner',upload.single('bannerImage'),adminAuth.noSession,adminController.createBanner)
+
 router.get('/addcategory',adminAuth.noSession,adminCategoryController.addcategory)
 router.post('/addcategory',adminCategoryController.createcategory)
 

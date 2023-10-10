@@ -1,5 +1,6 @@
 const Admin=require('../models/admin')
 const User=require('../models/users')
+const Banner=require('../models/banner')
 const Order=require('../models/order')
 const bcrypt=require('bcrypt')
 
@@ -9,8 +10,45 @@ const newAdmin=new Admin({
     password:'jayk@16',
 })
 
+//dashboard
 exports.dashboard=async(req,res)=>{
     res.render('./admin/dashboard')
+}
+
+//banner page
+exports.bannerPage=async(req,res)=>{
+    try {
+        const banners=await Banner.find()
+        res.render('./admin/banner',{banners})
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Internal Server Error')
+    }
+}
+
+//create new banner page
+exports.addBanner=async(req,res)=>{
+    res.render('./admin/addBanner')
+}
+
+//create banner and store on database
+exports.createBanner=async(req,res)=>{
+    try {
+        const { bannerId,bannerImage }=req.body;
+        if(!bannerId){
+             res.render('./admin/addBanner',{alert:'Please fill all required fields.'})
+             return
+        }
+        const newBanner=new Banner({
+            bannerId,
+            bannerImage:req.file.filename
+        })
+        await newBanner.save()
+        res.redirect('/banners?success=true')
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Internal server error')
+    }
 }
 
 exports.loginpage=async(req,res)=>{
@@ -99,3 +137,5 @@ exports.adminlogout=async(req,res)=>{
         res.status(500).send('Internal Server Error')
     }
 }
+
+
