@@ -123,8 +123,8 @@
 	    						<p class="price"><span>₹<%= product.price %></span></p>
 	    					</div>
 	    					<p class="bottom-area d-flex px-3">
-    							<a href="#" class="add-to-cart text-center py-2 mr-1" onclick="addToCart('<%= product._id %>')"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
-    							
+    							<a href="#" class="add-to-cart text-center py-2 mr-1" onclick="addToCart('<%= product._id %>')"><span>Add to cart <i class="ion-ios-cart ml-1"></i></span></a>
+								<a href="#" class="buy-now text-center py-2" onclick="addToWishlist('<%= product._id %>')">Wishlist<span><i class="ion-ios-add ml-1"></i></span></a>
     						</p>
     					</div>
     				</div>
@@ -236,7 +236,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 
-	//to add the product to the cart
+	//add the product to the cart
 	async function addToCart(productId){
 		await fetch(`/addcart/${productId}`).then(res=>res.json()).then(data=>{
 			if(data.data=='Product added to the cart successfully'){
@@ -251,6 +251,29 @@
                 Swal.fire({
 				icon:'warning',
 				title:'Already added this product to cart.',
+				showConfirmButton: false,
+				timer:2000,
+				position: 'top'
+				})
+			}
+		})
+	}
+
+	//add the product to the wishlist
+	async function addToWishlist(productId){
+		await fetch(`/addwishlist/${productId}`).then(res=>res.json()).then(data=>{
+			if(data.data=='Product added to the wishlist successfully'){
+				Swal.fire({
+				icon:'success',
+				title:'Product added to wishlist successfully',
+				showConfirmButton: false,
+				timer:2000,
+				position: 'top'
+				})
+			}else if(data.data=='Already added this product to wishlist.'){
+                Swal.fire({
+				icon:'warning',
+				title:'Already added this product to wishlist.',
 				showConfirmButton: false,
 				timer:2000,
 				position: 'top'

@@ -10,9 +10,10 @@ const Category = require('../models/category')
 const Order=require('../models/order')
 const Razorpay=require('razorpay')
 
+
 const razorpay=new Razorpay({
   key_id:process.env.RAZORPAY_ID_KEY,
-  key_secret:process.env.RAZORPAY_SECRET_KEY,
+  key_secret:process.env.RAZORPAY_SECRET_KEY
 });
 
 exports.homePage=async(req,res)=>{
@@ -43,6 +44,22 @@ exports.userprofile=async(req,res)=>{
 
 exports.passwordChange=async(req,res)=>{
   res.render('./user/changepassword')
+}
+
+//wishlist page
+exports.wishlistPage=async(req,res)=>{
+  try {
+    const userId=req.session.userId
+    const user=await User.findById(userId).populate('wishlist.productId')
+    const wishlistItems=user.wishlist.map(item=>{
+      return{
+        product:item.productId
+      }
+    })
+    res.render('./user/wishlist',{wishlistItems})
+  } catch (error) {
+    
+  }
 }
 
 exports.checkoutPage=async(req,res)=>{
@@ -123,7 +140,6 @@ exports.cartPage=async(req,res)=>{
   try {
     const userId=req.session.userId;
     const user = await User.findById(userId).populate('cart.productId').exec();
-    // const user=await User.findById(userId).populate('cart.productId');
     const cartItems=user.cart.map(item=>{
       return{
         product:item.productId,
@@ -625,7 +641,7 @@ exports.setDefaultAddress=async(req,res)=>{
   }
 }
 
-//to place an order
+//for place an order
 exports.orderPlace=async(req,res)=>{
   try {
    const { firstName,lastName,address,town,pincode,district,state,country,mobileNumber,paymentMethod }=req.body
@@ -672,9 +688,13 @@ exports.orderPlace=async(req,res)=>{
     await orderData.save()
     user.cart=[];
     await user.save();
+    if(paymentMethod==="Online Payment"){
+      res.redirect('/')
+    }
    }
   } catch (error) {
     console.error(error)
+    res.status(500).send('Internal server error')
   }
 }
 
@@ -691,5 +711,43 @@ exports.onlinePayment=async(req,res)=>{
   } catch (error) {
     console.error(error)
     return res.status(500).json({error:'Internal Server Error'})
+  }
+}
+
+//remove product from wishlist
+exports.removeFromWishlist=async(req,res)=>{
+  try {
+    const userId=req.session.userId
+    const productId=req.params.productId
+    const user=await User.findByIdAndUpdate(userId,
+      {$pull:{wishlist:{productId}}},
+      {new:true}
+      );
+      res.json({data:'Product removed from the wishlist successfully'})
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal server error')
+  }
+}
+
+//add product to the wishlist
+exports.addToWishlist=async(req,res)=>{
+  try {
+    const productId=req.params.productId
+    let userId=req.session.userId
+    const product=await Product.findById(productId);
+    const user=await User.findOne({_id:userId,'wishlist.productId':productId});
+    if(user){
+      res.json({data:'Already added this product to wishlist'})
+    }else{
+      let user=await User.findByIdAndUpdate(userId,
+        {$push:{wishlist:{productId:productId}}},
+        {new:true}
+        );
+        res.json({data:'Product added to the wishlist successfully'})
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal server error')
   }
 }

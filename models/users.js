@@ -45,6 +45,13 @@ const userSchema=new mongoose.Schema({
             type:Number,
         }
     }],
+    wishlist:[{
+        productId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Product',
+            required:true
+        }
+    }],
     gender:{
         type:String,
     },

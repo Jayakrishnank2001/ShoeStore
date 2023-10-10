@@ -167,7 +167,7 @@
 							<h3 class="billing-heading mb-4">Cart Total</h3>
 							<p class="d-flex">
 									  <span>Subtotal</span>
-									  <span name="totalPrice" id ="cartTotal" value="<%= cartTotal %>"><%= cartTotal %></span>
+									  <span name="totalPrice" id ="cartTotal" value="<%= cartTotal %>">₹<%= cartTotal %></span>
 								  </p>
 								  <p class="d-flex">
 									  <span>Delivery</span>
@@ -180,7 +180,7 @@
 								  <hr>
 								  <p class="d-flex total-price">
 									  <span>Total</span>
-									  <span name="totalPrice" value="<%= cartTotal %>">₹<%= cartTotal %></span>
+									  <span name="totalPrice" id="totalPrice" value="<%= cartTotal %>">₹<%= cartTotal %></span>
 								  </p>
 								  </div>
 					</div>
@@ -190,7 +190,7 @@
 									  <div class="form-group">
 										  <div class="col-md-12">
 											  <div class="radio">
-												 <label><input type="radio" id="razorPay" value="razorPay" name="paymentMethod" class="mr-2" value="Online Payment"> Online Payment</label>
+												 <label><input type="radio" id="razorPay" name="paymentMethod" class="mr-2" value="Online Payment"> Online Payment</label>
 											  </div>
 										  </div>
 									  </div>
@@ -230,54 +230,69 @@
 
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-	 <script>
-      
-	  const placeAnOrder=document.getElementById('placeOrder')
-	  placeAnOrder.addEventListener('click',async()=>{
-		const selectedPayment=document.querySelector('input[name=paymentMethod]:checked')
-		if(!selectedPayment){
-			showErrorPopup('No Payment method selected','Please select a payment method to proceed')
-			return 
-		}
 
-		let totalPrice=document.getElementById('cartTotal').innerHTML
-        console.log(totalPrice);
-		if(selectedPayment.value==='razorPay'){
-			const razorPayKey='rzp_test_8AyTSoNP7K7ygJ'
-			try {
-				fetch('/online-payment',{
+  <script>
+
+
+    //razorpay
+	const cartTotalElement = document.getElementById('cartTotal');
+	const cartTotalText = cartTotalElement.textContent;
+    const numericPart = cartTotalText.match(/[\d.]+/);
+    const cartTotal = parseFloat(numericPart);
+
+    async function proceedToPay(event){
+		event.preventDefault()
+      const form=document.getElementById('onlineCheckout')
+	  const selectedPayment=document.querySelector('input[name="paymentMethod"]:checked')
+	  if(selectedPayment.value=='Cash on delivery'){
+		orderPlaced()
+		form.submit()
+	  }
+	  else if(selectedPayment.value=='Online Payment'){
+            await fetch('/online-payment',{
 					method:'POST',
 					headers:{
 						'Content-Type':'application/json'
 					},
-					body:JSON.stringify({totalPrice:totalPrice})
+					body:JSON.stringify({totalPrice:cartTotal})
+					
 				}).then(res=>res.json())
 				.then((res)=>{
-					const razorPayOptions={
-						key:razorPayKey,
-						amount:totalPrice,
-						currency:'INR',
-						name:'Shoes Store',
-						descriptions:'Order Payment',
-						order:'hello',
-						handler:handleRazorpaySuccess
+					const orderId=res.orderId;
+					var razorPayOptions={
+						"key":"rzp_test_8AyTSoNP7K7ygJ",
+						"amount":totalPrice,
+						"currency":'INR',
+						"name":'Shoes Store',
+						"descriptions":'Order Payment',
+						"image":"https://img.freepik.com/premium-vector/shoes-store-logo-template-design_316488-430.jpg",
+						"order_id":orderId,
+						"handler":function(response){
+							form.submit();
+						},
+						"prefill":{
+							"name":"<%= user.firstName %>",
+							"email":"<%= user.email %>",
+							"contact":"7034240636"
+						},
+						"theme":{
+							"color":"#F37254"
+						}
 					}
-					const razorPayInstance=new Razorpay(razorPayOptions)
-					razorPayInstance.open()
+					var razorpay=new Razorpay(razorPayOptions)
+					razorpay.open()
 				})
-			} catch (error) {
-				showErrorPopup('Payment Error','Payment could not processed.Please try again.')
-				console.error(error)
+				.catch(error=>{
+					console.error('Fetch error:',error);
+				})
+			}else{
+				form.submit();
 			}
+			history.pushState(null,null,'/')
 		}
-	  })
-      
 
 
-	</script> 
-
-  <script>
-
+		//button functions
 		$(document).ready(function(){
 		var quantitiy=0;
 		   $('.quantity-right-plus').click(function(e){
@@ -324,56 +339,6 @@
       });
     },200)
    }
-
-    //razorpay
-    async function proceedToPay(event){
-		event.preventDefault()
-      const form=document.getElementById('onlineCheckout')
-	  const selectedPayment=document.querySelector('input[name=paymentMethod]:checked')
-	  if(selectedPayment.value=='Cash on delivery'){
-		orderPlaced()
-		form.submit()
-	  }else if(selectedPayment.value=='Online Payment'){
-		
-            await fetch('/online-payment',{
-					method:'POST',
-					headers:{
-						'Content-Type':'application/json'
-					},
-					body:JSON.stringify({totalPrice:totalPrice})
-				}).then(res=>res.json())
-				.then((res)=>{
-					const orderId=res.orderId;
-					const razorPayOptions={
-						"key":razorPayKey,
-						"amount":totalPrice,
-						"currency":'INR',
-						"name":'Shoes Store',
-						"descriptions":'Order Payment',
-						"order_id":orderId,
-						handler:function(response){
-							console.log(response.razorpay_payment_id);
-							form.submit();
-						},
-						"prefill":{
-							"name":"<%= user.firstName %>",
-							"email":"<%= user.email %>",
-							"contact":"7034240636"
-						},
-						"theme":{
-							"color":"#F37254"
-						}
-					}
-					const razorPayInstance=new Razorpay(razorPayOptions)
-					razorPayInstance.open()
-				})
-				.catch(error=>{
-					console.error('Fetch error:',error);
-				})
-			}else{
-				form.submit();
-			}
-		}
 
 
 	</script>

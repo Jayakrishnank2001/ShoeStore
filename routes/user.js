@@ -28,9 +28,12 @@ router.get('/products',userController.productspage)
 
 router.get('/userproduct/:productId',userController.productpage)
 
+router.get('/wishlist',userAuth.noSession,userController.wishlistPage)
+router.get('/addwishlist/:productId',userAuth.noSession,userController.addToWishlist)
+router.get('/removewishlist/:productId',userAuth.noSession,userController.removeFromWishlist)
+
 router.get('/cart',userAuth.noSession,userController.cartPage)
 router.get('/addcart/:productId',userAuth.noSession,userController.addToCart)
-
 router.get('/removecart/:productId',userAuth.noSession,userController.removeFromCart)
 
 router.get('/checkout',userAuth.noSession,userController.checkoutPage)

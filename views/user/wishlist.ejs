@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Shoes Store Website</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link rel="stylesheet" href="/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="/css/animate.css">
+    <link rel="stylesheet" href="/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+	
+    <link rel="stylesheet" href="/css/magnific-popup.css">
+    <link rel="stylesheet" href="/css/aos.css">
+
+    <link rel="stylesheet" href="/css/ionicons.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="/css/jquery.timepicker.css">
+
+	<link rel="stylesheet" href="/css1/userlogin.css">
+    <link rel="stylesheet" href="/css/flaticon.css">
+    <link rel="stylesheet" href="/css/icomoon.css">
+    <link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+  </head>
+  <body class="goto-here">
+		
+    <%- include('../partials/header.ejs') %>
+
+    
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"><a href=""></a></span> <span></span></p>
+            <h1 class="mb-0 bread" style="font-weight:600;">MY WISHLIST</h1>
+          </div>
+        </div>
+      </div>
+    
+
+    <section class="ftco-section ftco-cart">
+			<div class="container">
+				<div class="row">
+    			<div class="col-md-12 ftco-animate">
+    				<div class="cart-list">
+	    				<table class="table">
+						    <thead class="thead-primary">
+						      <tr class="text-center">
+						        <th>&nbsp;</th>
+						        <th>&nbsp;</th>
+						        <th>Product</th>
+						        <th>Price</th>
+						        <th>Add to cart</th>
+						      </tr>
+						    </thead>
+						    <tbody>
+                  <% if(wishlistItems.length===0) {%>
+                    <h3 class="text-center font-weight-bold">Your wishlist is Empty</h3>
+                    <% } %>
+							  <% wishlistItems.forEach(item=>{ %>
+						      <tr class="text-center">
+						        <td class="product-remove"><a href="#" onclick="wishlistRemove('<%= item.product._id %>')"><span class="ion-ios-close"></span></a></td>
+
+						        <td class="image-prod"><img src='/uploads/<%= item.product.image[0] %>' style="width:80px; height:80px;"></td>
+						        
+						        <td class="product-name">
+						        	<h3><%= item.product.productName %></h3>
+						        </td>
+						        
+						        <td class="price">₹<%= item.product.price %></td>
+						        
+						        <td class="addcart">
+
+                      <a href="#" class="btn btn-black py-1 px-3 mr-1" id="addToCartButton" onclick="addToCart('<%= item.product._id %>')">Add to Cart</a>
+
+								  </td>
+						      
+							</tr>
+
+							<% }); %>
+              
+						    </tbody>
+						  </table>
+					  </div>
+    			</div>
+    		</div>
+			</div>
+		</section>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+         
+		//product remove from the cart
+		async function wishlistRemove(productId){
+			await fetch(`/removewishlist/${productId}`).then(res=>res.json()).then(data=>{
+				if(data.data=='Product removed from the wishlist successfully'){
+					Swal.fire({
+					icon:'success',
+					title:'Product removed from the wishlist successfully',
+          timer:2000,
+          showConfirmButton:false
+					})
+          setTimeout(()=>{
+            location.reload()
+          },2000)
+				}
+			})
+		}
+
+  //add product to the cart
+	async function addToCart(productId){
+		await fetch(`/addcart/${productId}`).then(res=>res.json()).then(data=>{
+			if(data.data=='Product added to the cart successfully'){
+				Swal.fire({
+				icon:'success',
+				title:'Product added to cart successfully',
+				showConfirmButton: false,
+				timer:2000,
+				position: 'top'
+				})
+			}else if(data.data=='Already added this product to cart.'){
+                Swal.fire({
+				icon:'warning',
+				title:'Already added this product to cart.',
+				showConfirmButton: false,
+				timer:2000,
+				position: 'top'
+				})
+			}
+		})
+	}
+
+
+	</script>
+    
+
+	<%- include('../partials/homefooter.ejs') %>
