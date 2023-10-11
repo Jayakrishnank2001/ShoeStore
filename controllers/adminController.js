@@ -35,6 +35,11 @@ exports.addBanner=async(req,res)=>{
 exports.createBanner=async(req,res)=>{
     try {
         const { bannerId,bannerImage }=req.body;
+        const existingBanner=await Banner.findOne({ bannerId: {$regex: `^${bannerId}$`, $options: 'i'}})
+        if(existingBanner){
+            res.render('./admin/addBanner',{alert:'BannerId already exist.'})
+            return 
+        }
         if(!bannerId){
              res.render('./admin/addBanner',{alert:'Please fill all required fields.'})
              return
@@ -45,6 +50,18 @@ exports.createBanner=async(req,res)=>{
         })
         await newBanner.save()
         res.redirect('/banners?success=true')
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Internal server error')
+    }
+}
+
+//delete banner
+exports.bannerDelete=async(req,res)=>{
+    try {
+        const bannerId=req.params.bannerId
+        const banner=await Banner.findByIdAndRemove(bannerId)
+        res.redirect('/banners')
     } catch (error) {
         console.error(error)
         res.status(500).send('Internal server error')

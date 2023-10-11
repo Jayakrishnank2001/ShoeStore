@@ -38,32 +38,27 @@ router.post('/adminlogin',adminController.login)
 router.get('/dashboard',adminAuth.noSession,adminController.dashboard)
 
 router.get('/users',adminAuth.noSession,adminController.users)
-
 router.get('/admin/block-user/:userId',adminAuth.noSession,adminController.blockUser)
 router.get('/admin/unblock-user/:userId',adminAuth.noSession,adminController.unblockUser)
 
-router.get('/admin/category-list/:categoryId',adminAuth.noSession,adminCategoryController.listCategory)
-router.get('/admin/category-unlist/:categoryId',adminAuth.noSession,adminCategoryController.unlistCategory)
-
 router.get('/admin/product-list/:productId',adminAuth.noSession,adminProductController.listProduct)
 router.get('/admin/product-unlist/:productId',adminAuth.noSession,adminProductController.unlistProduct)
-
 router.get('/product',adminAuth.noSession,adminProductController.product)
-
 router.get('/addproduct',adminAuth.noSession,adminProductController.addproduct)
 router.post('/addproduct',upload.array('image',5),adminProductController.createProduct)
-
 router.get('/editproduct/:productId',adminAuth.noSession,adminProductController.editproduct)
 router.post('/editproduct/:productId',upload.array('image',5),adminProductController.updateProduct)
 
 router.get('/category',adminAuth.noSession,adminCategoryController.category)
+router.get('/addcategory',adminAuth.noSession,adminCategoryController.addcategory)
+router.post('/addcategory',adminCategoryController.createcategory)
+router.get('/admin/category-list/:categoryId',adminAuth.noSession,adminCategoryController.listCategory)
+router.get('/admin/category-unlist/:categoryId',adminAuth.noSession,adminCategoryController.unlistCategory)
 
 router.get('/banners',adminAuth.noSession,adminController.bannerPage)
 router.get('/addbanner',adminAuth.noSession,adminController.addBanner)
 router.post('/addbanner',upload.single('bannerImage'),adminAuth.noSession,adminController.createBanner)
-
-router.get('/addcategory',adminAuth.noSession,adminCategoryController.addcategory)
-router.post('/addcategory',adminCategoryController.createcategory)
+router.get('/bannerDelete/:bannerId',adminAuth.noSession,adminController.bannerDelete)
 
 router.get('/adminorder',adminAuth.noSession,adminOrderController.orderHistory)
 router.get('/adminOrderdetails/:orderId',adminAuth.noSession,adminOrderController.orderDetails)

@@ -306,7 +306,6 @@ exports.otpverify=async (req,res)=>{
     try{
         const enteredOTP=req.body.otp;
         const generatedOTP=req.session.otp;
-        console.log(enteredOTP,generatedOTP)
         if(enteredOTP!==generatedOTP){
             return res.render('./login/userloginotp',{alert:'Invalid OTP'})
         }
@@ -326,6 +325,20 @@ exports.otpverify=async (req,res)=>{
         console.error(error);
         res.status(500).send('Internal Server Error')
     }
+}
+
+//forgot resend OTP
+exports.resendOTP=async(req,res)=>{
+  try {
+   const newOTP=generateOTP()
+   const email=req.session.email
+   await sendOTPByEmail(email, newOTP);
+   req.session.otp=newOTP
+   req.session.save()
+  } catch (error) {
+   console.error(error)
+   res.status(500).send('Internal server error')
+  }
 }
 
 //verifying email to send OTP 

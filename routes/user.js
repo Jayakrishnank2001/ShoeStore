@@ -13,6 +13,8 @@ router.post('/otp',userController.otpverify)
 router.get('/forgototp',userController.forgototppage)
 router.post('/forgototp',userController.forgototpverify)
 
+router.get('/resendOTP',userController.resendOTP)
+
 router.get('/forgot',userController.forgotPage)
 router.post('/forgot',userController.emailverify)
 
@@ -21,8 +23,6 @@ router.post('/signup',userController.registerUser)
 
 router.get('/resetpassword',userController.resetpassword)
 router.post('/resetpassword',userController.reset)
-
-//router.get('/resendloginOTP',userController.OTPresend)
 
 router.get('/products',userController.productspage)
 
@@ -38,9 +38,7 @@ router.get('/removecart/:productId',userAuth.noSession,userController.removeFrom
 
 router.get('/checkout',userAuth.noSession,userController.checkoutPage)
 router.post('/checkout',userAuth.noSession,userController.orderPlace)
-// ================= online payment==========================
 router.post('/online-payment',userAuth.noSession,userController.onlinePayment)
-
 
 router.get('/profile',userAuth.noSession,userController.userprofile)
 

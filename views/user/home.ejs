@@ -84,12 +84,12 @@
 	  </div>
 	</section>
 
-	<div class="container">
+	<div class="container-fluid p-0">
 		<div class="row">
 			<% banners.forEach(banner => { %>
 				<div class="col-md-12 banner-slide">
 					<a href="/products">
-						<img src="/uploads/<%= banner.bannerImage %>" class="img-fluid" alt="" style="height: 100%; width:100%;">
+						<img src="/uploads/<%= banner.bannerImage %>" class="" alt="" style="height: 100%; width:100%;">
 					</a>
 				</div>
 			<% }) %>

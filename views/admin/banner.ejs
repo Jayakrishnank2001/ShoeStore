@@ -85,7 +85,7 @@
                             </div>
                         </td>  
                         <td class="col-md-4 table-data text-center">
-                            <button type="button" class="btn btn-danger block-btn" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                            <button type="button" class="btn btn-danger block-btn" data-toggle="modal" data-target="#deleteModal" data-banner-id="<%= banner._id %>" data-action-url="/bannerDelete/<%= banner._id %>">Delete</button>
                         </td>           
                       </tr>
                        <% }); %>
@@ -94,6 +94,49 @@
               </div>
 
             </div>
+            
+            <script>
+
+            //Modal script
+
+           $(document).ready(function () {
+            // Handle button click
+             $('.block-btn').click(function () {
+             const bannerId = $(this).data('banner-id');
+             const actionUrl = $(this).data('action-url');
+             $('#confirmActionBtn').data('banner-id', bannerId);
+             $('#confirmActionBtn').data('action-url', actionUrl);
+           });
+
+           // Handle "Confirm" button click in modal
+            $('#confirmActionBtn').click(function () {
+            const bannerId = $(this).data('banner-id');
+            const actionUrl = $(this).data('action-url');
+            // Perform the action by submitting the form or making an AJAX request
+            // Redirect to the appropriate URL after action completion
+            window.location.href = actionUrl;
+           });
+          });
+
+          //sweatalert script
+          function showSuccessMessage() {
+             Swal.fire({
+             icon: 'success',
+             title: 'Banner Created Successfully',
+             showConfirmButton: false,
+             timer: 3000,
+            });
+            history.pushState(null,null,'/banners')
+          }
+
+          // Check if the "success" query parameter is present in the URL
+          const urlParams = new URLSearchParams(window.location.search);
+           if (urlParams.has('success') && urlParams.get('success') === 'true') {
+           // Call the custom function to display the success message
+           showSuccessMessage();
+          }
+
+            </script>
             
             
     
