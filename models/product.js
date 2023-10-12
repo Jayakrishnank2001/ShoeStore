@@ -30,7 +30,7 @@ const productSchema=new mongoose.Schema({
         // require : true
     },
     size : {
-        sizes: [{ type: Number, enum: [6, 7, 8, 9, 10] }],
+        type: Number
     },
     color : {
         type :String
