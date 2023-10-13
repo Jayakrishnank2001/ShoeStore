@@ -11,32 +11,13 @@
 
     <style>
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
+.custom-modal-dialog {
+    width: 30vw;
+    height: 40vw;
+}
+.custom-modal-dialog .modal-content {
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.9);
-}
-
-.modal-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
-
-/* Close button style */
-.close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 30px;
-    cursor: pointer;
 }
 
     </style>
@@ -61,16 +42,53 @@
                 
               <%- include('../partials/adminsidebar.ejs') %>
 
+
+          <!-- Modal for More Images -->
+          <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog custom-modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <% product.image.forEach((img, index) => { %>
+                                    <div class="text-center carousel-item<%= index === 0 ? ' active' : '' %>">
+                                        <img src="/uploads/<%= img %>" alt="Image <%= index + 1 %>" style="width: 430px; height: 500px;">
+                                    </div>
+                                <% }); %>
+                            </div>
+                            
+                            <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                    <button class="btn-danger btn-block">DELETE</button>
+                    
+            </div>
+          </div>
+         </div>
+
+
               <div class="container">
                 <div class="row justify-content-center mt-5">
                     <div class="col-md-8">
-                        <div class="card" style="background-color: #DFDFDF; height:990px;">
+                        <div class="card" style="background-color: #DFDFDF; height:1050px;">
                             <div class="card-header" style="background-color: #DFDFDF; color:black">
                                 <h3 class="text-center">EDIT PRODUCT</h3>
                             </div>
                             <div class="card-body">
                                 <form action="/editproduct/<%= product._id %>" method="post" enctype="multipart/form-data" id="editProductForm">
                                     <div class="form-row">
+                                        <div class="col d-flex justify-content-center align-items-center">
+                                            <% if(locals.alert){ %>
+                                                <p class="alert alert-danger text-center"><%= locals.alert %></p>
+                                            <% } %>
+                                        </div>
                                         <div class="form-group col-md-12">
                                             <label for="firstName" style="font-weight: 600;">PRODUCT NAME</label>
                                             <input type="text" value="<%= product.productName %>" name="productName" class="form-control" id="firstName" placeholder="" style="border-radius: 1em;">
@@ -78,13 +96,13 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label for="mobileNumber" style="font-weight: 600;">CATEGORY</label>
+                                            <label for="category" style="font-weight: 600;">CATEGORY</label>
                                             <select name="category" class="form-control" id="category" style="border-radius: 1em;">
                                                 <% categories.forEach(category => { %>
-                                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
-                                                <% }); %>
+                                                    <option value="<%= category._id %>" <% if (product.category && product.category.toString() === category._id.toString()) { %>selected<% } %>><%= category.categoryName %></option>
+                                                    <% }); %>
                                             </select>
-                                        </div>
+                                        </div>                                        
                                         <div class="form-group col-md-6">
                                             <label for="price" style="font-weight: 600;">PRICE</label>
                                             <input type="number" value="<%= product.price %>" name="price" class="form-control" id="price" placeholder="" style="border-radius: 1em;">
@@ -110,10 +128,10 @@
                                         <div class="form-group col-md-5">
                                             <label for="firstName" style="font-weight: 600;">IMAGE</label>
                                             <input name="image" type="file" id="imageInput" multiple accept="image/*">
-                                            <div id="imagePreview">   
-                                                <img src="/uploads/<%= product.image[0] %>" alt="Image 1 Preview" class="preview-image" style="width:150px; height:150px;">
+                                            <div id="imagePreview">
+                                                <img src="/uploads/<%= product.image[0] %>" alt="Image Preview" class="preview-image" style="width:150px; height:150px;" data-toggle="modal" data-target="#imageModal">
                                             </div>
-                                        </div>
+                                        </div>                               
                                         
                                         <div class="form-group col-md-3">
                                             <label for="size" style="font-weight: 600;">SIZE</label>

@@ -9038,7 +9038,6 @@ h1, h2, h3, h4, h5,
 
 .product-details button, .product-details .form-control {
   height: 40px !important;
-  text-align: center;
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
   color: #dbcc8f;
   padding: 10px 20px;
@@ -9047,7 +9046,7 @@ h1, h2, h3, h4, h5,
   -moz-border-radius: 0;
   -ms-border-radius: 0;
   border-radius: 0;
-  font-size: 14px; }
+   }
   .product-details button:hover, .product-details button:focus, .product-details .form-control:hover, .product-details .form-control:focus {
     text-decoration: none;
     outline: none; }
@@ -9087,7 +9086,8 @@ h1, h2, h3, h4, h5,
   .product-details .form-group .select-wrap {
     position: relative; }
     .product-details .form-group .select-wrap select {
-      font-size: 13px;
+      text-align:justify;
+      font-size: 16px;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
@@ -10692,4 +10692,14 @@ textarea.form-control {
 
 .banner-slide:first-child {
   display: block;
+}
+
+.color-box {
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 1em;
+  width: 30px; 
+  height: 30px;
+  margin-left: 10px; 
+  margin-top:4px;
 }

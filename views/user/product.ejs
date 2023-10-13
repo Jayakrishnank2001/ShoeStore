@@ -53,12 +53,19 @@
 					<h5 class="mt-3"><%= product.gender %></h5>
     				<p class="mt-4"><%= product.description %></p>
 						<div class="row mt-4">
+							<h6 class="mt-2 ml-3">SIZE</h6>
 							<div class="col-md-6">
 								<div class="form-group d-flex">
-		              <div class="select-wrap">
-	                </div>
+									<div class="select-wrap">
+										<select name="" id="" class="form-control">
+										  <option value="<%= product.size %>"><%= product.size %></option>
+										</select>
+									  </div>
+									  <h6 class="mt-2 ml-4">COLOR</h6>
+										<span class="color-box" style="background-color: <%= product.color %>;"></span>
+									  
 		            </div>
-							</div>
+					</div>
 							
 	          	<div class="w-100"></div>
 	          	<div class="col-md-12">
@@ -76,38 +83,39 @@
 
 
     		<div class="row mt-5">
-          <div class="col-md-12 nav-link-wrap">
-            <div class="nav nav-pills d-flex text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-              <a class="nav-link ftco-animate active mr-lg-1" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">Description</a>
+				<div class="col-md-12 nav-link-wrap">
+					<div class="nav nav-pills d-flex text-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+					  <a class="nav-link ftco-animate mr-lg-1" id="v-pills-1-tab" data-toggle="pill" href="#v-pills-1" role="tab" aria-controls="v-pills-1" aria-selected="true">Description</a>
+					  <a class="nav-link ftco-animate mr-lg-1" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2" aria-selected="false">Manufacturer</a>
+					  <a class="nav-link ftco-animate" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-3" role="tab" aria-controls="v-pills-3" aria-selected="false">Details</a>
+					</div>
+				  </div>
+				<div class="col-md-12 tab-wrap">
+					<div class="tab-content" id="v-pills-tabContent">
+						<div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
+							<div class="p-4">
+								<h3 class="mb-4"><%= product.productName %></h3>
+								<p><%= product.description %></p>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-2-tab">
+							<div class="p-4">
+								<h3 class="mb-4">Manufactured By <%= product.brand %></h3>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="v-pills-3" role="tabpanel" aria-labelledby="v-pills-3-tab">
+							<div class="p-4">
+								<h3 class="mb-4"><%= product.productName %></h3>
+								<p><%= product.description %></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			  
 
-              <a class="nav-link ftco-animate mr-lg-1" id="v-pills-2-tab" data-toggle="pill" href="#v-pills-2" role="tab" aria-controls="v-pills-2" aria-selected="false">Manufacturer</a>
-
-              <a class="nav-link ftco-animate" id="v-pills-3-tab" data-toggle="pill" href="#v-pills-3" role="tab" aria-controls="v-pills-3" aria-selected="false">Reviews</a>
-
-            </div>
-          </div>
-          <div class="col-md-12 tab-wrap">
-            
-            <div class="tab-content bg-light" id="v-pills-tabContent">
-
-              <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="day-1-tab">
-              	<div class="p-4">
-	              	<h3 class="mb-4"><%= product.productName %></h3>
-	              	<p><%= product.description %></p>
-              	</div>
-              </div>
-
-              <div class="tab-pane fade" id="v-pills-2" role="tabpanel" aria-labelledby="v-pills-day-2-tab">
-              	<div class="p-4">
-	              	<h3 class="mb-4">Manufactured By <%= product.brand %></h3>
-              	</div>
-              </div>
-              <div class="tab-pane fade" id="v-pills-3" role="tabpanel" aria-labelledby="v-pills-day-3-tab">
-              	
-              </div>
-            </div>
-          </div>
-        </div>
     	</div>
     </section>
 

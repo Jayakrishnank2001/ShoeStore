@@ -45,10 +45,15 @@ exports.createProduct=async(req,res)=>{
         const categories=await Category.find()
         if(!productName||!category||!price||!quantity||!brand||!description||!size||!color||!gender){
             res.render('./admin/addProduct',{categories,alert:'Please fill all required fields.'})
+            return
         }
         //push the image files to the array
         for(const file of req.files){
             img.push(file.filename)
+        }
+        if(img.length===0){
+            res.render('./admin/addProduct',{categories,alert:'Please choose product images'})
+            return
         }
         const newProduct=new Product({
             productName,
@@ -66,7 +71,6 @@ exports.createProduct=async(req,res)=>{
         res.redirect('/product?success=true')
     }catch(error){
         console.error(error.message)
-        res.status(500).send('Internal server error')
     }
 }
 
@@ -120,10 +124,20 @@ exports.editproduct=async(req,res)=>{
 exports.updateProduct=async(req,res)=>{
     try{ 
         const productId=req.params.productId;
+        const product=await Product.findById(productId)
+        const categories=await Category.find()
         const img=[]
         const {productName,category,price,quantity,brand,description,image,size,color,gender}=req.body;
+        if(!productName||!category||!price||!quantity||!brand||!description||!size||!color||!gender){
+            res.render('./admin/editProduct',{product,categories,alert:'Please fill all required fields.'})
+            return
+        }
         for(const file of req.files){
             img.push(file.filename)
+        }
+        if(img.length===0){
+            res.render('./admin/editProduct',{product,categories,alert:'Please choose product images'})
+            return
         }
         // Update the product data in the database using Mongoose
         const updatedProduct=await Product.findByIdAndUpdate(productId,{
