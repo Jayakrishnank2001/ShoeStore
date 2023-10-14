@@ -17,7 +17,7 @@
           <div class="container p-4 pb-0">
             <section class="">
               <p class="d-flex justify-content-center text-nowrap">
-                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1030px; margin-top: 15px;">ADMIN/ADD COUPON</span>
+                <span class="me-3" style="color:black; font-weight:bold; font-size:200%; margin-right: 1030px; margin-top: 15px;">ADMIN/EDIT COUPON</span>
               </p>
             </section>
           </div>
@@ -35,10 +35,10 @@
                     <div class="col-md-8">
                         <div class="card" style="background-color: #DFDFDF; height:680px;">
                             <div class="card-header" style="background-color: #DFDFDF; color:black">
-                                <h3 class="text-center">ADD COUPON</h3>
+                                <h3 class="text-center">EDIT COUPON</h3>
                             </div>
                             <div class="card-body">
-                                <form action="/addcoupon" method="post">
+                                <form action="/editcoupon/<%= coupon._id %>" method="post">
                                     <div class="form-row">
                                         <div class="col d-flex justify-content-center align-items-center">
                                             <% if(locals.alert){ %>
@@ -47,36 +47,36 @@
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="coupon" style="font-weight: 600;">COUPON CODE</label>
-                                            <input type="text" name="couponCode" class="form-control" id="coupon" placeholder="" style="border-radius: 1em;">
+                                            <input type="text" name="couponCode" class="form-control" id="coupon" placeholder="" style="border-radius: 1em;" value="<%= coupon.couponCode %>">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="date" style="font-weight: 600;">CREATED AT</label>
-                                            <input type="date" name="createdAt" class="form-control" id="date" placeholder="" style="border-radius: 1em;">
+                                            <input type="date" name="createdAt" class="form-control" id="date" placeholder="" style="border-radius: 1em;" value="<%= coupon.createdAt ? coupon.createdAt.toISOString().split('T')[0] : '' %>">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="date" style="font-weight: 600;">EXPIRY DATE</label>
-                                            <input type="date" name="expiryDate" class="form-control" id="date" placeholder="" style="border-radius: 1em;">
+                                            <input type="date" name="expiryDate" class="form-control" id="date" placeholder="" style="border-radius: 1em;" value="<%= coupon.expiryDate ? coupon.expiryDate.toISOString().split('T')[0] : '' %>">
                                         </div>                                  
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="price" style="font-weight: 600;">COUPON PRICE</label>
-                                            <input type="number" name="price" class="form-control" id="price" placeholder="" style="border-radius: 1em;" min="1">
+                                            <input type="number" name="price" class="form-control" id="price" placeholder="" style="border-radius: 1em;" min="1" value="<%= coupon.price %>">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="purchaseAmount" style="font-weight: 600;">PURCHASE AMOUNT</label>
-                                            <input type="number" name="purchaseAmount" class="form-control" id="purchaseAmount" placeholder="" style="border-radius: 1em;" min="1">
+                                            <input type="number" name="purchaseAmount" class="form-control" id="purchaseAmount" placeholder="" style="border-radius: 1em;" min="1" value="<%= coupon.purchaseAmount %>">
                                         </div>                              
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="firstName" style="font-weight: 600;">DESCRIPTION</label>
-                                            <textarea type="text" name="description" class="form-control" id="description" rows="4" placeholder="" style="border-radius: 1em;"></textarea>
+                                            <textarea type="text" name="description" class="form-control" id="description" rows="4" placeholder="" style="border-radius: 1em;"><%= coupon.description %></textarea>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-success mx-auto d-block" style="margin-top: 20px;">CREATE COUPON</button>                              
+                                    <button type="submit" class="btn btn-success mx-auto d-block" style="margin-top: 20px;">UPDATE COUPON</button>                              
                                 </form>
                             </div>
                         </div>

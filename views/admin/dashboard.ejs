@@ -33,6 +33,79 @@
 
             </div>
 
-    
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+          <script>
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            const ctx = document.getElementById('myChart');
+            const userCountsElement = document.getElementById('userCounts');
+            const blockedUserCount = parseInt(userCountsElement.getAttribute('data-blocked-count'));
+            const nonBlockedUserCount = parseInt(userCountsElement.getAttribute('data-non-blocked-count'));
+            const totalUserCount = blockedUserCount + nonBlockedUserCount;
+
+
+            new Chart(ctx, {
+              type: 'pie',
+              data: {
+                labels: ['Blocked Users', 'Non-Blocked Users', "All Users"],
+                datasets: [{
+                  data: [blockedUserCount, nonBlockedUserCount, totalUserCount],
+                  backgroundColor: ['#f00', '#1fe074', "#0069c0"],
+                  borderWidth: 0
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+              }
+            });
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////z
+
+            const ctxi = document.getElementById('myCharts');
+
+            let monthlySales = document.getElementById('monthlySales').value;
+            let monthlySalesArray = JSON.parse(monthlySales);
+            let monthlySalesAmount = []
+            for (let i = 0; i <= 12; i++) {
+              for (let j = 0; j < monthlySalesArray.length; j++) {
+                if ((monthlySalesArray[j].month - 1) == i) {
+                  monthlySalesAmount[i] = monthlySalesArray[j].monthlySales
+                  break
+                }
+              }
+              if (!monthlySalesAmount[i]) {
+                monthlySalesAmount[i] = 0
+              }
+            }
+
+
+            new Chart(ctxi, {
+              type: 'bar',
+              data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                  label: `Sales of Month on ${monthlySalesArray[0].year}`,
+                  data: monthlySalesAmount,
+                  borderWidth: 1,
+                  backgroundColor: "#1fe074"
+                }]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+
+            
+          </script>
+
     
       <%- include('../partials/adminfooter.ejs') %>

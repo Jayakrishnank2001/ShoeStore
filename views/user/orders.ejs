@@ -21,6 +21,7 @@
         <a class="nav-link active" href="/orders" target="__blank">Orders</a>
         <a class="nav-link" href="/changepassword" target="__blank">Change Password</a>
         <a class="nav-link" href="/address" target="__blank">Saved Addresses</a>
+        <a class="nav-link" href="/wallet" target="__blank">Wallet</a>
     </nav>
     <hr class="mt-0 mb-4">
 
@@ -33,18 +34,19 @@
                 <table class="table mb-0">
                     <thead>
                         <tr>
-                            <th class="border-gray-200" scope="col">Order ID</th>
-                            <th class="border-gray-200" scope="col">product</th>
-                            <th class="border-gray-200" scope="col">Date</th>
-                            <th class="border-gray-200" scope="col">Amount</th>
-                            <th class="border-gray-200" scope="col">Status</th>
+                            <th class="border-gray-200 text-center" scope="col">Order ID</th>
+                            <th class="border-gray-200 text-center" scope="col">product</th>
+                            <th class="border-gray-200 text-center" scope="col">Date</th>
+                            <th class="border-gray-200 text-center" scope="col">Amount</th>
+                            <th class="border-gray-200 text-center" scope="col">Status</th>
+                            <th class="border-gray-200 text-center" scope="col">Cancel/Return</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% orders.forEach(order=> {  %>
                         <tr>
-                            <td class="table-data">#<%= order._id.toString().slice(0, 9) %></td>
-                            <td>
+                            <td class="table-data text-center">#<%= order._id.toString().slice(0, 9) %></td>
+                            <td class="text-center">
                                 <% order.products.forEach(product => { %>
                                     <a href="/orderdetails/<%= order._id %>">
                                       <img src="/uploads/<%= product.productId.image[0] %>" style="width:80px; height:80px;">
@@ -52,9 +54,10 @@
                                     <h6><%= product.productId.productName %></h6>
                                   <% }) %>                      
                             </td>
-                            <td class="table-data"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>
-                            <td class="table-data">₹<%= order.totalPrice %></span></td>
-                            <td class="table-data"><%= order.orderStatus %></td>
+                            <td class="table-data text-center"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>
+                            <td class="table-data text-center">₹<%= order.totalPrice %></span></td>
+                            <td class="table-data text-center"><%= order.orderStatus %></td>
+                            <td class="table-data text-center"><button type="button" class="btn btn-warning">Cancel</button></td>
                         </tr>
                         <% }) %>
                     </tbody>
@@ -71,6 +74,7 @@
             </div>
         </div>
     </div>
+    
 </div>
 </body>
 </html>

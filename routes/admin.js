@@ -65,7 +65,11 @@ router.get('/adminOrderdetails/:orderId',adminAuth.noSession,adminOrderControlle
 router.post('/update-order-status',adminAuth.noSession,adminOrderController.orderStatus)
 
 router.get('/addcoupon',adminAuth.noSession,adminCouponController.createCoupon)
+router.post('/addcoupon',adminAuth.noSession,adminCouponController.newCoupon)
+router.get('/couponDelete/:couponId',adminAuth.noSession,adminCouponController.deleteCoupon)
 router.get('/coupon',adminAuth.noSession,adminCouponController.couponPage)
+router.get('/editCoupon/:couponId',adminAuth.noSession,adminCouponController.couponEditPage)
+router.post('/editcoupon/:couponId',adminAuth.noSession,adminCouponController.updateCoupon)
 
 router.post('/adminlogout',adminController.adminlogout)
 

@@ -50,6 +50,8 @@ router.post('/logout',userAuth.noSession,userController.userLogout)
 router.get('/changepassword',userAuth.noSession,userController.passwordChange)
 router.post('/changepassword',userAuth.noSession,userController.changePassword)
 
+router.get('/wallet',userAuth.noSession,userController.userWallet)
+
 router.post('/update-user-info',userAuth.noSession,userController.userInfoUpdate)
 
 router.get('/address',userAuth.noSession,userController.userAddress)

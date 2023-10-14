@@ -60,7 +60,7 @@ exports.createBanner=async(req,res)=>{
 exports.bannerDelete=async(req,res)=>{
     try {
         const bannerId=req.params.bannerId
-        const banner=await Banner.findByIdAndRemove(bannerId)
+        await Banner.findByIdAndRemove(bannerId)
         res.redirect('/banners')
     } catch (error) {
         console.error(error)

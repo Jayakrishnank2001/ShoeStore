@@ -767,3 +767,13 @@ exports.addToWishlist=async(req,res)=>{
     res.status(500).send('Internal server error')
   }
 }
+
+//user wallet page
+exports.userWallet=async(req,res)=>{
+  try {
+    res.render('./user/wallet')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal server error')
+  }
+}
