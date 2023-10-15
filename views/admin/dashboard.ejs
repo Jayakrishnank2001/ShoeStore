@@ -24,14 +24,58 @@
     
     
         
-            <div class="row flex-nowrap">
-                
-              <%- include('../partials/adminsidebar.ejs') %>
-
-              
-
-
+    <div class="row flex-nowrap">
+      <!-- Include the sidebar -->
+      <%- include('../partials/adminsidebar.ejs') %>
+  
+      <div class="ml-5" style="width: 350px; height:250px;">
+          <div class="total-stat with-box-shadow mt-3">
+              <h4>Total Users</h4>
+              <p id="totalUsersCount"><%= usersCount %></p>
+          </div>
+          <div class="mt-5" style="width: 350px;">
+            <canvas id="myChart1"></canvas>
+          </div>
+          <div class="date-filter">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mt-4 form-group">
+                        <label for="startDate" class="font-weight-bold">Start Date</label>
+                        <input class="with-box-shadow" type="date" id="startDate" name="startDate">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mt-4 form-group">
+                        <label for="endDate" class="font-weight-bold">End Date</label>
+                        <input class="with-box-shadow" type="date" id="endDate" name="endDate">
+                    </div>
+                </div>
             </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-dark">Download Sales Report</button>
+                </div>
+            </div>
+          </div>
+      </div>
+      <div class="ml-5" style="width: 350px; height:250px;">
+          <div class="total-stat with-box-shadow mt-3">
+              <h4>Total Orders</h4>
+              <p id="totalOrdersCount"><%= orderCount %></p>
+          </div>
+          <div class="ml-5 mt-5" style="width: 700px;">
+            <canvas id="myChart2"></canvas>
+          </div>
+      </div>
+      <div class="ml-5" style="width: 350px; height:250px;">
+          <div class="total-stat with-box-shadow mt-3">
+              <h4>Total Revenue</h4>
+              <p id="totalRevenueAmount">₹<%= revenue %></p>
+          </div>
+      </div>
+    </div>
+  
+  
 
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -39,60 +83,20 @@
 
           <script>
 
-            /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            const ctx = document.getElementById('myChart');
-            const userCountsElement = document.getElementById('userCounts');
-            const blockedUserCount = parseInt(userCountsElement.getAttribute('data-blocked-count'));
-            const nonBlockedUserCount = parseInt(userCountsElement.getAttribute('data-non-blocked-count'));
-            const totalUserCount = blockedUserCount + nonBlockedUserCount;
-
-
-            new Chart(ctx, {
+            const ctx1 = document.getElementById('myChart1');
+          
+            new Chart(ctx1, {
               type: 'pie',
               data: {
-                labels: ['Blocked Users', 'Non-Blocked Users', "All Users"],
+                labels: ['Red', 'Blue'],
                 datasets: [{
-                  data: [blockedUserCount, nonBlockedUserCount, totalUserCount],
-                  backgroundColor: ['#f00', '#1fe074', "#0069c0"],
-                  borderWidth: 0
-                }]
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-              }
-            });
-
-            /////////////////////////////////////////////////////////////////////////////////////////////////////z
-
-            const ctxi = document.getElementById('myCharts');
-
-            let monthlySales = document.getElementById('monthlySales').value;
-            let monthlySalesArray = JSON.parse(monthlySales);
-            let monthlySalesAmount = []
-            for (let i = 0; i <= 12; i++) {
-              for (let j = 0; j < monthlySalesArray.length; j++) {
-                if ((monthlySalesArray[j].month - 1) == i) {
-                  monthlySalesAmount[i] = monthlySalesArray[j].monthlySales
-                  break
-                }
-              }
-              if (!monthlySalesAmount[i]) {
-                monthlySalesAmount[i] = 0
-              }
-            }
-
-
-            new Chart(ctxi, {
-              type: 'bar',
-              data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                  label: `Sales of Month on ${monthlySalesArray[0].year}`,
-                  data: monthlySalesAmount,
-                  borderWidth: 1,
-                  backgroundColor: "#1fe074"
+                  label: '',
+                  data: [17, 19],
+                  backgroundColor: [
+                  'rgba(0, 207, 140, 0.8)',
+                  'rgba(255, 99, 132, 01)'
+                  ],
+                  borderWidth: 1
                 }]
               },
               options: {
@@ -104,7 +108,34 @@
               }
             });
 
-            
+
+            const ctx2 = document.getElementById('myChart2');
+          
+            new Chart(ctx2, {
+              type: 'bar',
+              data: {
+                labels: ['Order', 'Revenue'],
+                datasets: [{
+                  label: '',
+                  data: [12, 19],
+                  backgroundColor: [
+                  'rgba(255, 99, 132, 01)',
+                  ],
+                  borderColor: [
+                 'rgb(255, 99, 132)',
+                ],
+                  borderWidth: 2
+                }]
+              },
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            });
+
           </script>
 
     

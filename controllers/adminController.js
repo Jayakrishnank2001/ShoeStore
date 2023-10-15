@@ -12,7 +12,27 @@ const newAdmin=new Admin({
 
 //dashboard
 exports.dashboard=async(req,res)=>{
-    res.render('./admin/dashboard')
+    try {
+        const usersCount=await User.countDocuments({blocked:false})
+        const orderCount=await Order.countDocuments({orderStatus:'Delivered'})
+        const revenue=await Order.aggregate([
+            {
+                $match:{
+                    orderStatus:'delivered',
+                },
+        },
+        {
+            $group:{
+                _id:null,
+                totalRevenue:{$sum:'$totalPrice'},
+            },
+         },
+        ])
+        res.render('./admin/dashboard',{usersCount,orderCount,revenue})
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Internal server error')
+    }
 }
 
 //banner page
