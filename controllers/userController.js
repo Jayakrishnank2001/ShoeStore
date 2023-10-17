@@ -1,5 +1,6 @@
 const User=require('../models/users')
 const Product=require('../models/product')
+const Coupon=require('../models/coupon')
 const Banner=require('../models/banner')
 const bcrypt=require('bcrypt')
 const nodemailer=require('nodemailer')
@@ -66,11 +67,13 @@ exports.wishlistPage=async(req,res)=>{
 
 exports.checkoutPage=async(req,res)=>{
   try {
-    const userId=req.session.userId
+    const currentDate=new Date()
     const cartTotal=req.session.totalSum
+    const coupons=await Coupon.find({isActive:true,purchaseAmount:{$lte:cartTotal},expiryDate:{$gte:currentDate}})
+    const userId=req.session.userId
     const user=await User.findById(userId)
     const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
-    res.render('./user/checkout',{user,defaultAddress,cartTotal})
+    res.render('./user/checkout',{coupons,user,defaultAddress,cartTotal})
   } catch (error) {
   }
 }
@@ -772,6 +775,19 @@ exports.addToWishlist=async(req,res)=>{
 exports.userWallet=async(req,res)=>{
   try {
     res.render('./user/wallet')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal server error')
+  }
+}
+
+//apply coupon when checkout
+exports.couponApply=async(req,res)=>{
+  try {
+    const { couponId }=req.body
+    const coupon=await Coupon.findById(couponId)
+    const discountAmount=coupon.price
+    res.json({success:true,discountAmount})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal server error')

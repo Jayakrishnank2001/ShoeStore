@@ -18,7 +18,7 @@ exports.dashboard=async(req,res)=>{
         const revenue=await Order.aggregate([
             {
                 $match:{
-                    orderStatus:'delivered',
+                    orderStatus:'Delivered',
                 },
         },
         {
@@ -28,12 +28,27 @@ exports.dashboard=async(req,res)=>{
             },
          },
         ])
-        res.render('./admin/dashboard',{usersCount,orderCount,revenue})
+        const totalRevenue=revenue[0].totalRevenue
+        res.render('./admin/dashboard',{usersCount,orderCount,totalRevenue})
     } catch (error) {
         console.error(error)
         res.status(500).send('Internal server error')
     }
 }
+
+//users and blocked users graph
+exports.usersGraph=async(req,res)=>{
+    try {
+        const usersCount=await User.countDocuments({blocked:false})
+        const blockedUsersCount=await User.countDocuments({blocked:true})
+        res.json({usersCount,blockedUsersCount})
+    } catch (error) {
+       console.error(error)
+       res.status(500).send('Internal server error') 
+    }
+}
+
+  
 
 //banner page
 exports.bannerPage=async(req,res)=>{

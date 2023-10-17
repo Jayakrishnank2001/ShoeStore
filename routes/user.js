@@ -39,6 +39,7 @@ router.get('/removecart/:productId',userAuth.noSession,userController.removeFrom
 router.get('/checkout',userAuth.noSession,userController.checkoutPage)
 router.post('/checkout',userAuth.noSession,userController.orderPlace)
 router.post('/online-payment',userAuth.noSession,userController.onlinePayment)
+router.post('/apply-coupon',userAuth.noSession,userController.couponApply)
 
 router.get('/profile',userAuth.noSession,userController.userprofile)
 

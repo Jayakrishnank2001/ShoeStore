@@ -150,10 +150,19 @@
 					<h5 class="mb-4 billing-heading mt-4">Apply Coupon</h5>
 					<div class="row align-items-end">
 						<div class="col-md-5">
-							<div class="form-group">
-								<input type="text" class="form-control equal-size" id="couponCode" name="couponCode" placeholder="Enter coupon code">
+							<div class="form-group input-group">
+								<div class="input-group-append">
+									<select class="custom-select" style="height: 60px; width:350px;" id="couponSelect">
+										<option class="text-center" value="" selected></option>
+										<% coupons.forEach(coupon => { %>
+										<option class="text-center" value="<%= coupon._id %>"><%= coupon.couponCode %></option>
+										<% }); %>
+									</select>
+								</div>
+								
 							</div>
 						</div>
+						
 						<div class="col-md-6">
 							<div class="form-group">
 								<button type="button" class="btn btn-primary equal-size" id="applyCouponButton">Apply Coupon</button>
@@ -167,7 +176,7 @@
 							<h3 class="billing-heading mb-4">Cart Total</h3>
 							<p class="d-flex">
 									  <span>Subtotal</span>
-									  <span name="totalPrice" id ="cartTotal" value="<%= cartTotal %>">₹<%= cartTotal %></span>
+									  <span value="<%= cartTotal %>">₹<%= cartTotal %></span>
 								  </p>
 								  <p class="d-flex">
 									  <span>Delivery</span>
@@ -175,14 +184,14 @@
 								  </p>
 								  <p class="d-flex">
 									  <span>Discount</span>
-									  <span>₹0.00</span>
+									  <span id="discountAmount">₹0.00</span>
 								  </p>
 								  <hr>
 								  <p class="d-flex total-price">
 									  <span>Total</span>
-									  <span name="totalPrice" id="totalPrice" value="<%= cartTotal %>">₹<%= cartTotal %></span>
+									  <span name="totalPrice" id="totalPrice" data-value="<%= cartTotal %>">₹<%= cartTotal %></span>
 								  </p>
-								  </div>
+						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="cart-detail bg-light p-3 p-md-4">
@@ -233,9 +242,46 @@
 
   <script>
 
+    
+    //apply coupon
+    document.getElementById('applyCouponButton').addEventListener('click',function(){
+	const selectedCouponId = document.getElementById('couponSelect').value;
+	if(!selectedCouponId){
+		alert('Please select a coupon.')
+		return 
+	}
+	fetch('/apply-coupon',{
+		method:'POST',
+		body:JSON.stringify({couponId:selectedCouponId}),
+		headers:{
+			'Content-Type':'application/json',
+		},
+	})
+	.then((response)=>response.json())
+	.then((data)=>{
+		if(data.success){
+			const discountAmount=data.discountAmount;
+			const totalPriceElement=document.getElementById('totalPrice')
+			const cartTotal=parseFloat(totalPriceElement.getAttribute('data-value'));
+			const newTotal=cartTotal-discountAmount
+
+			console.log(newTotal)
+			totalPriceElement.textContent = `₹${newTotal.toFixed()}`;
+
+			const discountAmountElement=document.getElementById('discountAmount')
+			discountAmountElement.textContent=`₹${discountAmount.toFixed()}`;
+		}else{
+			alert('Coupon application failed: '+data.message);
+		}
+	})
+	.catch((error)=>{
+		console.error('Error:',error);
+	});
+   }); 
+
 
     //razorpay
-	const cartTotalElement = document.getElementById('cartTotal');
+	const cartTotalElement = document.getElementById('totalPrice');
 	const cartTotalText = cartTotalElement.textContent;
     const numericPart = cartTotalText.match(/[\d.]+/);
     const cartTotal = parseFloat(numericPart);
@@ -249,6 +295,7 @@
 		form.submit()
 	  }
 	  else if(selectedPayment.value=='Online Payment'){
+		console.log(cartTotal);
             await fetch('/online-payment',{
 					method:'POST',
 					headers:{
@@ -276,7 +323,7 @@
 							"contact":"7034240636"
 						},
 						"theme":{
-							"color":"#F37254"
+							"color":"blue"
 						}
 					}
 					var razorpay=new Razorpay(razorPayOptions)
@@ -290,7 +337,6 @@
 			}
 			history.pushState(null,null,'/')
 		}
-
 
 		//button functions
 		$(document).ready(function(){
@@ -339,6 +385,7 @@
       });
     },200)
    }
+
 
 
 	</script>

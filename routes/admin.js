@@ -36,6 +36,7 @@ router.get('/adminlogin',adminAuth.yesSession,adminController.loginpage)
 router.post('/adminlogin',adminController.login)
 
 router.get('/dashboard',adminAuth.noSession,adminController.dashboard)
+router.get('/usersgraph',adminAuth.noSession,adminController.usersGraph)
 
 router.get('/users',adminAuth.noSession,adminController.users)
 router.get('/admin/block-user/:userId',adminAuth.noSession,adminController.blockUser)
