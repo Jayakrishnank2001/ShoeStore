@@ -49,11 +49,17 @@ const orderSchema=new mongoose.Schema({
     totalPrice:{
         type:Number
     },
+    discountAmount:{
+        type:Number
+    },
     orderDate:{
         type:Date,
         default:Date.now
     },
     orderStatus:{
+        type:String
+    },
+    paymentMethod:{
         type:String
     },
     returned:{

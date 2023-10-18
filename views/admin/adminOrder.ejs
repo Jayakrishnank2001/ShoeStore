@@ -74,18 +74,17 @@
                         <td class="table-data text-center"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>                                             
                         <td class="table-data text-center">
                           <div class="input-group">
-                              <select type="button" id="statusSelect" class="form-select" data-order-id="<%= order._id %>">
+                              <select type="button" id="statusSelect" class="form-select status-select" data-order-id="<%= order._id %>">
                                   <option value="<%= order.orderStatus %>"><%= order.orderStatus %></option>
                                   <option value="Pending">Pending</option>
                                   <option value="order confirmed">Order Confirmed</option>
                                   <option value="out for delivery">Out for delivery</option>
                                   <option value="Shipped">Shipped</option>
                                   <option value="Delivered">Delivered</option>
-                                  <option value="Canceled">Cancel Confirmed</option>
+                                  <option value="Canceled">Canceled</option>
                                   <option value="Refunded">Refunded</option>
                                   <option value="Returned">Returned</option>
                                   <option value="Payment Failed">Payment Failed</option>
-                                  <option value="confirm return">Confirm Return</option>
                               </select>
                           </div>
                         </td>                                
@@ -113,7 +112,8 @@
 
         <script>
 
-        const statusSelect = document.getElementById('statusSelect');
+        const statusSelects = document.querySelectorAll('.status-select');
+        statusSelects.forEach((statusSelect) => {
         statusSelect.addEventListener('change', () => {
         const newStatus = statusSelect.value;
         const orderId = statusSelect.getAttribute('data-order-id');
@@ -135,6 +135,7 @@
       .catch((error) => {
         console.error('Fetch error:', error);
       });
+    });
     });
 
       </script>

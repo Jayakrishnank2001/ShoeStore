@@ -236,7 +236,7 @@
     </section> <!-- .section -->
 		
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 
@@ -265,7 +265,6 @@
 			const cartTotal=parseFloat(totalPriceElement.getAttribute('data-value'));
 			const newTotal=cartTotal-discountAmount
 
-			console.log(newTotal)
 			totalPriceElement.textContent = `₹${newTotal.toFixed()}`;
 
 			const discountAmountElement=document.getElementById('discountAmount')
@@ -281,21 +280,29 @@
 
 
     //razorpay
-	const cartTotalElement = document.getElementById('totalPrice');
+	
+    async function proceedToPay(event){
+
+		event.preventDefault()
+		const cartTotalElement = document.getElementById('totalPrice');
 	const cartTotalText = cartTotalElement.textContent;
     const numericPart = cartTotalText.match(/[\d.]+/);
     const cartTotal = parseFloat(numericPart);
 
-    async function proceedToPay(event){
-		event.preventDefault()
       const form=document.getElementById('onlineCheckout')
 	  const selectedPayment=document.querySelector('input[name="paymentMethod"]:checked')
 	  if(selectedPayment.value=='Cash on delivery'){
+		await fetch('/cash-delivery',{
+			method:'POST',
+			headers:{
+				'Content-Type':'application/json'
+			},
+			body:JSON.stringify({totalPrice:cartTotal})
+		})
 		orderPlaced()
 		form.submit()
 	  }
 	  else if(selectedPayment.value=='Online Payment'){
-		console.log(cartTotal);
             await fetch('/online-payment',{
 					method:'POST',
 					headers:{
@@ -332,7 +339,31 @@
 				.catch(error=>{
 					console.error('Fetch error:',error);
 				})
-			}else{
+			}else if(selectedPayment.value=='Wallet'){
+              await fetch('/walletPay',{
+				method:'POST',
+				headers:{
+					'Content-Type':'application/json'
+				},
+				body:JSON.stringify({totalPrice:cartTotal})
+			  })
+			  .then(response=>response.json())
+			  .then(data=>{
+				if(data.ok){
+				   orderPlaced()
+			       form.submit()
+				}else{
+					Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+            });
+				}
+			  })
+			}else if(selectedPayment.value===null){
+				form.submit();
+			}
+			else{
 				form.submit();
 			}
 			history.pushState(null,null,'/')

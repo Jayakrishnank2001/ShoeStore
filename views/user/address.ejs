@@ -224,7 +224,10 @@ radioButtons.forEach((radioButton) => {
         .then((data) => {
             if (data.success) {
                 // Optionally, update the UI to indicate the selected default address
-                alert('Address selected successfully');
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Address selected successfully',
+                })
             } else {
                 alert('Failed');
             }

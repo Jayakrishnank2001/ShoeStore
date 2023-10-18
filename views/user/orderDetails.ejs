@@ -31,6 +31,7 @@
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col-lg-12">
             <div class="card" style="border-radius: 10px;">
+              <% order.products.forEach(product => { %>
               <div class="card-header px-4 py-5">
                 <h5 class="text-muted mb-0" style="font-size: 24px;">Thanks for your Order, <span
                     style="color: #a8729a;"><%= user.firstName %></span>!</h5>
@@ -43,7 +44,6 @@
                 </div>
                 <div class="card shadow-0 border mb-4">
                   <div class="card-body">
-                    <% order.products.forEach(product => { %>
                     <div class="row">
                       <div class="col-md-3">
                         <img src="/uploads/<%= product.productId.image[0] %>" class="img-fluid"
@@ -62,25 +62,23 @@
                         <p class="text-muted mb-0">Qty: <%= product.orderQuantity %></p>
                       </div>
                       <div class="col-md-2 text-center d-flex justify-content-center align-items-center table-data">
-                        <p class="text-muted mb-0">₹<%= product.productTotalPrice %></p>
+                        <p class="text-muted mb-0">₹<%= product.productTotalPrice %>.00</p>
                       </div>
                     </div>
                     <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
-                    <% }); %>
                   </div>
                 </div>
     
                 <div class="d-flex justify-content-between pt-2">
                   <p class="fw-bold mb-0" style="font-size: 18px;">Address Details</p>
-                  <p class="text-muted mb-0" style="font-size: 18px;"><span class="fw-bold me-4">Total: </span>₹<%= order.totalPrice %></p>
+                  <p class="text-muted mb-0" style="font-size: 18px;"><span class="fw-bold me-4">Total : </span>₹<%= product.productTotalPrice %>.00</p>
                 </div>
                 <div class="d-flex justify-content-between pt-2">
                   <p class="text-muted mb-0" style="font-size: 18px;"><%= order.address[0].firstName %> <%= order.address[0].lastName %></p>
-                  <p class="text-muted mb-0" style="font-size: 18px;"><span class="fw-bold me-4">Discount: </span>₹0.00</p>
+                  <p class="text-muted mb-0" style="font-size: 18px;"><span class="fw-bold me-4">Discount : </span>₹<%= order.discountAmount %>.00</p>
                 </div>
                 <div class="d-flex justify-content-between">
                   <p class="text-muted mb-0" style="font-size: 18px;"><%= order.address[0].address %></p>
-                  <p class="text-muted mb-0" style="font-size: 18px;"><span class="fw-bold me-4">Delivery Charges: </span>₹0.00</p>
                 </div>
                 <div class="d-flex justify-content-between mb-5">
                   <p class="text-muted mb-0" style="font-size: 18px;"><%= order.address[0].town %>, <%= order.address[0].district %> - <%= order.address[0].pincode %>, <%= order.address[0].state %></p>
@@ -89,8 +87,9 @@
               <div class="card-footer border-0 px-4 py-5"
                 style="background-color: #a8729a; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
                 <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0" style="font-size: 24px;">Total Amount:<span
-                    class="h2 mb-0 ms-2">₹<%= order.totalPrice %></span></h5>
+                    class="h2 mb-0 ms-2">₹<%= order.totalPrice %>.00</span></h5>
               </div>
+              <% }); %>
             </div>
           </div>
         </div>

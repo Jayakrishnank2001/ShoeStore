@@ -57,7 +57,18 @@
                             <td class="table-data text-center"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>
                             <td class="table-data text-center">₹<%= order.totalPrice %></span></td>
                             <td class="table-data text-center"><%= order.orderStatus %></td>
-                            <td class="table-data text-center"><button type="button" class="btn btn-warning">Cancel</button></td>
+                            <% if(order.orderStatus==='order confirmed') { %>
+                            <td class="table-data text-center"><button type="button" class="btn btn-warning cancel-button" data-order-id="<%= order._id %>">Cancel</button></td>
+                            <% } %>
+                            <% if(order.orderStatus==='Delivered') { %>
+                            <td class="table-data text-center"><button type="button" class="btn btn-warning return-button" data-order-id="<%= order._id %>">Return</button></td>
+                            <% } %>
+                            <% if(order.orderStatus==='Refunded' || order.orderStatus==='Returned' || order.orderStatus==='confirm return') { %>
+                            <td class="table-data text-center"><button type="button" class="btn btn-warning disabled">Return</button></td>
+                            <% } %>
+                            <% if(order.orderStatus==='Pending' || order.orderStatus==='out for delivery' || order.orderStatus==='Shipped' || order.orderStatus==='Canceled' || order.orderStatus==='Payment Failed') { %>
+                            <td class="table-data text-center"><button type="button" class="btn btn-warning disabled">Cancel</button></td>
+                            <% } %>
                         </tr>
                         <% }) %>
                     </tbody>
@@ -74,7 +85,80 @@
             </div>
         </div>
     </div>
-    
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+
+
+    //cancel order button
+    document.addEventListener('DOMContentLoaded',function(){
+        const cancelButtons=document.querySelectorAll('.cancel-button')
+        cancelButtons.forEach(function(button){
+            button.addEventListener('click',function(){
+                const orderId=button.getAttribute('data-order-id')
+
+                Swal.fire({
+                title: 'Confirm Order Cancellation',
+                text: 'Are you sure you want to cancel this order?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Cancel Order'
+            }).then((result) => {
+                if (result.isConfirmed){
+                    fetch(`/cancel-order/${orderId}`,{
+                        method:'POST',
+                    })
+                    .then(response=>response.json())
+                    .then(data=>{
+                        window.location.href='/orders'
+                    })
+                    .catch(error=>{
+                        alert('Error cancelling the order:'+error.message);
+                    })
+                }
+            })
+          })
+        })
+    })
+
+    //return order button
+    document.addEventListener('DOMContentLoaded',function(){
+        const returnButtons=document.querySelectorAll('.return-button')
+        returnButtons.forEach(function(button){
+            button.addEventListener('click',function(){
+                const orderId=button.getAttribute('data-order-id')
+
+               Swal.fire({
+                title: 'Confirm Return',
+                text: 'Are you sure you want to return this Product?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Return Product'
+            }).then((result) => {
+                if (result.isConfirmed){
+                    fetch(`/return-order/${orderId}`,{
+                        method:'POST',
+                    })
+                    .then(response=>response.json())
+                    .then(data=>{
+                        window.location.href='/orders'
+                    })
+                    .catch(error=>{
+                        alert('Error returning the order:'+error.message)
+                    })
+                }
+            })
+          })
+        })
+    })
+
+
+  </script>
 </body>
 </html>

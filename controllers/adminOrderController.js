@@ -31,9 +31,7 @@ exports.orderDetails=async(req,res)=>{
     try {
         const orderId=req.params.orderId
         const order=await Order.findById(orderId).populate('products.productId')
-        const userId=req.session.userId
-        const user=await User.findById(userId)
-        res.render('./admin/adminOrderDetails',{user,order})
+        res.render('./admin/adminOrderDetails',{order})
     }catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -44,11 +42,25 @@ exports.orderDetails=async(req,res)=>{
 exports.orderStatus=async(req,res)=>{
     try {
         const { orderId,status }=req.body;
-        const updatedOrder=await Order.findByIdAndUpdate(orderId,
+        const order=await Order.findByIdAndUpdate(orderId,
             {$set:{orderStatus:status}},
             {new:true}
-        );
-        res.status(200).json(updatedOrder)
+        ).populate('userId');
+        const user=order.userId
+        if(order.orderStatus==='Refunded'){
+        let oldBalance=0
+        if(user.wallet.length>0){
+            oldBalance=user.wallet[user.wallet.length-1].balance
+        }
+        const walletData={
+            balance:oldBalance+order.totalPrice,
+            date:Date.now(),
+            creditAmount:order.totalPrice
+        }
+        user.wallet.push(walletData)
+        await user.save()    
+        }
+        res.status(200).json(order)
     } catch (error) {
         console.error(error)
         res.status(500).send('Internal Server Error')

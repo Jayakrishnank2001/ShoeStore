@@ -126,14 +126,18 @@ exports.updateProduct=async(req,res)=>{
         const productId=req.params.productId;
         const product=await Product.findById(productId)
         const categories=await Category.find()
-        const img=[]
+        let img=[]
         const {productName,category,price,quantity,brand,description,image,size,color,gender}=req.body;
         if(!productName||!category||!price||!quantity||!brand||!description||!size||!color||!gender){
             res.render('./admin/editProduct',{product,categories,alert:'Please fill all required fields.'})
             return
         }
-        for(const file of req.files){
-            img.push(file.filename)
+        if(req.files.length>0){
+            for(const file of req.files){
+                img.push(file.filename)
+            }
+        }else{
+            img=product.image
         }
         if(img.length===0){
             res.render('./admin/editProduct',{product,categories,alert:'Please choose product images'})

@@ -11,6 +11,7 @@ const { product } = require('./adminProductController')
 const Category = require('../models/category')
 const Order=require('../models/order')
 const Razorpay=require('razorpay')
+const { ok } = require('assert')
 
 
 const razorpay=new Razorpay({
@@ -663,16 +664,21 @@ exports.setDefaultAddress=async(req,res)=>{
 //for place an order
 exports.orderPlace=async(req,res)=>{
   try {
-   const { firstName,lastName,address,town,pincode,district,state,country,mobileNumber,paymentMethod }=req.body
+   const { firstName,lastName,address,town,pincode,district,state,country,mobileNumber }=req.body
    //totalPrice to store in database
-   const totalPrice=req.session.totalSum
+   const currentDate=new Date()
+   const cartTotal=req.session.totalSum
+   const coupons=await Coupon.find({isActive:true,purchaseAmount:{$lte:cartTotal},expiryDate:{$gte:currentDate}})
+   const paymentMethod=req.body.paymentMethod
+   const previoustotalPrice=req.session.totalSum
+   const totalPrice=req.session.orderAmount
+   const discountAmount=previoustotalPrice-totalPrice
    const userId=req.session.userId
    //cartTotal to render the cart page
-   const cartTotal=req.session.totalSum
    const user=await User.findById(userId)
    const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
    if(!firstName||!lastName||!address||!town||!pincode||!district||!state||!country||!mobileNumber||!paymentMethod){
-    res.render('./user/checkout',{user,defaultAddress,cartTotal,alert:'Please fill all the required fields or select a payment method'})
+    res.render('./user/checkout',{coupons,user,defaultAddress,cartTotal,alert:'Please fill all the required fields or select a payment method'})
    }
    if(firstName && lastName && address && town && pincode && district && state && country && mobileNumber){
     const newAddress = {
@@ -697,11 +703,14 @@ exports.orderPlace=async(req,res)=>{
         };
       })
     );
+    
     const orderData = new Order({
       userId,
       products, 
       totalPrice, 
+      discountAmount,
       orderStatus: 'Pending', 
+      paymentMethod,
     });
     orderData.address.push(newAddress);
     await orderData.save()
@@ -717,10 +726,53 @@ exports.orderPlace=async(req,res)=>{
   }
 }
 
+//cash on delivery 
+exports.cashOnDelivery=async(req,res)=>{
+   try {
+    const totalPrice=req.body.totalPrice
+    req.session.orderAmount=totalPrice
+    res.json(ok)
+   } catch (error) {
+     console.error(error)
+     res.status(500).send('Internal server error')
+   }
+}
+
+//order using wallet
+exports.walletPayment=async(req,res)=>{
+  try {
+    const totalPrice=req.body.totalPrice
+    console.log(totalPrice,"fkdjkfjdkf")
+    req.session.orderAmount=totalPrice
+    const userId=req.session.userId
+    const user=await User.findById(userId).select('wallet')
+    let oldBalance=0
+    if(user.wallet.length>0){
+      oldBalance=user.wallet[user.wallet.length-1].balance
+    }
+    if(oldBalance>totalPrice){
+      const walletData={
+        balance:oldBalance-totalPrice,
+        date:Date.now(),
+        creditAmount:totalPrice
+      }
+      user.wallet.push(walletData)
+      await user.save()
+      res.json({ok:true})
+    }else{
+      res.json({message:'Insufficient wallet balance choose any other payment method.'})
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal server error')
+  }
+}
+
 //for online payment
 exports.onlinePayment=async(req,res)=>{
   try {
     const totalPrice=req.body.totalPrice
+    req.session.orderAmount=totalPrice
     const options={
       amount:totalPrice*100,
       currency:'INR',
@@ -774,7 +826,10 @@ exports.addToWishlist=async(req,res)=>{
 //user wallet page
 exports.userWallet=async(req,res)=>{
   try {
-    res.render('./user/wallet')
+    const userId=req.session.userId
+    const user=await User.findById(userId)
+    const userWallet=user.wallet
+    res.render('./user/wallet',{userWallet})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal server error')
@@ -791,5 +846,52 @@ exports.couponApply=async(req,res)=>{
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal server error')
+  }
+}
+
+//cancel an order 
+exports.cancelOrder=async(req,res)=>{
+  try {
+    const orderId=req.params.orderId
+    const userId=req.session.userId
+    const order=await Order.findById(orderId)
+    if(order.paymentMethod==='Online Payment' || order.paymentMethod==='Wallet'){
+      const user=await User.findById(userId).select('wallet')
+      let oldBalance=0
+      if(user.wallet.length>0){
+        oldBalance=user.wallet[user.wallet.length-1].balance
+      }
+      const walletData={
+        balance:oldBalance+order.totalPrice,
+        date:Date.now(),
+        creditAmount:order.totalPrice
+      }
+      user.wallet.push(walletData)
+      await user.save()
+      order.orderStatus='Canceled';
+      await order.save()
+      return res.json({message:'Order cancelled and refunded successfully'})
+    }else{
+      order.orderStatus='Canceled';
+      await order.save()
+      return res.json({message:'Order cancelled successfully'})
+    }
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({message:'Internal server error'})
+  }
+}
+
+//return an order
+exports.returnOrder=async(req,res)=>{
+  try {
+    const orderId=req.params.orderId
+    const order=await Order.findById(orderId)
+    order.orderStatus='Returned';
+    await order.save()
+    return res.json({message:'Order returned successfully'})
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({message:'Internal server error'})
   }
 }

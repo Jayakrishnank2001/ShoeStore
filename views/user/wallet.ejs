@@ -27,37 +27,43 @@
         <div class="row">
             <div class="col-xl-4">             
                 <div class="card mb-4 mb-xl-0">
-                    <div class="card-header font-weight-bolder">Wallet</div>
+                    <div class="text-center card-header font-weight-bolder">Wallet</div>
                     <div class="card-body text-center d-flex justify-content-center flex-column align-items-center">
                         <img class="img-account-profile rounded-circle mb-2 larger-image" id="imagePreview" src="/images/billfold_dribble.png" alt="">
                     </div>      
                     <div class="text-center mt-3 mb-4">
                         <h5>Wallet Balance</h5>
-                        <h5>₹30,000</h5>
+                        <% if(userWallet.length) { %>
+                        <h5>₹<%= userWallet[userWallet.length-1].balance %>.00</h5>
+                        <% }else{ %>
+                        <h5>₹0.00</h5>
+                        <% } %>
                     </div>              
                 </div>    
             </div>
 
             <div class="col-xl-8">             
              <div class="card mb-4">
-                <div class="card-header font-weight-bolder">Wallet History</div>
+                <div class="text-center card-header font-weight-bolder">Wallet History</div>
                 <div class="card-body p-0">
                     <!-- Billing history table-->
                     <div class="table-responsive table-billing-history">
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    <th class="border-gray-200" scope="col">Order ID</th>
-                                    <th class="border-gray-200" scope="col">Date</th>
-                                    <th class="border-gray-200" scope="col">Amount</th>
+                                    <th class="text-center border-gray-200 col-md-4" scope="col">Transaction ID</th>
+                                    <th class="text-center border-gray-200 col-md-4" scope="col">Date</th>
+                                    <th class="text-center border-gray-200 col-md-4" scope="col">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <% userWallet.forEach(wallet=> {  %>
                                 <tr>
-                                    <td class="table-data"></td>
-                                    <td class="table-data"></td>
-                                    <td class="table-data"></td>
+                                    <td class="table-data text-center">#<%= wallet._id.toString().slice(0, 9) %></td>
+                                    <td class="table-data text-center"><%= wallet.date ? wallet.date.toISOString().split('T')[0] : '' %></td>
+                                    <td class="table-data text-center">₹<%= wallet.creditAmount %></td>
                                 </tr>
+                                <% }) %>
                             </tbody>
                         </table>
                         <nav aria-label="Page navigation">

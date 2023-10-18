@@ -28,7 +28,12 @@ exports.dashboard=async(req,res)=>{
             },
          },
         ])
-        const totalRevenue=revenue[0].totalRevenue
+        let totalRevenue
+        if(revenue.length===0){
+            totalRevenue=0
+        }else{
+            totalRevenue=revenue[0].totalRevenue
+        }
         res.render('./admin/dashboard',{usersCount,orderCount,totalRevenue})
     } catch (error) {
         console.error(error)
