@@ -11,6 +11,11 @@
 </head>
 <body>
 
+    <style>
+        .table-data{
+        font-weight: 500;
+    }
+    </style>
     <%- include('../partials/header.ejs') %>
 
 
@@ -51,9 +56,10 @@
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-center border-gray-200 col-md-4" scope="col">Transaction ID</th>
-                                    <th class="text-center border-gray-200 col-md-4" scope="col">Date</th>
-                                    <th class="text-center border-gray-200 col-md-4" scope="col">Amount</th>
+                                    <th class="text-center border-gray-200 col-md-3" scope="col">Transaction ID</th>
+                                    <th class="text-center border-gray-200 col-md-3" scope="col">Date</th>
+                                    <th class="text-center border-gray-200 col-md-3" scope="col">Transaction Type</th>
+                                    <th class="text-center border-gray-200 col-md-3" scope="col">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -61,6 +67,7 @@
                                 <tr>
                                     <td class="table-data text-center">#<%= wallet._id.toString().slice(0, 9) %></td>
                                     <td class="table-data text-center"><%= wallet.date ? wallet.date.toISOString().split('T')[0] : '' %></td>
+                                    <td class="table-data text-center" style="<%= wallet.transactionType === 'Credit' ? 'color: green;' : wallet.transactionType === 'Debit' ? 'color: red;' : '' %>"><%= wallet.transactionType %></td>
                                     <td class="table-data text-center">₹<%= wallet.creditAmount %></td>
                                 </tr>
                                 <% }) %>

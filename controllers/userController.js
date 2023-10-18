@@ -754,7 +754,8 @@ exports.walletPayment=async(req,res)=>{
       const walletData={
         balance:oldBalance-totalPrice,
         date:Date.now(),
-        creditAmount:totalPrice
+        creditAmount:totalPrice,
+        transactionType:'Debit'
       }
       user.wallet.push(walletData)
       await user.save()
@@ -864,7 +865,8 @@ exports.cancelOrder=async(req,res)=>{
       const walletData={
         balance:oldBalance+order.totalPrice,
         date:Date.now(),
-        creditAmount:order.totalPrice
+        creditAmount:order.totalPrice,
+        transactionType:'Credit'
       }
       user.wallet.push(walletData)
       await user.save()
@@ -893,5 +895,15 @@ exports.returnOrder=async(req,res)=>{
   } catch (error) {
     console.error(error)
     return res.status(500).json({message:'Internal server error'})
+  }
+}
+
+//user invoice
+exports.userInvoice=async(req,res)=>{
+  try {
+    res.render('./user/invoice')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Internal server error')
   }
 }

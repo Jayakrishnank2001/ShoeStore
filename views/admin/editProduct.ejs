@@ -13,7 +13,7 @@
 
 .custom-modal-dialog {
     width: 30vw;
-    height: 40vw;
+    height: 35vw;
 }
 .custom-modal-dialog .modal-content {
     width: 100%;
@@ -49,13 +49,14 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div id="imageCarousel" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
+                            <div class="carousel-inner" id="carouselContainer">
                                 <% product.image.forEach((img, index) => { %>
                                     <div class="text-center carousel-item<%= index === 0 ? ' active' : '' %>" id="carouselItem<%= index %>">
                                         <img src="/uploads/<%= img %>" alt="Image <%= index + 1 %>" style="width: 430px; height: 500px;">
                                     </div>
                                 <% }); %>
                             </div>
+                            
                             
                             
                             <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
@@ -67,9 +68,7 @@
                                 <span class="sr-only">Next</span>
                             </a>
                         </div>
-                    </div>
-                    <button class="btn-danger btn-block">DELETE</button>
-                    
+                    </div>                    
             </div>
           </div>
          </div>
@@ -132,7 +131,9 @@
                                             <div id="imagePreview" data-toggle="modal" data-target="#imageModal">
                                                 <img src="/uploads/<%= product.image[0] %>" alt="Image Preview" class="preview-image" style="width:150px; height:150px;">
                                             </div>
-                                        </div>                      
+                                        </div>
+                                        
+                                                
                                         
                                         <div class="form-group col-md-3">
                                             <label for="size" style="font-weight: 600;">SIZE</label>
@@ -253,16 +254,42 @@
     //show the newly selected images
     document.getElementById('imageInput').addEventListener('change', function(event) {
     const imagePreview = document.getElementById('imagePreview');
-    imagePreview.innerHTML = ''; // Clear existing previews
+    const carouselContainer = document.getElementById('carouselContainer');
 
-    if (event.target.files.length > 0) {
-        const file = event.target.files[0]; // Only consider the first selected image
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(file);
-        img.alt = 'New Image Preview';
-        img.style.width = '150px';
-        img.style.height = '150px';
-        imagePreview.appendChild(img);
+    // Clear the existing image preview and carousel items
+    imagePreview.innerHTML = '';
+    carouselContainer.innerHTML = '';
+
+    // Loop through selected images to display them in the image preview and carousel
+    const imgPreview = document.createElement('img');
+        imgPreview.src = URL.createObjectURL(event.target.files[0]);
+        imgPreview.alt = `Image ${0}`;
+        imgPreview.style.width = '150px';
+        imgPreview.style.height = '150px';
+
+        // Add the new image to the image preview
+        imagePreview.appendChild(imgPreview);
+
+    for (let i = 0; i < event.target.files.length; i++) {
+        const file = event.target.files[i];
+
+        // Create a new image element for the image preview
+        
+        // Create a new image element for the carousel
+        const imgCarousel = document.createElement('img');
+        imgCarousel.src = URL.createObjectURL(file);
+        imgCarousel.alt = `Image ${i + 1}`;
+        imgCarousel.style.width = '430px';
+        imgCarousel.style.height = '500px';
+
+        // Add the new image to the carousel
+        const carouselItem = document.createElement('div');
+        carouselItem.classList.add('text-center', 'carousel-item');
+        if (i === 0) {
+            carouselItem.classList.add('active');
+        }
+        carouselItem.appendChild(imgCarousel);
+        carouselContainer.appendChild(carouselItem);
     }
 });
 

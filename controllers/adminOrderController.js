@@ -55,7 +55,8 @@ exports.orderStatus=async(req,res)=>{
         const walletData={
             balance:oldBalance+order.totalPrice,
             date:Date.now(),
-            creditAmount:order.totalPrice
+            creditAmount:order.totalPrice,
+            transactionType:'Credit'
         }
         user.wallet.push(walletData)
         await user.save()    

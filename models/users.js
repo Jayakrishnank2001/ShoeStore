@@ -92,6 +92,9 @@ const userSchema=new mongoose.Schema({
         },
         creditAmount:{
             type:Number
+        },
+        transactionType:{
+            type:String
         }
     }]
 });

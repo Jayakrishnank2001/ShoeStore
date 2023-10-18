@@ -49,6 +49,7 @@ router.get('/orders',userAuth.noSession,userController.orderHistory)
 router.get('/orderdetails/:orderId',userAuth.noSession,userController.orderDetails)
 router.post('/cancel-order/:orderId',userAuth.noSession,userController.cancelOrder)
 router.post('/return-order/:orderId',userAuth.noSession,userController.returnOrder)
+router.get('/invoice',userAuth.noSession,userController.userInvoice)
 
 router.post('/logout',userAuth.noSession,userController.userLogout)
 
