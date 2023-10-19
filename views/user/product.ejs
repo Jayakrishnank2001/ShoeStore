@@ -69,12 +69,25 @@
 							
 	          	<div class="w-100"></div>
 	          	<div class="col-md-12">
-	          		<p style="color: #000;"><%= product.quantity %> pieces available</p>
+					<% if(product.quantity==='0') { %>
+					<p class="font-weight-bold" style="color: #ff0202">Product is out of stock</p>
+                     <% }else{ %>
+	          		<p style="color: #000000;"><%= product.quantity %> pieces available</p>
+					<% } %>
 	          	</div>
           	</div>
           	<p>
-                <a href="#" class="btn btn-black py-3 px-5 mr-2" id="addToCartButton" onclick="addToCart('<%= product._id %>')">Add to Cart</a>
-                <a href="#" class="btn btn-primary py-3 px-5" onclick="addToWishlist('<%= product._id %>')">Wishlist</a>
+				<% if(product.quantity==='0') { %>
+				 <a href="#" class="btn btn-black disabled py-3 px-5 mr-2" id="addToCartButton" onclick="addToCart('<%= product._id %>')">Add to Cart</a>
+                <% }else{ %>
+                 <a href="#" class="btn btn-black py-3 px-5 mr-2" id="addToCartButton" onclick="addToCart('<%= product._id %>')">Add to Cart</a>
+				<% } %>
+				<% if(product.quantity==='0') { %>
+                 <a href="#" class="btn btn-primary disabled py-3 px-5" onclick="addToWishlist('<%= product._id %>')">Wishlist</a>
+				<% }else{ %>
+				 <a href="#" class="btn btn-primary py-3 px-5" onclick="addToWishlist('<%= product._id %>')">Wishlist</a>
+				<% } %>
+
           </p>
     			</div>
 			
@@ -133,10 +146,10 @@
 				showConfirmButton: false,
 				position: 'top'
 				})
-			}else if(data.data=='Already added this product to cart.'){
+			}else if(data.data=='Already added this product to cart'){
         Swal.fire({
 				icon:'warning',
-				title:'Already added this product to cart.',
+				title:'Already added this product to cart',
 				showConfirmButton: false,
 				timer:2000,
 				position: 'top'
@@ -156,10 +169,10 @@
 				timer:2000,
 				position: 'top'
 				})
-			}else if(data.data=='Already added this product to wishlist.'){
+			}else if(data.data=='Already added this product to wishlist'){
                 Swal.fire({
 				icon:'warning',
-				title:'Already added this product to wishlist.',
+				title:'Already added this product to wishlist',
 				showConfirmButton: false,
 				timer:2000,
 				position: 'top'

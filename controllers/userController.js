@@ -12,6 +12,7 @@ const Category = require('../models/category')
 const Order=require('../models/order')
 const Razorpay=require('razorpay')
 const { ok } = require('assert')
+const { session } = require('passport')
 
 
 const razorpay=new Razorpay({
@@ -440,14 +441,16 @@ exports.addToCart=async(req,res)=>{
     let userId=req.session.userId;
     const user=await User.findOne({_id:userId,'cart.productId':productId});
     if(user){
-      res.json({data:'Already added this product to cart.'});
-    }else{
+      res.json({data:'Already added this product to cart'});
+    }else if(product.quantity!=='0'){
       let user=await User.findByIdAndUpdate(
           userId,
           {$push:{cart:{productId:productId,quantity:1,totalPrice:product.price}}},
           {new:true}
       );
       res.json({data:'Product added to the cart successfully'})
+    }else{
+      res.json({data:'Product is out of stock'})
     }
   } catch (error) {
     console.error(error)
@@ -703,6 +706,14 @@ exports.orderPlace=async(req,res)=>{
         };
       })
     );
+
+    await Promise.all(
+      products.map(async(product)=>{
+        const existingProduct=await Product.findById(product.productId)
+        existingProduct.quantity-=product.orderQuantity
+        await existingProduct.save()
+      })
+    )
     
     const orderData = new Order({
       userId,
@@ -811,12 +822,14 @@ exports.addToWishlist=async(req,res)=>{
     const user=await User.findOne({_id:userId,'wishlist.productId':productId});
     if(user){
       res.json({data:'Already added this product to wishlist'})
-    }else{
+    }else if(product.quantity!=='0'){
       let user=await User.findByIdAndUpdate(userId,
         {$push:{wishlist:{productId:productId}}},
         {new:true}
         );
         res.json({data:'Product added to the wishlist successfully'})
+    }else{
+      res.json({data:'Product is out of stock'})
     }
   } catch (error) {
     console.error(error)
@@ -901,7 +914,11 @@ exports.returnOrder=async(req,res)=>{
 //user invoice
 exports.userInvoice=async(req,res)=>{
   try {
-    res.render('./user/invoice')
+    const orderId=req.params.orderId
+    const userId=req.session.userId
+    const user=await User.findById(userId)
+    const order=await Order.findById(orderId).populate('products.productId')
+    res.render('./user/invoice',{user,order})
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal server error')

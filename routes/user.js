@@ -36,6 +36,10 @@ router.get('/cart',userAuth.noSession,userController.cartPage)
 router.get('/addcart/:productId',userAuth.noSession,userController.addToCart)
 router.get('/removecart/:productId',userAuth.noSession,userController.removeFromCart)
 
+router.put('/updateQuantity/:productId/:newQuantity',userAuth.noSession,userController.updateQuantity)
+router.get('/getproduct/:productId',userAuth.noSession,userController.getProductDetails)
+
+
 router.get('/checkout',userAuth.noSession,userController.checkoutPage)
 router.post('/checkout',userAuth.noSession,userController.orderPlace)
 router.post('/online-payment',userAuth.noSession,userController.onlinePayment)
@@ -49,7 +53,7 @@ router.get('/orders',userAuth.noSession,userController.orderHistory)
 router.get('/orderdetails/:orderId',userAuth.noSession,userController.orderDetails)
 router.post('/cancel-order/:orderId',userAuth.noSession,userController.cancelOrder)
 router.post('/return-order/:orderId',userAuth.noSession,userController.returnOrder)
-router.get('/invoice',userAuth.noSession,userController.userInvoice)
+router.get('/invoice/:orderId',userAuth.noSession,userController.userInvoice)
 
 router.post('/logout',userAuth.noSession,userController.userLogout)
 
@@ -65,10 +69,6 @@ router.post('/address',userAuth.noSession,userController.addAddress)
 router.get('/deleteaddress/:addressId',userAuth.noSession,userController.deleteAddress)
 router.post('/editaddress/:addressId',userAuth.noSession,userController.editAddress)
 router.post('/set-default-address/:addressId',userAuth.noSession,userController.setDefaultAddress)
-
-router.put('/updateQuantity/:productId/:newQuantity',userAuth.noSession,userController.updateQuantity)
-
-router.get('/getproduct/:productId',userAuth.noSession,userController.getProductDetails)
 
 
 

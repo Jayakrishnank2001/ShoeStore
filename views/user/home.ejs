@@ -176,10 +176,18 @@
 				timer:2000,
 				position: 'top'
 				})
-			}else if(data.data=='Already added this product to cart.'){
+			}else if(data.data=='Already added this product to cart'){
                 Swal.fire({
 				icon:'warning',
-				title:'Already added this product to cart.',
+				title:'Already added this product to cart',
+				showConfirmButton: false,
+				timer:2000,
+				position: 'top'
+				})
+			}else if(data.data=='Product is out of stock'){
+				Swal.fire({
+				icon:'warning',
+				title:'Product is out of stock',
 				showConfirmButton: false,
 				timer:2000,
 				position: 'top'
@@ -199,10 +207,18 @@
 				timer:2000,
 				position: 'top'
 				})
-			}else if(data.data=='Already added this product to wishlist.'){
+			}else if(data.data=='Already added this product to wishlist'){
                 Swal.fire({
 				icon:'warning',
-				title:'Already added this product to wishlist.',
+				title:'Already added this product to wishlist',
+				showConfirmButton: false,
+				timer:2000,
+				position: 'top'
+				})
+			}else if(data.data=='Product is out of stock'){
+				Swal.fire({
+				icon:'warning',
+				title:'Product is out of stock',
 				showConfirmButton: false,
 				timer:2000,
 				position: 'top'

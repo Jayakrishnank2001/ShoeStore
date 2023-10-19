@@ -84,6 +84,10 @@ exports.createBanner=async(req,res)=>{
              res.render('./admin/addBanner',{alert:'Please fill all required fields.'})
              return
         }
+        if(!req.file){
+            res.render('./admin/addBanner',{alert:'Please select an Image'})
+            return
+        }
         const newBanner=new Banner({
             bannerId,
             bannerImage:req.file.filename

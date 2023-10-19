@@ -17,85 +17,89 @@
             background: linear-gradient(to top left, rgb(255, 255, 255), rgba(246, 243, 255, 1))
         }
         .table-data{
-          font-weight:400;
+          font-weight:600;
         }
         .custom-card {
-          background-color: #f7f5f5;
+          background-color: #f0efef;
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
+        .card-body-small{
+          background-color: #f0efef;
+        }
 
     </style>
 
  <%- include('../partials/adminheader.ejs') %>
 
+
  <section class="h-100 gradient-custom">
     <div class="container py-5 h-100">
+      <div class="container text-center">
+        <h2 class="text" style="text-decoration: underline;">ORDER DETAILS</h2>
+     </div>
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-12">
-            <div class="custom-card" style="border-radius: 10px;">
-            <% order.products.forEach(product => { %>
+          <div class="custom-card" style="border-radius: 10px;">
+
+            <div class="card-header px-4 py-5">
+            </div>
             <div class="card-body p-4">
               <div class="d-flex justify-content-between align-items-center mb-4 table-data">
-                <p class="small text-muted mb-0" style="font-size: 18px;">Order ID : #<%= order._id.toString().slice(0, 9) %></p>
-                <p class="small text-muted mb-0" style="font-size: 18px;">Ordered Date : <%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></p>
+                <p class="small text mb-0" style="font-size: 18px; font-weight: 500;">Order ID : #<%= order._id.toString().slice(0, 9) %></p>
+                <p class="small text mb-0" style="font-size: 18px; font-weight: 500;">Ordered Date : <%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></p>
               </div>
+              <% order.products.forEach(product => { %>
               <div class="card shadow-0 border mb-4">
-                <div class="card-body">
-                  
+                <div class="card-body card-body-small">
                   <div class="row">
                     <div class="col-md-3">
                       <img src="/uploads/<%= product.productId.image[0] %>" class="img-fluid"
                         alt="Product Image" style="max-width: 200px; max-height: 250px;">
                     </div>
                     <div class="col-md-3 d-flex align-items-center table-data">
-                      <p class="text-muted mb-0" style="font-size: 18px;"><%= product.productId.productName %></p>
+                      <p class="text mb-0 " style="font-size: 18px;"><%= product.productId.productName %></p>
                     </div>
                     <div class="col-md-1 text-center d-flex align-items-center table-data">
-                      <p class="text-muted mb-0" style="font-size: 18px;"><%= product.productId.gender %></p>
+                      <p class="text mb-0" style="font-size: 18px;"><%= product.productId.gender %></p>
                     </div>
                     <div class="col-md-1 text-center d-flex align-items-center table-data" style="margin-left: 70px;">
-                      <p class="text-muted mb-0" style="font-size: 18px;">Qty: <%= product.orderQuantity %></p>
+                      <p class="text mb-0" style="font-size: 18px;">Qty: <%= product.orderQuantity %></p>
                     </div>
                     <div class="col-md-2 text-center d-flex align-items-center table-data" style="margin-left: 70px;">
-                      <p class="text-muted mb-0" style="font-size: 18px;">₹<%= product.productTotalPrice %>.00</p>
+                      <p class="text mb-0" style="font-size: 18px;">₹<%= product.productTotalPrice %>.00</p>
                     </div>
                   </div>
-                  <hr class="mb-4" style="background-color: #e0e0e0; opacity: 1;">
-                  
                 </div>
               </div>
-  
+              <% }); %>
+
               <div class="d-flex justify-content-between pt-2">
                 <p class="fw-bold mb-0" style="font-size: 20px;">Shipping Address</p>
-                <p class="text-muted mb-0" style="font-size: 20px;"><span class="fw-bold me-4">Total: </span>₹<%= product.productTotalPrice %>.00</p>
+                <p class="text mb-0 font-weight-bold" style="font-size: 20px;"><span class="fw-bold me-4">Total: </span>₹<%= order.totalPrice+order.discountAmount %>.00</p>
               </div>
               <div class="d-flex justify-content-between pt-2">
-                <p class="text-muted mb-0" style="font-size: 18px;"><%= order.address[0].firstName %> <%= order.address[0].lastName %></p>
-                <p class="text-muted mb-0" style="font-size: 20px;"><span class="fw-bold me-4">Discount: </span>₹<%= order.discountAmount %>.00</p>
+                <p class="text mb-0" style="font-size: 18px;"><%= order.address[0].firstName %> <%= order.address[0].lastName %></p>
+                <p class="text mb-0 font-weight-bold" style="font-size: 20px;"><span class="fw-bold me-4">Discount: </span>₹<%= order.discountAmount %>.00</p>
               </div>
               <div class="d-flex justify-content-between">
-                <p class="text-muted mb-0" style="font-size: 18px;"><%= order.address[0].address %></p>
+                <p class="text mb-0" style="font-size: 18px;"><%= order.address[0].address %></p>
               </div>
               <div class="d-flex justify-content-between mb-5">
-                <p class="text-muted mb-0" style="font-size: 18px;"><%= order.address[0].town %>, <%= order.address[0].district %> -
+                <p class="text mb-0" style="font-size: 18px;"><%= order.address[0].town %>, <%= order.address[0].district %> -
                   <%= order.address[0].pincode %>, <%= order.address[0].state %></p>
               </div>
             </div>
             <div class="card-footer border-0 px-4 py-5"
-              style="background-color: #46969d; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+              style="background-color: #000000; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
               <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0" style="font-size: 28px;">Total Amount:<span
                   class="h2 mb-0 ms-2">₹<%= order.totalPrice %>.00</span></h5>
             </div>
-            <% }); %>
+            
           </div>
         </div>
       </div>
     </div>
   </section>
-  
-  
-  
 </body>
 </html>
 

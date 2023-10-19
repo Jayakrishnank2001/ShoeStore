@@ -86,6 +86,7 @@
                         <th class="text-center">PRODUCT</th>
                         <th class="text-center">CATEGORY</th>
                         <th class="text-center">BRAND</th>
+                        <th class="text-center">QUANTITY</th>
                         <th class="text-center">PRICE</th>
                         <th class="text-center">GENDER</th>
                         <th class="text-center">IMAGE</th>
@@ -98,7 +99,8 @@
                       <tr>
                         <td class="editable table-data text-center" data-field="productname"><%= product.productName %></td>
                         <td class="table-data text-center"><%= product.category.categoryName %></td>  
-                        <td class="table-data text-center"><%= product.brand %></td>                                              
+                        <td class="table-data text-center"><%= product.brand %></td>   
+                        <td class="table-data text-center"><%= product.quantity %></td>                                              
                         <td class="table-data text-center">₹<%= product.price %></td> 
                         <td class="table-data text-center"><%= product.gender %></td>                                             
                         <td>
