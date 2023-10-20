@@ -99,36 +99,36 @@
                                                         <!-- Form Group (first name)-->
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="address">Address</label>
-                                                            <input name="address" class="form-control" id="address" type="text" placeholder="" value="<%= address.address %>">
+                                                            <input name="address" class="form-control" id="address" type="text" placeholder="" value="<%= address.address %>" required>
                                                         </div>
                                                         <!-- Form Group (last name)-->
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="town">Town</label>
-                                                            <input name="town" class="form-control" id="town" type="text" placeholder="" value="<%= address.town %>">
+                                                            <input name="town" class="form-control" id="town" type="text" placeholder="" value="<%= address.town %>" required>
                                                         </div>
                                                     </div>
                                                     <div class="row gx-3 mb-3">
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="pincode">Pin Code/Zip Code</label>
-                                                            <input name="pincode" class="form-control" id="pincode" type="" placeholder="" value="<%= address.pincode %>">
+                                                            <input name="pincode" class="form-control" id="pincode" type="" placeholder="" value="<%= address.pincode %>" required>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="district">District</label>
-                                                            <input name="district" class="form-control" id="district" type="text" placeholder="" value="<%= address.district %>">
+                                                            <input name="district" class="form-control" id="district" type="text" placeholder="" value="<%= address.district %>" required>
                                                         </div>
                                                     </div>
                                                     <div class="row gx-3 mb-3">
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="state">State</label>
-                                                            <input name="state" class="form-control" id="state" type="text" placeholder="" value="<%= address.state %>">
+                                                            <input name="state" class="form-control" id="state" type="text" placeholder="" value="<%= address.state %>" required>
                                                         </div>                            
                                                         <div class="col-md-6">
                                                             <label class="small mb-1" for="country">Country</label>
-                                                            <input name="country" class="form-control" id="country" type="text" placeholder="" value="<%= address.country %>">
+                                                            <input name="country" class="form-control" id="country" type="text" placeholder="" value="<%= address.country %>" required>
                                                         </div>                     
                                                     </div>
                                                     <div class="text-center">
-                                                        <button type="submit" class="btn btn-primary" onclick="updateAddress()">Update Address</button>
+                                                        <button type="submit" class="btn btn-primary">Update Address</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -163,36 +163,36 @@
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="address">Address</label>
-                                <input name="address" class="form-control" id="address" type="text" placeholder="" value="">
+                                <input name="address" class="form-control" id="address" type="text" placeholder="" value="" required>
                             </div>
                             <!-- Form Group (last name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="town">Town</label>
-                                <input name="town" class="form-control" id="town" type="text" placeholder="" value="">
+                                <input name="town" class="form-control" id="town" type="text" placeholder="" value="" required>
                             </div>
                         </div>
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="pincode">Pin Code/Zip Code</label>
-                                <input name="pincode" class="form-control" id="pincode" type="number" placeholder="" value="">
+                                <input name="pincode" class="form-control" id="pincode" type="number" placeholder="" value="" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" for="district">District</label>
-                                <input name="district" class="form-control" id="district" type="text" placeholder="" value="">
+                                <input name="district" class="form-control" id="district" type="text" placeholder="" value="" required>
                             </div>
                         </div>
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="state">State</label>
-                                <input name="state" class="form-control" id="state" type="text" placeholder="" value="">
+                                <input name="state" class="form-control" id="state" type="text" placeholder="" value="" required>
                             </div>                            
                             <div class="col-md-6">
                                 <label class="small mb-1" for="country">Country</label>
-                                <input name="country" class="form-control" id="country" type="text" placeholder="" value="">
+                                <input name="country" class="form-control" id="country" type="text" placeholder="" value="" required>
                             </div>                     
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary" onclick="createAddress()">Create Address</button>
+                            <button type="submit" class="btn btn-primary">Create Address</button>
                         </div>
                     </form>
                 </div>
@@ -227,6 +227,8 @@ radioButtons.forEach((radioButton) => {
                 Swal.fire({
                     icon: 'success',
                     text: 'Address selected successfully',
+                    showConfirmButton:false,
+                    timer:2000
                 })
             } else {
                 alert('Failed');
@@ -238,25 +240,42 @@ radioButtons.forEach((radioButton) => {
     });
 });
 
-//sweatalert for create address
-function createAddress(){
-    Swal.fire({
-    icon:'success',
-	title:'Address created successfully',
-    timer:2000,
-    showConfirmButton:false
-	})
-   }
+          //modal create new address
+          function showSuccessMessage() {
+             Swal.fire({
+             icon: 'success',
+             title: 'Address created successfully',
+             showConfirmButton: false,
+             timer: 2000,
+            });
+            history.pushState(null, null, '/address');
+          }
 
-//sweatalert for update address
-function updateAddress(){
-    Swal.fire({
-    icon:'success',
-	title:'Address updated successfully',
-    timer:2000,
-    showConfirmButton:false
-	})
-   }
+          // Check if the "success" query parameter is present in the URL
+           const urlParams = new URLSearchParams(window.location.search);
+           if (urlParams.has('success') && urlParams.get('success') === 'true') {
+           // Call the custom function to display the success message
+           showSuccessMessage();
+        }
+
+        //modal update address
+        function showUpdateMessage() {
+             Swal.fire({
+             icon: 'success',
+             title: 'Address updated successfully',
+             showConfirmButton: false,
+             timer: 2000,
+            });
+            history.pushState(null, null, '/address');
+          }
+
+          // Check if the "success" query parameter is present in the URL
+           const urlParams1 = new URLSearchParams(window.location.search);
+           if (urlParams1.has('success') && urlParams1.get('success') === 'false') {
+           // Call the custom function to display the success message
+           showUpdateMessage();
+        }
+
 
 
 </script>

@@ -123,7 +123,7 @@
             <% if(cartItems.length===0) { %>
     				<p class="text-center"><a href="/cart" class="btn btn-primary py-3 px-4" onclick="checkCartNotEmpty()">Proceed to Checkout</a></p>
             <% }else{ %>
-              <p class="text-center"><a href="/checkout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+              <p class="text-center"><a href="/checkout/<%= totalSum %>" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
             <% } %>
     			</div>
     		</div>

@@ -32,6 +32,33 @@
               <%- include('../partials/adminsidebar.ejs') %>
 
 
+              <!-- Modal for More Images -->
+          <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog custom-modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner" id="carouselContainer">
+                                    <div class="text-center carousel-item">
+                                        <img src="" alt="Image" style="width: 430px; height: 500px;">
+                                    </div>
+                            </div>
+                            
+                            <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>                    
+            </div>
+          </div>
+         </div>
+
+         
               <div class="container">
                 <div class="row justify-content-center mt-5">
                     <div class="col-md-8">
@@ -86,7 +113,9 @@
                                         <div class="form-group col-md-5">
                                             <label for="firstName" style="font-weight: 600;">IMAGE</label>
                                             <input name="image" type="file" id="imageInput" multiple accept="image/*">
-                                            <img id="imagePreview" src="" alt="Image Preview" style="width:150px; height:150px;">
+                                            <div id="imagePreview" data-toggle="modal" data-target="#imageModal">
+                                                <img src="" alt="Image Preview" class="preview-image" style="width:150px; height:150px;">
+                                            </div>                                       
                                         </div>                                                                                                                
                                         <div class="form-group col-md-3">
                                             <label for="size" style="font-weight: 600;">SIZE</label>
@@ -209,6 +238,49 @@
             }
         });
     });
+
+
+    //show the newly selected images
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+    const imagePreview = document.getElementById('imagePreview');
+    const carouselContainer = document.getElementById('carouselContainer');
+
+    // Clear the existing image preview and carousel items
+    imagePreview.innerHTML = '';
+    carouselContainer.innerHTML = '';
+
+    // Loop through selected images to display them in the image preview and carousel
+    const imgPreview = document.createElement('img');
+        imgPreview.src = URL.createObjectURL(event.target.files[0]);
+        imgPreview.alt = `Image ${0}`;
+        imgPreview.style.width = '150px';
+        imgPreview.style.height = '150px';
+
+        // Add the new image to the image preview
+        imagePreview.appendChild(imgPreview);
+
+    for (let i = 0; i < event.target.files.length; i++) {
+        const file = event.target.files[i];
+
+        // Create a new image element for the image preview
+        
+        // Create a new image element for the carousel
+        const imgCarousel = document.createElement('img');
+        imgCarousel.src = URL.createObjectURL(file);
+        imgCarousel.alt = `Image ${i + 1}`;
+        imgCarousel.style.width = '430px';
+        imgCarousel.style.height = '500px';
+
+        // Add the new image to the carousel
+        const carouselItem = document.createElement('div');
+        carouselItem.classList.add('text-center', 'carousel-item');
+        if (i === 0) {
+            carouselItem.classList.add('active');
+        }
+        carouselItem.appendChild(imgCarousel);
+        carouselContainer.appendChild(carouselItem);
+    }
+});
 
 
         </script>

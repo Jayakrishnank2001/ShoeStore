@@ -91,13 +91,14 @@
             new Chart(ctx1, {
               type: 'pie',
               data: {
-                labels: ['Users', 'Blocked users'],
+                labels: ['Wallet', 'Online Payment','Cash on delivery'],
                 datasets: [{
                   label: '',
-                  data: [data.usersCount,data.blockedUsersCount],
+                  data: [data.walletPayment,data.onlinePayment,data.cashOnDelivery],
                   backgroundColor: [
-                  'rgba(0, 207, 140, 0.8)',
-                  'rgba(255, 99, 132, 01)'
+                  'rgba(245, 30, 95, 0.8)',
+                  'rgba(13, 92, 216, 0.8)',
+                  'rgba(13, 216, 104, 0.8)'
                   ],
                   borderWidth: 1
                 }]

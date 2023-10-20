@@ -70,7 +70,8 @@ exports.wishlistPage=async(req,res)=>{
 exports.checkoutPage=async(req,res)=>{
   try {
     const currentDate=new Date()
-    const cartTotal=req.session.totalSum
+    const cartTotal=req.params.totalSum
+    req.session.cartTotal=cartTotal
     const coupons=await Coupon.find({isActive:true,purchaseAmount:{$lte:cartTotal},expiryDate:{$gte:currentDate}})
     const userId=req.session.userId
     const user=await User.findById(userId)
@@ -401,6 +402,7 @@ exports.userlogin=async(req,res)=>{
       const passwordMatch=await bcrypt.compare(password,user.password)
       if(!user){
         res.render('./login/userLogin',{alert:"Invalid Email or Password."})
+        return
       }
       if(user.blocked===true){
         return res.render('./login/userlogin',{alert:"Can't access your account."})
@@ -412,8 +414,8 @@ exports.userlogin=async(req,res)=>{
         return res.render('./login/userLogin',{alert:'Invalid Password or Email.'})
       }
   }catch(error){
-    console.log('Error during user login',error)
-    res.status(500).json({error:'Internal Server Error'})
+    console.log(error)
+    res.status(500).send('Internal server error')
   }
 }
 
@@ -528,9 +530,7 @@ exports.userInfoUpdate=async(req,res)=>{
    };
    Object.assign(user, updatedFields);
    await user.save();
-   setTimeout(() => {
-    res.render('./user/userprofile',{user})
-   }, 2000);
+   res.redirect('/profile?success=true')
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -547,9 +547,7 @@ exports.addAddress=async(req,res)=>{
       {$push:{userAddress:{address:address,town:town,pincode:pincode,district:district,state:state,country:country}}},
       {new:true}
     )
-    setTimeout(()=>{
-      res.redirect('/address')
-    },2000)
+    res.redirect('/address?success=true')
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -591,9 +589,7 @@ exports.editAddress=async(req,res)=>{
       },
       {new:true}
     );
-    setTimeout(()=>{
-      res.redirect('/address')
-    },2000)
+    res.redirect('/address?success=false')
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')
@@ -623,6 +619,7 @@ exports.updateQuantity=async(req,res)=>{
         return sum + cartItem.totalPrice
     },0)
     req.session.totalSum=totalSum
+    req.session.save()
     await user.save()
     // Respond with the updated total price
     res.json({updatedTotalPrice: cartItem.totalPrice,totalSum})
@@ -673,7 +670,7 @@ exports.orderPlace=async(req,res)=>{
    const cartTotal=req.session.totalSum
    const coupons=await Coupon.find({isActive:true,purchaseAmount:{$lte:cartTotal},expiryDate:{$gte:currentDate}})
    const paymentMethod=req.body.paymentMethod
-   const previoustotalPrice=req.session.totalSum
+   const previoustotalPrice=req.session.cartTotal
    const totalPrice=req.session.orderAmount
    const discountAmount=previoustotalPrice-totalPrice
    const userId=req.session.userId
@@ -727,9 +724,6 @@ exports.orderPlace=async(req,res)=>{
     await orderData.save()
     user.cart=[];
     await user.save();
-    if(paymentMethod==="Online Payment"){
-      res.redirect('/')
-    }
    }
   } catch (error) {
     console.error(error)

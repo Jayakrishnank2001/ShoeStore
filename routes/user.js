@@ -40,7 +40,7 @@ router.put('/updateQuantity/:productId/:newQuantity',userAuth.noSession,userCont
 router.get('/getproduct/:productId',userAuth.noSession,userController.getProductDetails)
 
 
-router.get('/checkout',userAuth.noSession,userController.checkoutPage)
+router.get('/checkout/:totalSum',userAuth.noSession,userController.checkoutPage)
 router.post('/checkout',userAuth.noSession,userController.orderPlace)
 router.post('/online-payment',userAuth.noSession,userController.onlinePayment)
 router.post('/cash-delivery',userAuth.noSession,userController.cashOnDelivery)

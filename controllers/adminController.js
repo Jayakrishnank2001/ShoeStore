@@ -44,9 +44,10 @@ exports.dashboard=async(req,res)=>{
 //users and blocked users graph
 exports.usersGraph=async(req,res)=>{
     try {
-        const usersCount=await User.countDocuments({blocked:false})
-        const blockedUsersCount=await User.countDocuments({blocked:true})
-        res.json({usersCount,blockedUsersCount})
+        const walletPayment=await Order.countDocuments({paymentMethod:'Wallet'})
+        const onlinePayment=await Order.countDocuments({paymentMethod:'Online Payment'})
+        const cashOnDelivery=await Order.countDocuments({paymentMethod:'Cash on delivery'})
+        res.json({walletPayment,onlinePayment,cashOnDelivery})
     } catch (error) {
        console.error(error)
        res.status(500).send('Internal server error') 

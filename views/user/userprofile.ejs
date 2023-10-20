@@ -131,18 +131,18 @@
                             <!-- Form Group (first name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputFirstName">First name</label>
-                                <input name="firstName" class="form-control" id="inputFirstName" type="text" placeholder="" value="<%= user.firstName %>">
+                                <input name="firstName" class="form-control" id="inputFirstName" type="text" placeholder="" value="<%= user.firstName %>" required>
                             </div>
                             <!-- Form Group (last name)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputLastName">Last name</label>
-                                <input name="lastName" class="form-control" id="inputLastName" type="text" placeholder="" value="<%= user.lastName %>">
+                                <input name="lastName" class="form-control" id="inputLastName" type="text" placeholder="" value="<%= user.lastName %>" required>
                             </div>
                         </div>
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">Phone number</label>
-                                <input name="mobileNumber" class="form-control" id="inputPhone" type="tel" placeholder="" value="<%= user.mobileNumber %>">
+                                <input name="mobileNumber" class="form-control" id="inputPhone" type="tel" placeholder="" value="<%= user.mobileNumber %>" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputUsername">Email Address</label>
@@ -166,7 +166,7 @@
                             </div>                            
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary" onclick="updateDetails()">Update Details</button>
+                            <button type="submit" class="btn btn-primary">Update Details</button>
                         </div>
                     </form>
                 </div>
@@ -190,16 +190,6 @@
 
 <script>
 
-//show sweetalert for update details
-    function updateDetails(){
-    Swal.fire({
-    icon:'success',
-	title:'Details updated successfully',
-    timer:2000,
-    showConfirmButton:false
-	})
-    }
-
 
    //calender
     $(document).ready(function () {
@@ -209,6 +199,24 @@
             todayHighlight: true
         });
     });
+
+    //modal update user details
+    function showSuccessMessage() {
+             Swal.fire({
+             icon: 'success',
+             title: 'Updated details successfully',
+             showConfirmButton: false,
+             timer: 2000,
+            });
+            history.pushState(null, null, '/profile');
+          }
+
+          // Check if the "success" query parameter is present in the URL
+           const urlParams = new URLSearchParams(window.location.search);
+           if (urlParams.has('success') && urlParams.get('success') === 'true') {
+           // Call the custom function to display the success message
+           showSuccessMessage();
+        }
 
 </script>
 
