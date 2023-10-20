@@ -83,8 +83,8 @@
 
           <script>
 
-
-        fetch('/usersgraph')
+        //order payment method graph
+        fetch('/payment-method')
          .then((response)=>response.json())
          .then((data)=>{
             const ctx1 = document.getElementById('myChart1');
@@ -111,22 +111,72 @@
           })
 
         
-          const ctx2 = document.getElementById('myChart2');
-            new Chart(ctx2, {
-              type: 'bar',
-              data: {
-                labels: ['jan','feb'],
-                datasets: [{
-                  label: 'Revenue',
-                  data: [4000,6000],
-                  backgroundColor: [
-                  'rgba(255, 99, 132, 01)'
-                  ],
-                  borderWidth: 1
-                }]
-              },
-              
-            });
+  //total revenue graph
+  fetch('/total-revenue')
+  .then((response) => response.json())
+  .then((data) => {
+    const revenueData = [];
+    for (const year in data) {
+      for (let month = 0; month < 12; month++) {
+        const revenue = data[year][month] || 0;
+        revenueData.push(revenue);
+      }
+    }
+    const ctx2 = document.getElementById('myChart2');
+    new Chart(ctx2, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+          {
+            label: 'Revenue',
+            data: revenueData,
+            backgroundColor: ['rgba(245, 30, 95, 0.8)'],
+            borderWidth: 1,
+          },
+        ],
+      },
+    });
+  })
+  .catch((error) => {
+    console.error('Error fetching revenue data:', error);
+  });
+
+
+
+  document.querySelector('.date-filter button').addEventListener('click', async () => {
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+
+  // Send a POST request to generate the sales report
+  const response = await fetch('/generate-sales-report', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ startDate, endDate }),
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    const { totalRevenue, salesReport } = data;
+
+    // Display the total revenue
+    alert(`Total Revenue between ${startDate} and ${endDate}: ₹${totalRevenue}`);
+
+    // Create a blob from the buffer and initiate a download
+    const blob = new Blob([salesReport], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'SalesReport.xlsx';
+    a.click();
+  } else {
+    alert('Error generating sales report.');
+  }
+});
+
+
           
 
 

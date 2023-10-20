@@ -85,7 +85,7 @@
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputPhone">Phone number</label>
-                                    <input name="mobileNumber" class="form-control" id="inputPhone" type="tel" placeholder="" value="<%= user.mobileNumber %>" readonly>
+                                    <input name="mobileNumber" class="form-control" id="inputPhone" type="number" placeholder="" value="<%= user.mobileNumber %>" readonly>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="inputUsername">Email Address</label>
@@ -142,7 +142,7 @@
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">Phone number</label>
-                                <input name="mobileNumber" class="form-control" id="inputPhone" type="tel" placeholder="" value="<%= user.mobileNumber %>" required>
+                                <input name="mobileNumber" class="form-control" id="inputPhone" type="number" placeholder="" value="<%= user.mobileNumber %>" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputUsername">Email Address</label>
@@ -154,7 +154,7 @@
                         <div class="row gx-3 mb-3">
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputBirthday">Date Of Birth</label>
-                                <input class="form-control" id="inputBirthday" type="text" name="dateOfBirth" placeholder="" value="<%= user.dateOfBirth ? user.dateOfBirth.toISOString().split('T')[0] : '' %>">
+                                <input class="form-control" id="inputBirthday" type="date" name="dateOfBirth" placeholder="" value="<%= user.dateOfBirth ? user.dateOfBirth.toISOString().split('T')[0] : '' %>">
                             </div>                            
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputGender">Gender</label>
@@ -191,14 +191,7 @@
 <script>
 
 
-   //calender
-    $(document).ready(function () {
-        $('#inputBirthday').datepicker({
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            todayHighlight: true
-        });
-    });
+
 
     //modal update user details
     function showSuccessMessage() {

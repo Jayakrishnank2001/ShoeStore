@@ -90,9 +90,9 @@
 						<div class="form-group">
 						<label for="country">Pincode</label>
 						<% if(defaultAddress) { %>
-					    <input type="text" name="pincode" class="form-control" placeholder="" value="<%= defaultAddress.pincode %>" required>
+					    <input type="number" name="pincode" class="form-control" placeholder="" value="<%= defaultAddress.pincode %>" required>
 						<% }else{ %>
-						<input type="text" name="pincode" class="form-control" placeholder="" value="" required>
+						<input type="number" name="pincode" class="form-control" placeholder="" value="" required>
 						<% } %>
 					</div>
 					</div>
@@ -133,7 +133,7 @@
 	              <div class="col-md-6">
 	                <div class="form-group">
 	                  <label for="emailaddress">Phone</label>
-	                  <input type="text" name="mobileNumber" class="form-control" placeholder="" value="<%= user.mobileNumber %>" required>
+	                  <input type="number" name="mobileNumber" class="form-control" placeholder="" value="<%= user.mobileNumber %>" required>
 	                </div>
                 </div>
                 <div class="w-100"></div>

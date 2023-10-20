@@ -399,11 +399,11 @@ exports.userlogin=async(req,res)=>{
   const {email,password}=req.body
   try{
       const user=await User.findOne({email})
-      const passwordMatch=await bcrypt.compare(password,user.password)
       if(!user){
-        res.render('./login/userLogin',{alert:"Invalid Email or Password."})
+        res.render('./login/userLogin',{alert:"Invalid Email"})
         return
       }
+      const passwordMatch=await bcrypt.compare(password,user.password)
       if(user.blocked===true){
         return res.render('./login/userlogin',{alert:"Can't access your account."})
       }
@@ -411,7 +411,7 @@ exports.userlogin=async(req,res)=>{
         req.session.userId=user._id;
         res.redirect('/')
       }else{
-        return res.render('./login/userLogin',{alert:'Invalid Password or Email.'})
+        return res.render('./login/userLogin',{alert:'Password is incorrect'})
       }
   }catch(error){
     console.log(error)

@@ -36,7 +36,9 @@ router.get('/adminlogin',adminAuth.yesSession,adminController.loginpage)
 router.post('/adminlogin',adminController.login)
 
 router.get('/dashboard',adminAuth.noSession,adminController.dashboard)
-router.get('/usersgraph',adminAuth.noSession,adminController.usersGraph)
+router.get('/payment-method',adminAuth.noSession,adminController.usersGraph)
+router.get('/total-revenue',adminAuth.noSession,adminController.totalRevenueGraph)
+router.post('/generate-sales-report',adminAuth.noSession,adminController.salesReport)
 
 router.get('/users',adminAuth.noSession,adminController.users)
 router.get('/admin/block-user/:userId',adminAuth.noSession,adminController.blockUser)
@@ -73,8 +75,6 @@ router.get('/editCoupon/:couponId',adminAuth.noSession,adminCouponController.cou
 router.post('/editcoupon/:couponId',adminAuth.noSession,adminCouponController.updateCoupon)
 
 router.post('/adminlogout',adminController.adminlogout)
-
-
 
 
 
