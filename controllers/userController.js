@@ -72,6 +72,7 @@ exports.checkoutPage=async(req,res)=>{
     const currentDate=new Date()
     const cartTotal=req.params.totalSum
     req.session.cartTotal=cartTotal
+    req.session.save()
     const coupons=await Coupon.find({isActive:true,purchaseAmount:{$lte:cartTotal},expiryDate:{$gte:currentDate}})
     const userId=req.session.userId
     const user=await User.findById(userId)

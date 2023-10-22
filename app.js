@@ -46,6 +46,12 @@ app.set('view engine','ejs')
 app.use('/',require('./routes/user'))
 app.use('/',require('./routes/admin'))
 
+//404 page
+app.use((req,res)=>{
+    res.status(404)
+    res.render('./user/404page')
+})
+
 app.listen(port,()=>{
     console.log(`Server started on port http://localhost:${port}`)
 })
