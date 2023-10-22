@@ -46,10 +46,15 @@ app.set('view engine','ejs')
 app.use('/',require('./routes/user'))
 app.use('/',require('./routes/admin'))
 
+//500 error
+app.get('/error', (req, res) => {
+  const error = req.query.err;
+  res.render('./user/500page', { error });
+});
+
 //404 page
 app.use((req,res)=>{
-    res.status(404)
-    res.render('./user/404page')
+    res.status(404).render('./user/404page')
 })
 
 app.listen(port,()=>{

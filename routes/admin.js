@@ -65,7 +65,7 @@ router.get('/bannerDelete/:bannerId',adminAuth.noSession,adminController.bannerD
 
 router.get('/adminorder',adminAuth.noSession,adminOrderController.orderHistory)
 router.get('/adminOrderdetails/:orderId',adminAuth.noSession,adminOrderController.orderDetails)
-router.post('/update-order-status',adminAuth.noSession,adminOrderController.orderStatus)
+router.put('/update-order-status',adminAuth.noSession,adminOrderController.orderStatus)
 
 router.get('/addcoupon',adminAuth.noSession,adminCouponController.createCoupon)
 router.post('/addcoupon',adminAuth.noSession,adminCouponController.newCoupon)

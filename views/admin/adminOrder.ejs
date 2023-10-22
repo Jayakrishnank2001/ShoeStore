@@ -119,7 +119,7 @@
         const orderId = statusSelect.getAttribute('data-order-id');
         const data = { status: newStatus, orderId: orderId };
         fetch('/update-order-status', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
             'Content-Type': 'application/json',
             },

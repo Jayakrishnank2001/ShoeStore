@@ -38,7 +38,7 @@ exports.dashboard=async(req,res)=>{
         res.render('./admin/dashboard',{usersCount,orderCount,totalRevenue})
     } catch (error) {
         console.error(error)
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -51,7 +51,7 @@ exports.usersGraph=async(req,res)=>{
         res.json({walletPayment,onlinePayment,cashOnDelivery})
     } catch (error) {
        console.error(error)
-       res.status(500).send('Internal server error') 
+       res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -62,7 +62,7 @@ exports.bannerPage=async(req,res)=>{
         res.render('./admin/banner',{banners})
     } catch (error) {
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -96,7 +96,7 @@ exports.createBanner=async(req,res)=>{
         res.redirect('/banners?success=true')
     } catch (error) {
         console.error(error)
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -108,7 +108,7 @@ exports.bannerDelete=async(req,res)=>{
         res.redirect('/banners')
     } catch (error) {
         console.error(error)
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -117,7 +117,7 @@ exports.loginpage=async(req,res)=>{
         res.render('./admin/adminLogin')
     } catch (error) {
        console.error(error)
-       res.status(500).send('Internal Server Error') 
+       res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -138,7 +138,7 @@ exports.users=async(req,res)=>{
         res.render('admin/adminUser',{users,totalPages,currentPage:page});
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -156,7 +156,7 @@ exports.login=async(req,res)=>{
         } 
     }catch(error){
         console.error('Error during admin login',error)
-        res.status(500).json({error:'Internal server error'})
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -170,7 +170,7 @@ exports.blockUser=async(req,res)=>{
         res.redirect('/users')
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -184,7 +184,7 @@ exports.unblockUser=async(req,res)=>{
         res.redirect('/users')
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -195,7 +195,7 @@ exports.adminlogout=async(req,res)=>{
         res.redirect('/adminlogin')
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -219,7 +219,7 @@ exports.totalRevenueGraph=async(req,res)=>{
         res.json(revenueData);        
     } catch (error) {
       console.error(error)
-      res.status(500).send('Internal server error')  
+      res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -239,6 +239,6 @@ exports.salesReport=async(req,res)=>{
         res.json({ totalRevenue, salesReport: buffer });
     } catch (error) {
         console.error(error)
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }

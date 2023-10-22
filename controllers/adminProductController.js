@@ -22,7 +22,7 @@ exports.product=async(req,res)=>{
         res.render('./admin/adminProduct',{products,totalPages,currentPage:page});
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal server error');
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -33,7 +33,7 @@ exports.addproduct=async(req,res)=>{
         res.render('./admin/addProduct',{categories})
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -71,6 +71,7 @@ exports.createProduct=async(req,res)=>{
         res.redirect('/product?success=true')
     }catch(error){
         console.error(error.message)
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -85,7 +86,7 @@ exports.listProduct=async(req,res)=>{
         res.redirect('/product')
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -100,7 +101,7 @@ exports.unlistProduct=async(req,res)=>{
         res.redirect('/product')
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -116,7 +117,7 @@ exports.editproduct=async(req,res)=>{
         res.render('./admin/editProduct',{product,categories})
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal server error');
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -161,6 +162,6 @@ exports.updateProduct=async(req,res)=>{
         res.redirect('/product?success=false');
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }

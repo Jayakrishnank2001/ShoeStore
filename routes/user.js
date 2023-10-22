@@ -39,7 +39,6 @@ router.get('/removecart/:productId',userAuth.noSession,userController.removeFrom
 router.put('/updateQuantity/:productId/:newQuantity',userAuth.noSession,userController.updateQuantity)
 router.get('/getproduct/:productId',userAuth.noSession,userController.getProductDetails)
 
-
 router.get('/checkout/:totalSum',userAuth.noSession,userController.checkoutPage)
 router.post('/checkout',userAuth.noSession,userController.orderPlace)
 router.post('/online-payment',userAuth.noSession,userController.onlinePayment)

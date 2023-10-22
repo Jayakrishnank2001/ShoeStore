@@ -12,7 +12,7 @@ exports.couponPage=async(req,res)=>{
       res.render('./admin/adminCoupon',{coupons})
    }catch{
       console.error(error)
-      res.status(500).send('Internal server error')
+      res.redirect('/error?err=' + encodeURIComponent(error.message));
    }
 }
 
@@ -36,7 +36,7 @@ exports.newCoupon=async(req,res)=>{
      res.redirect('/coupon?success=true')
    } catch (error) {
       console.error(error)
-      res.status(500).send('Internal Server Error')
+      res.redirect('/error?err=' + encodeURIComponent(error.message));
    }
 }
 
@@ -48,7 +48,7 @@ exports.deleteCoupon=async(req,res)=>{
       res.redirect('/coupon')
    } catch (error) {
       console.error(error)
-      res.status(500).send('Internal server error')
+      res.redirect('/error?err=' + encodeURIComponent(error.message));
    }
 }
 
@@ -60,7 +60,7 @@ exports.couponEditPage=async(req,res)=>{
       res.render('./admin/editCoupon',{coupon})
    } catch (error) {
       console.error(error)
-      res.status(500).send('Internal Server error')
+      res.redirect('/error?err=' + encodeURIComponent(error.message));
    }
 }
 
@@ -87,6 +87,6 @@ exports.updateCoupon=async(req,res)=>{
       res.redirect('/coupon?success=false')
    } catch (error) {
       console.error(error)
-      res.status(500).send('Internal Server Error')
+      res.redirect('/error?err=' + encodeURIComponent(error.message));
    }
 }

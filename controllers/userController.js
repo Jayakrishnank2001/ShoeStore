@@ -27,7 +27,7 @@ exports.homePage=async(req,res)=>{
     res.render('./user/home',{products,banners})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -43,7 +43,7 @@ exports.userprofile=async(req,res)=>{
     res.render('./user/userprofile',{user})
   }catch(error){
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -63,7 +63,8 @@ exports.wishlistPage=async(req,res)=>{
     })
     res.render('./user/wishlist',{wishlistItems})
   } catch (error) {
-    
+     console.log(error)
+     res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -77,8 +78,14 @@ exports.checkoutPage=async(req,res)=>{
     const userId=req.session.userId
     const user=await User.findById(userId)
     const defaultAddress = user.userAddress.find((address) => address.isDefault === true);
-    res.render('./user/checkout',{coupons,user,defaultAddress,cartTotal})
+    if(user.cart.length===0){
+      res.render('./user/404page')
+    }else{
+      res.render('./user/checkout',{coupons,user,defaultAddress,cartTotal})
+    }
   } catch (error) {
+    console.error(error)
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -87,10 +94,15 @@ exports.otppage=async(req,res)=>{
 }
 
 exports.userAddress=async(req,res)=>{
-  const userId=req.session.userId
-  const user= await User.findById(userId);
-  const addressDetails =user.userAddress;
-  res.render('./user/address',{addressDetails})
+  try{
+    const userId=req.session.userId
+    const user= await User.findById(userId);
+    const addressDetails =user.userAddress;
+    res.render('./user/address',{addressDetails})
+  }catch(error){
+    console.error(error)
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
+  }
 }
 
 exports.forgotPage=async(req,res)=>{
@@ -119,7 +131,7 @@ exports.orderDetails=async(req,res)=>{
     res.render('./user/orderDetails',{user,order})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -142,7 +154,7 @@ exports.orderHistory=async(req,res)=>{
     res.render('./user/orders',{orders,totalPages,currentPage:page})
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 //to show products on the cart page
@@ -164,7 +176,7 @@ exports.cartPage=async(req,res)=>{
     res.render('./user/cart',{cartItems,totalSum})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -176,7 +188,7 @@ exports.productpage=async(req,res)=>{
     res.render('./user/product',{product})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
   
 }
@@ -221,8 +233,8 @@ exports.productspage = async (req, res) => {
       res.render("./user/shop", {products,categories,currentPage: page,totalPages,priceFrom,priceTo,gender,searchQuery});
    } catch (error) {
       console.error(error);
-      res.status(500).send("Internal server error.");
-  }
+      res.redirect('/error?err=' + encodeURIComponent(error.message));
+    }
 };
 
 //set email to send OTP
@@ -304,7 +316,7 @@ exports.registerUser = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 };
 
@@ -330,8 +342,8 @@ exports.otpverify=async (req,res)=>{
         res.redirect('/login')
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal Server Error')
-    }
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
+      }
 }
 
 //forgot resend OTP
@@ -344,7 +356,7 @@ exports.resendOTP=async(req,res)=>{
    req.session.save()
   } catch (error) {
    console.error(error)
-   res.status(500).send('Internal server error')
+   res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -366,7 +378,7 @@ exports.emailverify=async(req,res)=>{
         }
     }catch(error){
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -391,7 +403,7 @@ exports.reset = async (req, res) => {
     res.redirect('/login');
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -415,8 +427,8 @@ exports.userlogin=async(req,res)=>{
         return res.render('./login/userLogin',{alert:'Password is incorrect'})
       }
   }catch(error){
-    console.log(error)
-    res.status(500).send('Internal server error')
+    console.error(error);
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -432,8 +444,8 @@ exports.forgototpverify=async(req,res)=>{
     res.redirect('/resetpassword')
   }catch(error){
     console.error(error);
-    res.status(500).send('Internal Server Error')
-}
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
+  }
 }
 
 //product add to the cart
@@ -457,7 +469,7 @@ exports.addToCart=async(req,res)=>{
     }
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -473,7 +485,7 @@ exports.removeFromCart=async(req,res)=>{
     res.json({data:'Product removed from the cart successfully'})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -484,7 +496,7 @@ exports.userLogout=async(req,res)=>{
     res.redirect('/login')
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -511,7 +523,7 @@ exports.changePassword=async(req,res)=>{
     res.redirect('/login')
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -534,7 +546,7 @@ exports.userInfoUpdate=async(req,res)=>{
    res.redirect('/profile?success=true')
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -551,7 +563,7 @@ exports.addAddress=async(req,res)=>{
     res.redirect('/address?success=true')
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -566,7 +578,7 @@ exports.deleteAddress=async(req,res)=>{
     res.redirect('/address')
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -593,7 +605,7 @@ exports.editAddress=async(req,res)=>{
     res.redirect('/address?success=false')
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -625,7 +637,8 @@ exports.updateQuantity=async(req,res)=>{
     // Respond with the updated total price
     res.json({updatedTotalPrice: cartItem.totalPrice,totalSum})
 } catch (error) {
-    console.error('Error:',error)
+    console.error(error)
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
 }
 }
 
@@ -637,7 +650,7 @@ exports.getProductDetails=async(req,res)=>{
     res.json({availableQuantity:product.quantity})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -728,7 +741,7 @@ exports.orderPlace=async(req,res)=>{
    }
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal server error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -740,8 +753,8 @@ exports.cashOnDelivery=async(req,res)=>{
     res.json(ok)
    } catch (error) {
      console.error(error)
-     res.status(500).send('Internal server error')
-   }
+     res.redirect('/error?err=' + encodeURIComponent(error.message));
+    }
 }
 
 //order using wallet
@@ -771,7 +784,7 @@ exports.walletPayment=async(req,res)=>{
     }
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal server error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -804,7 +817,7 @@ exports.removeFromWishlist=async(req,res)=>{
       res.json({data:'Product removed from the wishlist successfully'})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal server error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -828,7 +841,7 @@ exports.addToWishlist=async(req,res)=>{
     }
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal server error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -841,7 +854,7 @@ exports.userWallet=async(req,res)=>{
     res.render('./user/wallet',{userWallet})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal server error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -854,7 +867,7 @@ exports.couponApply=async(req,res)=>{
     res.json({success:true,discountAmount})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal server error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }
 
@@ -916,6 +929,6 @@ exports.userInvoice=async(req,res)=>{
     res.render('./user/invoice',{user,order})
   } catch (error) {
     console.error(error)
-    res.status(500).send('Internal server error')
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
   }
 }

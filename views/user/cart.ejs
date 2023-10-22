@@ -127,7 +127,7 @@
             <% if(cartItems.length===0) { %>
     				<p class="text-center"><a href="/cart" class="btn btn-primary py-3 px-4" onclick="checkCartNotEmpty()">Proceed to Checkout</a></p>
             <% }else if(canProceedToCheckout){ %>
-              <p class="text-center"><a href="" id="totalForCheckout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+              <p class="text-center"><a href="/checkout/<%= totalSum %>" id="totalForCheckout" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
             <% }else{ %>
               <p class="text-center font-weight-bold text-danger">Some Products in your cart do not have sufficient stock</p>
               <p class="text-center"><a href="" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
@@ -177,10 +177,11 @@
             const totalPriceElement = document.querySelector(`#totalPrice${productId}`);
             const totalSumElement = document.getElementById('newTotalSumejs');
             const newTotalSumElement = document.getElementById('newTotalSumClient');
-            const totalForCheckout=document.getElementById('totalForCheckout')
+            const totalForCheckout=document.getElementById('totalForCheckout');
             if (newTotalSumElement) {
               newTotalSumElement.textContent = `₹${newTotalSum}`;
               totalForCheckout.href=`/checkout/${newTotalSum}`
+              console.log(newTotalSum)
             }
             quantityInput.value = newQuantity;
             totalPriceElement.innerHTML = `₹${newTotalPrice}`;

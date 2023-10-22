@@ -10,7 +10,7 @@ exports.category=async(req,res)=>{
         res.render('./admin/adminCategory',{categories})
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -38,7 +38,7 @@ exports.createcategory=async(req,res)=>{
         res.redirect('/category?success=true');
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -53,7 +53,7 @@ exports.listCategory=async(req,res)=>{
         res.redirect('/category')
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -68,6 +68,6 @@ exports.unlistCategory=async(req,res)=>{
         res.redirect('/category')
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal server error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }

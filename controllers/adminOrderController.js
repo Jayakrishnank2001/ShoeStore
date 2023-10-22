@@ -22,7 +22,7 @@ exports.orderHistory=async(req,res)=>{
         res.render('./admin/adminOrder',{orders,totalPages,currentPage:page});
     } catch (error) {
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -34,8 +34,8 @@ exports.orderDetails=async(req,res)=>{
         res.render('./admin/adminOrderDetails',{order})
     }catch (error) {
     console.error(error)
-    res.status(500).send('Internal Server Error')
- }
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
+}
 }
 
 //to change the order status of a product
@@ -64,6 +64,6 @@ exports.orderStatus=async(req,res)=>{
         res.status(200).json(order)
     } catch (error) {
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
