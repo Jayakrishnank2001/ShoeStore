@@ -48,6 +48,7 @@
                         <th class="text-center">ORDER ITEM</th>
                         <th class="text-center">AMOUNT</th>
                         <th class="text-center">ADDRESS</th>
+                        <th class="text-center">Payment Method</th>
                         <th class="text-center">ORDER DATE</th>
                         <th class="text-center">STATUS</th>
                       </tr>
@@ -71,6 +72,7 @@
                             <h6><%= order.address[0].town %>,<%= order.address[0].district %>-<%= order.address[0].pincode %></h6>
                             <h6><%= order.address[0].state %></h6>              
                         </td> 
+                        <td class="table-data text-center"><%= order.paymentMethod %></td>                                             
                         <td class="table-data text-center"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>                                             
                         <td class="table-data text-center">
                           <div class="input-group">

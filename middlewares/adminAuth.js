@@ -12,7 +12,7 @@ exports.noSession=async(req,res,next)=>{
         return next()
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
 
@@ -25,6 +25,6 @@ exports.yesSession=async(req,res,next)=>{
         return next()
     }catch(error){
         console.error(error)
-        res.status(500).send('Internal Server Error')
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }

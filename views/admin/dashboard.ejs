@@ -33,35 +33,36 @@
               <h4>TOTAL USERS</h4>
               <p class="font-weight-bold" id="totalUsersCount"><%= usersCount %></p>
           </div>
-          <div class="mt-5" style="width: 350px;">
-            <canvas id="myChart1"></canvas>
+          <div class="col-md-12 text-center mt-5">
+            <a href="/salesReport"><button class="btn btn-primary btn-block mt-3 font-weight-bold" style="height: 60px;">Full Sales Report</button></a>
           </div>
-          <div class="date-filter">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="mt-4 form-group">
-                        <label for="startDate" class="font-weight-bold">Start Date</label>
-                        <input class="with-box-shadow" type="date" id="startDate" name="startDate">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mt-4 form-group">
-                        <label for="endDate" class="font-weight-bold">End Date</label>
-                        <input class="with-box-shadow" type="date" id="endDate" name="endDate">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <button class="btn btn-dark">Download Sales Report</button>
-                </div>
-            </div>
+          <div class="" style="width: 350px; margin-top: 100px;">
+            <canvas id="myChart1"></canvas>
           </div>
       </div>
       <div class="ml-5" style="width: 350px; height:250px;">
           <div class="total-stat with-box-shadow mt-3">
               <h4>TOTAL ORDERS</h4>
               <p class="font-weight-bold" id="totalOrdersCount"><%= orderCount %></p>
+          </div>
+          <div class="date-filter mt-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mt-4 form-group" style="margin-left: 250px;">
+                        <input class="with-box-shadow" type="date" id="startDate" name="startDate" style="height: 10px;" placeholder="Start Date">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mt-4 form-group" style="margin-left: 250px;">                        
+                        <input class="with-box-shadow" type="date" id="endDate" name="endDate" style="height: 10px;" placeholder="End Date">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-center" style="margin-left: 250px;">
+                <button class="btn btn-dark" id="fetchRevenueBtn">Revenue</button>
+              </div>
+            </div>
           </div>
           <div class="ml-5 mt-5" style="width: 700px;">
             <canvas id="myChart2"></canvas>
@@ -83,12 +84,14 @@
 
           <script>
 
+
+        
         //order payment method graph
         fetch('/payment-method')
          .then((response)=>response.json())
          .then((data)=>{
             const ctx1 = document.getElementById('myChart1');
-            new Chart(ctx1, {
+            const chart1=new Chart(ctx1, {
               type: 'pie',
               data: {
                 labels: ['Wallet', 'Online Payment','Cash on delivery'],
@@ -111,6 +114,7 @@
           })
 
         
+  let chart2
   //total revenue graph
   fetch('/total-revenue')
   .then((response) => response.json())
@@ -123,7 +127,7 @@
       }
     }
     const ctx2 = document.getElementById('myChart2');
-    new Chart(ctx2, {
+    chart2=new Chart(ctx2, {
       type: 'bar',
       data: {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -143,44 +147,36 @@
   });
 
 
-
-  document.querySelector('.date-filter button').addEventListener('click', async () => {
-  const startDate = document.getElementById('startDate').value;
-  const endDate = document.getElementById('endDate').value;
-
-  // Send a POST request to generate the sales report
-  const response = await fetch('/generate-sales-report', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ startDate, endDate }),
-  });
-
-  if (response.ok) {
-    const data = await response.json();
-    const { totalRevenue, salesReport } = data;
-
-    // Display the total revenue
-    alert(`Total Revenue between ${startDate} and ${endDate}: ₹${totalRevenue}`);
-
-    // Create a blob from the buffer and initiate a download
-    const blob = new Blob([salesReport], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'SalesReport.xlsx';
-    a.click();
-  } else {
-    alert('Error generating sales report.');
-  }
-});
+  //fetch revenue based date
+  const fetchRevenueBtn=document.getElementById('fetchRevenueBtn')
+  fetchRevenueBtn.addEventListener('click',function(){
+    const startDate=document.getElementById('startDate').value
+    const endDate=document.getElementById('endDate').value
+    fetch('/show-revenue',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({startDate:startDate,endDate:endDate})
+    })
+    .then((response)=>response.json())
+    .then((data)=>{
+      chart2.data.datasets[0].data=[]
+      for (const year in data) {
+       for (let month = 0; month < 12; month++) {
+        const revenue = data[year][month] || 0;
+        chart2.data.datasets[0].data.push(revenue)
+      }
+    }
+    chart2.update();
+    })
+    .catch((error)=>{
+      console.error('Error fetching revenue data:',error)
+    })
+  })
 
 
-          
-
-
-          </script>
+   </script>
 
     
       <%- include('../partials/adminfooter.ejs') %>

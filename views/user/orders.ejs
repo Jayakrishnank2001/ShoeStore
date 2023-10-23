@@ -38,6 +38,7 @@
                             <th class="border-gray-200 text-center" scope="col">product</th>
                             <th class="border-gray-200 text-center" scope="col">Date</th>
                             <th class="border-gray-200 text-center" scope="col">Amount</th>
+                            <th class="border-gray-200 text-center" scope="col">Payment Method</th>
                             <th class="border-gray-200 text-center" scope="col">Status</th>
                             <th class="border-gray-200 text-center" scope="col">Cancel/Return</th>
                         </tr>
@@ -56,6 +57,7 @@
                             </td>
                             <td class="table-data text-center"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>
                             <td class="table-data text-center">₹<%= order.totalPrice %></span></td>
+                            <td class="table-data text-center"><%= order.paymentMethod %></span></td>
                             <td class="table-data text-center"><%= order.orderStatus %></td>
                             <% if(order.orderStatus==='order confirmed') { %>
                             <td class="table-data text-center"><button type="button" class="btn btn-warning cancel-button" data-order-id="<%= order._id %>">Cancel</button></td>

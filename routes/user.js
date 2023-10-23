@@ -72,5 +72,4 @@ router.post('/set-default-address/:addressId',userAuth.noSession,userController.
 
 
 
-
 module.exports=router

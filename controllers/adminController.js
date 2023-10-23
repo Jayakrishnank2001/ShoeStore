@@ -3,7 +3,7 @@ const User=require('../models/users')
 const Banner=require('../models/banner')
 const Order=require('../models/order')
 const bcrypt=require('bcrypt')
-const xlsx=require('xlsx')
+const { Parser } = require('json2csv')
 
 const newAdmin=new Admin({
     userName:'Jayakrishnan',
@@ -223,22 +223,75 @@ exports.totalRevenueGraph=async(req,res)=>{
     }
 }
 
-//sales report
-exports.salesReport=async(req,res)=>{
+
+//show revenue on the graph based on date
+exports.showRevenue=async(req,res)=>{
     try {
-        const startDate = new Date(req.body.startDate);
-        const endDate = new Date(req.body.endDate);
-        const orders = await Order.find({
-        orderDate: { $gte: startDate, $lte: endDate },
-        });
-        const totalRevenue = orders.reduce((total, order) => total + order.totalPrice, 0);
-        const wb = xlsx.utils.book_new();
-        const ws = xlsx.utils.json_to_sheet(orders);
-        xlsx.utils.book_append_sheet(wb, ws, 'Sales Report');
-        const buffer = xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
-        res.json({ totalRevenue, salesReport: buffer });
+        const startDate=req.body.startDate
+        const endDate=req.body.endDate
+        const orders=await Order.find({orderStatus:'Delivered',orderDate:{$gte:startDate,$lte:endDate}})
+        const revenueData=orders.reduce((acc,order)=>{
+          const orderDate=new Date(order.orderDate)
+          const year = orderDate.getFullYear();
+          const month = orderDate.getMonth();
+          if (!acc[year]) {
+            acc[year] = {};
+          }
+          if (!acc[year][month]) {
+            acc[year][month] = 0;
+          }
+          acc[year][month] += order.totalPrice;
+          return acc;
+        },{})
+        res.json(revenueData)
     } catch (error) {
         console.error(error)
         res.redirect('/error?err=' + encodeURIComponent(error.message));
     }
 }
+
+//salesReport page
+exports.salesReportPage=async(req,res)=>{
+   try {
+    const orders=await Order.find({orderStatus:'Delivered'}).populate('userId').sort({ orderDate: -1 });
+    res.render('./admin/salesReport',{orders})
+   } catch (error) {
+    console.error(error)
+    res.redirect('/error?err=' + encodeURIComponent(error.message));
+   }
+}
+
+//filter sales report based on date
+exports.filterSalesReport=async(req,res)=>{
+    try {
+        const {startDate,endDate}=req.query
+        const orders=await Order.find({orderStatus:'Delivered',orderDate:{$gte:startDate,$lte:endDate}}).populate('userId').sort({ orderDate: -1 });
+        if (req.xhr) {
+           res.json(orders);
+        } else {
+           res.render('./admin/salesReport',{orders})
+        }
+    } catch (error) {
+        console.error(error)
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
+    }
+}
+
+//download sales report
+exports.downloadSalesReport=async(req,res)=>{
+    try {
+        const { startDate,endDate }=req.query
+        const orders=await Order.find({orderStatus:'Delivered',orderDate:{$gte:startDate,$lte:endDate}}).populate('userId').sort({ orderDate: -1 });
+        console.log(orders)
+        res.json(orders)
+    } catch (error) {
+        console.error(error)
+        res.redirect('/error?err=' + encodeURIComponent(error.message));
+    }
+}
+
+
+
+
+
+

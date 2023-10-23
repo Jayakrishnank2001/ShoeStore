@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoes Store Admin</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css1/adminlogin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2csv/5.0.5/json2csv.umd.min.js"></script>
+
+</head>
+<body>
+
+    <style>
+        .table-data{
+          font-weight: 600;
+        }
+       
+  </style>
+
+ <%- include('../partials/adminheader.ejs') %>
+
+ <div class="container mt-4">
+    <div class="container text-center">
+        <h1 class="text" style="text-decoration: underline;">SALES REPORT</h1>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-2 mt-3">
+            <div class="form-group">
+                <label for="startDate" class="font-weight-bold text-center">Start Date</label>
+                <input class="with-box-shadow" type="date" id="startDate" name="startDate" style="height: 10px;">
+            </div>
+        </div>
+        <div class="col-md-2 mt-3">
+            <div class="form-group">
+                <label for="endDate" class="font-weight-bold">End Date</label>
+                <input class="with-box-shadow" type="date" id="endDate" name="endDate" style="height: 10px;">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <button class="btn btn-warning mt-5" id="applyDateBtn" style="height: 42px;">Apply</button>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <button class="btn btn-info mt-5" style="height: 42px;" id="downloadSalesReport">Download Report</button>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered table-thick">
+      <thead class="thead-dark">
+        <tr>
+          <th class="text-center col-md-2">DATE</th>
+          <th class="text-center col-md-2">ORDER ID</th>
+          <th class="text-center col-md-2">USERNAME</th>
+          <th class="text-center col-md-2">PAYMENT METHOD</th>
+          <th class="text-center col-md-2">TOTAL AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <% orders.forEach(order =>{ %>
+        <tr>
+          <td class="table-data text-center"><%= order.orderDate ? order.orderDate.toISOString().split('T')[0] : '' %></td>
+          <td class="table-data text-center">#<%= order._id.toString().slice(0, 9) %></td>  
+          <td class="table-data text-center"><%= order.userId.firstName %></td>   
+          <td class="table-data text-center"><%= order.paymentMethod %></td>   
+          <td class="table-data text-center">₹<%= order.totalPrice %></td>                                             
+        </tr>
+        <% }) %> 
+      </tbody>
+    </table>
+</div>
+
+
+<script>
+
+    //apply date and show sales report based on applied date
+    document.getElementById('applyDateBtn').addEventListener('click',function(){
+        const startDate=document.getElementById('startDate').value
+        const endDate=document.getElementById('endDate').value
+        window.location.href=`/filterSales?startDate=${startDate}&endDate=${endDate}`
+    })
+
+
+    //download button
+    document.addEventListener('DOMContentLoaded', function () {
+      const downloadSalesReport = document.getElementById('downloadSalesReport');
+      downloadSalesReport.addEventListener('click', function () {
+        const table = document.querySelector('table'); // Assuming you have only one table
+  
+        if (table) {
+          const rows = Array.from(table.querySelectorAll('tr'));
+          const csvData = [];
+  
+          // Extract data from table rows
+          rows.forEach((row, rowIndex) => {
+            const rowData = [];
+            const columns = Array.from(row.querySelectorAll('th, td'));
+  
+            columns.forEach((column, columnIndex) => {
+              rowData.push(column.textContent);
+            });
+  
+            csvData.push(rowData.join(','));
+  
+            // Add line breaks (newlines) between rows
+            if (rowIndex < rows.length - 1) {
+              csvData.push('\n');
+            }
+          });
+  
+          // Create a data URI for the CSV file
+          const csvContent = 'data:text/csv;charset=utf-8,' + csvData.join('');
+  
+          // Create an invisible anchor element to trigger the download
+          const encodedUri = encodeURI(csvContent);
+          const link = document.createElement('a');
+          link.setAttribute('href', encodedUri);
+          link.setAttribute('download', 'sales_report.csv');
+          document.body.appendChild(link);
+  
+          // Trigger the download
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
+    });
+
+
+    //download sales report
+    document.getElementById('downloadSalesReport').addEventListener('click',function(){
+        const startDate=document.getElementById('startDate').value
+        const endDate=document.getElementById('endDate').value
+        fetch(`/download-salesReport?startDate=${startDate}&endDate=${endDate}`)
+          .then((response)=>response.json())
+          .then((data)=>{
+            generateCSV(data); 
+            
+          })
+          .catch((error)=>{
+            console.error('Error:',error)
+          })
+    })
+
+
+    function generateCSV(data) {
+    const json2csvParser = new json2csv.Parser();
+    const fields = ["DATE", "ORDER ID", "USERNAME", "PAYMENT METHOD", "TOTAL"];
+    const opts = { fields };
+    try {
+        const csv = json2csvParser.parse(data.orders);
+        console.log(data.orders)
+        const blob = new Blob([csv], { type: "text/csv" });
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "sales_report.csv";
+        link.click();
+    } catch (error) {
+        console.error("Error generating CSV: " + error);
+    }
+}
+
+</script>
+</body>
+</html>
+ 
+
+    
