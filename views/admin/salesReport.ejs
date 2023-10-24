@@ -75,6 +75,7 @@
 
 <script>
 
+
     //apply date and show sales report based on applied date
     document.getElementById('applyDateBtn').addEventListener('click',function(){
         const startDate=document.getElementById('startDate').value
@@ -82,84 +83,79 @@
         window.location.href=`/filterSales?startDate=${startDate}&endDate=${endDate}`
     })
 
+    
 
-    //download button
-    document.addEventListener('DOMContentLoaded', function () {
-      const downloadSalesReport = document.getElementById('downloadSalesReport');
-      downloadSalesReport.addEventListener('click', function () {
-        const table = document.querySelector('table'); // Assuming you have only one table
-  
-        if (table) {
-          const rows = Array.from(table.querySelectorAll('tr'));
-          const csvData = [];
-  
-          // Extract data from table rows
-          rows.forEach((row, rowIndex) => {
-            const rowData = [];
-            const columns = Array.from(row.querySelectorAll('th, td'));
-  
-            columns.forEach((column, columnIndex) => {
-              rowData.push(column.textContent);
-            });
-  
-            csvData.push(rowData.join(','));
-  
-            // Add line breaks (newlines) between rows
-            if (rowIndex < rows.length - 1) {
-              csvData.push('\n');
-            }
-          });
-  
-          // Create a data URI for the CSV file
-          const csvContent = 'data:text/csv;charset=utf-8,' + csvData.join('');
-  
-          // Create an invisible anchor element to trigger the download
-          const encodedUri = encodeURI(csvContent);
-          const link = document.createElement('a');
-          link.setAttribute('href', encodedUri);
-          link.setAttribute('download', 'sales_report.csv');
-          document.body.appendChild(link);
-  
-          // Trigger the download
-          link.click();
-          document.body.removeChild(link);
-        }
+//     document.addEventListener('DOMContentLoaded', function () {
+//   const downloadSalesReport = document.getElementById('downloadSalesReport');
+//   downloadSalesReport.addEventListener('click', function () {
+//     const table = document.querySelector('table'); // Assuming you have only one table
+//     if (table) {
+//       const rows = Array.from(table.querySelectorAll('tr'));
+//       const csvData = [];
+//       // Extract data from table rows
+//       rows.forEach((row, rowIndex) => {
+//         const rowData = [];
+//         const columns = Array.from(row.querySelectorAll('th, td'));
+//         columns.forEach((column, columnIndex) => {
+//           rowData.push(column.textContent);
+//         });
+//         csvData.push(rowData.join(','));
+//       });
+//       // Combine the rows using newlines
+//       const csvContent = csvData.join('\n');
+//       // Create a data URI for the CSV file
+//       const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+//       // Create an invisible anchor element to trigger the download
+//       const link = document.createElement('a');
+//       link.setAttribute('href', encodedUri);
+//       link.setAttribute('download', 'sales_report.csv');
+//       document.body.appendChild(link);
+//       // Trigger the download
+//       link.click();
+//       document.body.removeChild(link);
+//     }
+//   });
+// });
+
+
+
+  // JavaScript code
+  document.addEventListener('DOMContentLoaded', function () {
+  const downloadSalesReport = document.getElementById('downloadSalesReport');
+  downloadSalesReport.addEventListener('click', function () {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    fetch(`/download-salesReport?startDate=${startDate}&endDate=${endDate}`)
+      .then((response) => response.json())
+      .then((data) => {
+        generateCSV(data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
       });
-    });
+   });
+ });
 
 
-    //download sales report
-    document.getElementById('downloadSalesReport').addEventListener('click',function(){
-        const startDate=document.getElementById('startDate').value
-        const endDate=document.getElementById('endDate').value
-        fetch(`/download-salesReport?startDate=${startDate}&endDate=${endDate}`)
-          .then((response)=>response.json())
-          .then((data)=>{
-            generateCSV(data); 
-            
-          })
-          .catch((error)=>{
-            console.error('Error:',error)
-          })
-    })
+  // Updated generateCSV function
+  function generateCSV(data) {
+  const fields = ["DATE", "ORDER ID", "USERNAME", "PAYMENT METHOD", "TOTAL AMOUNT"];
+  const opts = { fields };
+  const json2csvParser = new json2csv.Parser(opts);
 
-
-    function generateCSV(data) {
-    const json2csvParser = new json2csv.Parser();
-    const fields = ["DATE", "ORDER ID", "USERNAME", "PAYMENT METHOD", "TOTAL"];
-    const opts = { fields };
-    try {
-        const csv = json2csvParser.parse(data.orders);
-        console.log(data.orders)
-        const blob = new Blob([csv], { type: "text/csv" });
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = "sales_report.csv";
-        link.click();
-    } catch (error) {
-        console.error("Error generating CSV: " + error);
-    }
+  try {
+    const csv = json2csvParser.parse(data);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "sales_report.csv";
+    link.click();
+  } catch (error) {
+    console.error("Error generating CSV: " + error);
+  }
 }
+
+
 
 </script>
 </body>

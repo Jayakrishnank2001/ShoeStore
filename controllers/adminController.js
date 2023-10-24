@@ -266,11 +266,7 @@ exports.filterSalesReport=async(req,res)=>{
     try {
         const {startDate,endDate}=req.query
         const orders=await Order.find({orderStatus:'Delivered',orderDate:{$gte:startDate,$lte:endDate}}).populate('userId').sort({ orderDate: -1 });
-        if (req.xhr) {
-           res.json(orders);
-        } else {
-           res.render('./admin/salesReport',{orders})
-        }
+        res.render('./admin/salesReport',{orders})
     } catch (error) {
         console.error(error)
         res.redirect('/error?err=' + encodeURIComponent(error.message));
@@ -282,8 +278,15 @@ exports.downloadSalesReport=async(req,res)=>{
     try {
         const { startDate,endDate }=req.query
         const orders=await Order.find({orderStatus:'Delivered',orderDate:{$gte:startDate,$lte:endDate}}).populate('userId').sort({ orderDate: -1 });
-        console.log(orders)
-        res.json(orders)
+        // Extract the necessary data fields
+    const data = orders.map((order) => ({
+        DATE: order.orderDate ? order.orderDate.toISOString().split('T')[0] : '',
+        'ORDER ID': `#${order._id.toString().slice(0, 9)}`,
+        USERNAME: order.userId.firstName,
+        'PAYMENT METHOD': order.paymentMethod,
+        'TOTAL AMOUNT': `${order.totalPrice}`,
+      }));
+        res.json(data)
     } catch (error) {
         console.error(error)
         res.redirect('/error?err=' + encodeURIComponent(error.message));
