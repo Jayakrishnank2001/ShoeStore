@@ -253,7 +253,7 @@ exports.showRevenue=async(req,res)=>{
 //salesReport page
 exports.salesReportPage=async(req,res)=>{
    try {
-    const orders=await Order.find({orderStatus:'Delivered'}).populate('userId').sort({ orderDate: -1 });
+    const orders=await Order.find({orderStatus:'Delivered'}).sort({ orderDate: -1 }).populate('userId')
     res.render('./admin/salesReport',{orders})
    } catch (error) {
     console.error(error)
