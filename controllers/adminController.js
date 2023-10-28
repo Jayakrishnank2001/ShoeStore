@@ -81,7 +81,7 @@ exports.createBanner=async(req,res)=>{
             return 
         }
         if(!bannerId){
-             res.render('./admin/addBanner',{alert:'Please fill all required fields.'})
+             res.render('./admin/addBanner',{alert:'Please fill all fields.'})
              return
         }
         if(!req.file){
